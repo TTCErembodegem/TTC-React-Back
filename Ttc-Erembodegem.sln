@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ttc.Model", "src\Ttc.Model\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ttc.WebApi", "src\Ttc.WebApi\Ttc.WebApi.csproj", "{3964F219-FB18-4BE6-B135-7BA117748783}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrenoySyncer", "src\FrenoySyncer\FrenoySyncer.csproj", "{D3FDABD3-8D5F-4A24-8AE9-7BAAED1D62C8}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{3964F219-FB18-4BE6-B135-7BA117748783}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3964F219-FB18-4BE6-B135-7BA117748783}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3964F219-FB18-4BE6-B135-7BA117748783}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D3FDABD3-8D5F-4A24-8AE9-7BAAED1D62C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D3FDABD3-8D5F-4A24-8AE9-7BAAED1D62C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D3FDABD3-8D5F-4A24-8AE9-7BAAED1D62C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D3FDABD3-8D5F-4A24-8AE9-7BAAED1D62C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

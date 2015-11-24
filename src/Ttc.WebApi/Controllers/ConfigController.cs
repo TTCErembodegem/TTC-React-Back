@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using Ttc.DataAccess;
 
 namespace Ttc.WebApi.Controllers
@@ -12,8 +13,8 @@ namespace Ttc.WebApi.Controllers
     {
         public string Get()
         {
-            var x = new TtcDbContext();
-            return x.Spelers.First().Naam;
+            using (var x = new TtcDbContext())
+                return x.Spelers.First().Naam;
         }
     }
 }
