@@ -83,15 +83,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\Ttc.DataAccess\Ttc.DataAccess.csproj">
+    <ProjectReference Include="..\Ttc.DataAccess\Ttc.DataAccess.csproj">
       <Project>{bdfc6f37-3b94-467b-beee-53ffba49918e}</Project>
       <Name>Ttc.DataAccess</Name>
     </ProjectReference>
-    <ProjectReference Include="..\src\Ttc.Model\Ttc.Model.csproj">
+    <ProjectReference Include="..\Ttc.Model\Ttc.Model.csproj">
       <Project>{321dcbad-1302-400f-8532-74209420b126}</Project>
       <Name>Ttc.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\src\Ttc.WebApi\Ttc.WebApi.csproj">
+    <ProjectReference Include="..\Ttc.WebApi\Ttc.WebApi.csproj">
       <Project>{3964f219-fb18-4be6-b135-7ba117748783}</Project>
       <Name>Ttc.WebApi</Name>
     </ProjectReference>
