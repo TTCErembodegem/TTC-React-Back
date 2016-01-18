@@ -14,7 +14,7 @@ namespace Ttc.WebApi.Controllers
         public IEnumerable<Player> Get()
         {
             var ps = new PlayerService();
-            return ps.Get();
+            return ps.GetActiveOwnClub();
         }
     }
 }

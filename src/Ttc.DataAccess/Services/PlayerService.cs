@@ -9,11 +9,15 @@ namespace Ttc.DataAccess.Services
 {
     public class PlayerService
     {
-        public IEnumerable<Player> Get()
+        public IEnumerable<Player> GetActiveOwnClub()
         {
             using (var dbContext = new TtcDbContext())
             {
-                return Mapper.Map<IList<Speler>, IList<Player>>(dbContext.Players.Take(3).ToArray());
+                var activeOwnClubPlayers = dbContext.Players
+                    .ToArray()
+                    .Where(x => !x.IsGestopt && x.IsFromOwnClub());
+
+                return Mapper.Map<IEnumerable<Speler>, IEnumerable<Player>>(activeOwnClubPlayers);
             }
         }
     }

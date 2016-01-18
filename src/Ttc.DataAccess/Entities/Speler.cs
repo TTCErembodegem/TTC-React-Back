@@ -3,58 +3,54 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ttc.DataAccess.Entities
 {
+    /// <summary>
+    /// Mapped to db.
+    /// </summary>
     internal class Speler
     {
         [Key]
         public int Id { get; set; }
-
         public string Naam { get; set; }
-
-        public string LinkKaartVttl { get; set; }
-
-        public string KlassementVttl { get; set; }
-
-        public string KlassementSporta { get; set; }
-
+        public string NaamKort { get; set; }
         public string Stijl { get; set; }
-
         public string BesteSlag { get; set; }
 
-        public int? ComputerNummerVttl { get; set; }
-
-        public string Adres { get; set; }
-
-        public string Gemeente { get; set; }
-
-        public string GSM { get; set; }
-
-        public string Email { get; set; }
-
-        public string Paswoord { get; set; }
-
+        #region Vttl
         public int? ClubIdVttl { get; set; }
-
-        public int? ClubIdSporta { get; set; }
-
-        public string NaamKort { get; set; }
-
-        public int? VolgnummerVttl { get; set; }
-
         public int? IndexVttl { get; set; }
+        public string LinkKaartVttl { get; set; }
+        public string KlassementVttl { get; set; }
+        public int? ComputerNummerVttl { get; set; }
+        public int? VolgnummerVttl { get; set; }
+        #endregion
 
-        public int? LIdNummerSporta { get; set; }
-
-        public int? VolgnummerSporta { get; set; }
-
+        #region Sporta
+        public int? ClubIdSporta { get; set; }
         public int? IndexSporta { get; set; }
+        public string LinkKaartSporta { get; set; }
+        public string KlassementSporta { get; set; }
+        public int? LidNummerSporta { get; set; }
+        public int? VolgnummerSporta { get; set; }
+        #endregion
 
-        [Column("Gestopt")]
-        public int? JaarGestopt { get; set; }
+        #region Address
+        public string Adres { get; set; }
+        public string Gemeente { get; set; }
+        public string Gsm { get; set; }
+        public string Email { get; set; }
+        #endregion
+
+        /// <summary>
+        /// Jaar gestopt
+        /// </summary>
+        public int? Gestopt { get; set; }
+        public bool IsGestopt => Gestopt != null;
 
         public int? Toegang { get; set; }
 
-        public string LinkKaartSporta { get; set; }
-
-        public bool IsGestopt { get { return JaarGestopt != null; } }
+        public bool IsFromOwnClub()
+        {
+            return ClubIdSporta == Constants.OwnClubId || ClubIdVttl == Constants.OwnClubId;
+        }
     }
 }

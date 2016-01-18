@@ -50,12 +50,12 @@ namespace Ttc.Model
 
         public int? IndexSporta { get; set; }
 
-        public int? JaarGestopt { get; set; }
+        public int? Gestopt { get; set; }
 
         public int? Toegang { get; set; }
 
         public string LinkKaartSporta { get; set; }
 
-        public bool IsGestopt => JaarGestopt != null;
+        public bool IsGestopt => Gestopt != null;
     }
 }
