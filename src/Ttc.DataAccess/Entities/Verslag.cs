@@ -4,22 +4,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ttc.DataAccess.Entities
 {
-    [Table("verslag")]
     internal class Verslag
     {
         [Key]
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         // Foreign Key voor Kalender
-        public int KalenderID { get; set; }
+        public int KalenderId { get; set; }
 
         // Foreign Key voor Speler
-        public int SpelerID { get; set; }
+        public int SpelerId { get; set; }
 
-        //[ForeignKey("KalenderID")]
+        //[ForeignKey("KalenderId")]
         //public Match Kalender { get; set; }
 
-        //[ForeignKey("SpelerID")]
+        //[ForeignKey("SpelerId")]
         //public Speler Speler { get; set; }
 
         public string Beschrijving { get; set; }

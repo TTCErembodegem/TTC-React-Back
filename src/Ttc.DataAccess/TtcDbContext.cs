@@ -35,7 +35,12 @@ namespace Ttc.DataAccess
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-            //modelBuilder.Conventions.Add<System.Data.Entity.ModelConfiguration.Conventions.Tab>();
+            modelBuilder.Types().Configure(c => c.ToTable(ToLowerCaseTableName(c.ClrType)));
+        }
+
+        private static string ToLowerCaseTableName(Type clrType)
+        {
+            return clrType.Name.ToLowerInvariant();
         }
     }
 }

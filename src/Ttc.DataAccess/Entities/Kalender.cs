@@ -4,27 +4,26 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ttc.DataAccess.Entities
 {
-    [Table("kalender")]
     internal class Kalender
     {
         [Key]
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         public DateTime Datum { get; set; }
 
         public DateTime Uur { get; set; }
 
-        public int? ThuisClubID { get; set; }
+        public int? ThuisClubId { get; set; }
 
         public string ThuisPloeg { get; set; }
 
-        public int? ThuisClubPloegID { get; set; }
+        public int? ThuisClubPloegId { get; set; }
 
-        public int? UitClubID { get; set; }
+        public int? UitClubId { get; set; }
 
         public string UitPloeg { get; set; }
 
-        public int? UitClubPloegID { get; set; }
+        public int? UitClubPloegId { get; set; }
 
         public int? Week { get; set; }
 
@@ -32,7 +31,7 @@ namespace Ttc.DataAccess.Entities
 
         public int? Thuis { get; set; }
 
-        public string GeleideTraining { get; set; }
+        public string GeleIdeTraining { get; set; }
 
         public string FrenoyMatchId { get; set; }
     }

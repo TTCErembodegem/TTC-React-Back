@@ -3,11 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ttc.DataAccess.Entities
 {
-    [Table("reeks")]
     internal class Reeks
     {
         [Key]
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         public string Competitie { get; set; }
 
@@ -20,7 +19,7 @@ namespace Ttc.DataAccess.Entities
 
         public int? Jaar { get; set; }
 
-        public string LinkID { get; set; }
+        public string LinkId { get; set; }
 
         public string FrenoyTeamId { get; set; }
         public int FrenoyDivisionId { get; set; }

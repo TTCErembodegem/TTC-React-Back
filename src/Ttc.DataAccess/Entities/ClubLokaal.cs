@@ -3,11 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ttc.DataAccess.Entities
 {
-    [Table("clublokaal")]
     internal class ClubLokaal
     {
         [Key]
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         // Foreign Key voor Club
         public int ClubId { get; set; }

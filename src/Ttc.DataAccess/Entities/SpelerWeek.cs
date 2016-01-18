@@ -3,15 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ttc.DataAccess.Entities
 {
-    [Table("spelerweek")]
     internal class SpelerWeek
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         // Foreign Key voor Speler
-        public int SpelerID { get; set; }
+        public int SpelerId { get; set; }
 
-        [ForeignKey("SpelerID")]
+        [ForeignKey("SpelerId")]
         public Speler Speler { get; set; }
 
         public string Beschrijving { get; set; }

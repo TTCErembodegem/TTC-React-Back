@@ -3,17 +3,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ttc.DataAccess.Entities
 {
-    [Table("speler")]
     internal class Speler
     {
         [Key]
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         public string Naam { get; set; }
 
-        public string LinkKaartVTTL { get; set; }
+        public string LinkKaartVttl { get; set; }
 
-        public string KlassementVTTL { get; set; }
+        public string KlassementVttl { get; set; }
 
         public string KlassementSporta { get; set; }
 
@@ -21,7 +20,7 @@ namespace Ttc.DataAccess.Entities
 
         public string BesteSlag { get; set; }
 
-        public int? ComputerNummerVTTL { get; set; }
+        public int? ComputerNummerVttl { get; set; }
 
         public string Adres { get; set; }
 
@@ -33,17 +32,17 @@ namespace Ttc.DataAccess.Entities
 
         public string Paswoord { get; set; }
 
-        public int? ClubIdVTTL { get; set; }
+        public int? ClubIdVttl { get; set; }
 
         public int? ClubIdSporta { get; set; }
 
         public string NaamKort { get; set; }
 
-        public int? VolgnummerVTTL { get; set; }
+        public int? VolgnummerVttl { get; set; }
 
-        public int? IndexVTTL { get; set; }
+        public int? IndexVttl { get; set; }
 
-        public int? LidNummerSporta { get; set; }
+        public int? LIdNummerSporta { get; set; }
 
         public int? VolgnummerSporta { get; set; }
 
