@@ -11,10 +11,18 @@ namespace Ttc.WebApi.Controllers
 {
     public class PlayersController : ApiController
     {
+        #region Constructor
+        private readonly PlayerService _playerService;
+
+        public PlayersController(PlayerService playerService)
+        {
+            _playerService = playerService;
+        }
+        #endregion
+
         public IEnumerable<Player> Get()
         {
-            var ps = new PlayerService();
-            return ps.GetActiveOwnClub();
+            return _playerService.GetActiveOwnClub();
         }
     }
 }

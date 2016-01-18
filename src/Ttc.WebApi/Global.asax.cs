@@ -6,6 +6,7 @@ using System.Web.Http;
 using System.Web.Routing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using SimpleInjector;
 using Ttc.DataAccess;
 
 namespace Ttc.WebApi
@@ -15,9 +16,15 @@ namespace Ttc.WebApi
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
-            GlobalBackendConfiguration.Configure();
 
             HttpConfiguration config = GlobalConfiguration.Configuration;
+            ConfigureJson(config);
+
+            GlobalBackendConfiguration.Configure();
+        }
+
+        private static void ConfigureJson(HttpConfiguration config)
+        {
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
             //JsonConvert.DefaultSettings = () => new JsonSerializerSettings

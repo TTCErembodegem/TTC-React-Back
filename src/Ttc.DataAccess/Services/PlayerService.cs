@@ -17,7 +17,7 @@ namespace Ttc.DataAccess.Services
                     .ToArray()
                     .Where(x => !x.IsGestopt && x.IsFromOwnClub());
 
-                return Mapper.Map<IEnumerable<Speler>, IEnumerable<Player>>(activeOwnClubPlayers);
+                return Mapper.Map<IList<Speler>, IList<Player>>(activeOwnClubPlayers.ToList());
             }
         }
     }
