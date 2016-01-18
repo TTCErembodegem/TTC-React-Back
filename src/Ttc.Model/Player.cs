@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Ttc.Model
 {
-    [Table("speler")]
-    public class Speler
+    public class Player
     {
-        [Key]
         public int ID { get; set; }
 
         public string Naam { get; set; }
@@ -54,7 +50,6 @@ namespace Ttc.Model
 
         public int? IndexSporta { get; set; }
 
-        [Column("Gestopt")]
         public int? JaarGestopt { get; set; }
 
         public int? Toegang { get; set; }

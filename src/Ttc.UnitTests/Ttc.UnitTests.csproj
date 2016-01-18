@@ -72,10 +72,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Players\TestSpelerDbSet.cs" />
-    <Compile Include="TestDbSet.cs" />
-    <Compile Include="TestPlayersController.cs" />
-    <Compile Include="TestTtcDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

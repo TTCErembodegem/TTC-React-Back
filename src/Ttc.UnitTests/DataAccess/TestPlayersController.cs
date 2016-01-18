@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
+using Ttc.DataAccess.Entities;
 using Ttc.UnitTests.Players;
 using Ttc.WebApi.Controllers;
-using Ttc.Model;
 
 namespace Ttc.UnitTests
 {

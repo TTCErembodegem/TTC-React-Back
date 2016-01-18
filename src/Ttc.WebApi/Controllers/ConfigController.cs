@@ -13,8 +13,7 @@ namespace Ttc.WebApi.Controllers
     {
         public string Get()
         {
-            using (var x = new TtcDbContext())
-                return x.Spelers.First().Naam;
+            return "";
         }
     }
 }

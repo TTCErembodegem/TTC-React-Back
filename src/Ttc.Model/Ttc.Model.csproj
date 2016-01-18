@@ -45,19 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Club.cs" />
-    <Compile Include="ClubLokaal.cs" />
-    <Compile Include="ClubPloeg.cs" />
-    <Compile Include="ClubPloegSpeler.cs" />
-    <Compile Include="Klassement.cs" />
-    <Compile Include="Match.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reeks.cs" />
-    <Compile Include="Speler.cs" />
-    <Compile Include="Training.cs" />
-    <Compile Include="Verslag.cs" />
-    <Compile Include="VerslagSpeler.cs" />
-    <Compile Include="WeekSpeler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

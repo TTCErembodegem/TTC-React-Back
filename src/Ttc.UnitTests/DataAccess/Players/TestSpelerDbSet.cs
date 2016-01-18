@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Ttc.Model;
+using Ttc.DataAccess.Entities;
 
 namespace Ttc.UnitTests.Players
 {
-    public class TestSpelerDbSet: TestDbSet<Speler>
+    internal class TestSpelerDbSet: TestDbSet<Speler>
     {
         public override Speler Find(params object[] keyValues)
         {

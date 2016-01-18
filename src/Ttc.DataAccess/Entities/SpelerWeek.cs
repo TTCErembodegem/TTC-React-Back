@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Ttc.Model
+namespace Ttc.DataAccess.Entities
 {
     [Table("spelerweek")]
-    public class WeekSpeler
+    internal class SpelerWeek
     {
         public int ID { get; set; }
 

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Ttc.Model
+namespace Ttc.DataAccess.Entities
 {
     [Table("verslagspeler")]
-    public class VerslagSpeler
+    internal class VerslagSpeler
     {
         [Key]
         public int ID { get; set; }

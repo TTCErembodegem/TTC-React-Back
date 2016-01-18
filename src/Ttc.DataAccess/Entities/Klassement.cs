@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Ttc.Model
+namespace Ttc.DataAccess.Entities
 {
     [Table("klassement")]
-    public class Klassement
+    internal class Klassement
     {
         [Key]
         public string Code { get; set; }

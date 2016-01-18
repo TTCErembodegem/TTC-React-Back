@@ -4,17 +4,17 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using Ttc.DataAccess;
+using Ttc.DataAccess.Services;
+using Ttc.Model;
 
 namespace Ttc.WebApi.Controllers
 {
     public class PlayersController : ApiController
     {
-        public IHttpActionResult Get()
+        public IEnumerable<Player> Get()
         {
-            using (var x = new TtcDbContext())
-            {
-                return Json(x.Spelers.ToArray());
-            }
+            var ps = new PlayerService();
+            return ps.Get();
         }
     }
 }

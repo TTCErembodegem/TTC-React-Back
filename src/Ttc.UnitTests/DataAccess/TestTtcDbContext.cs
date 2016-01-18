@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Ttc.DataAccess;
 using Ttc.UnitTests.Players;
-using Ttc.Model;
 using System.Data.Entity;
+using Ttc.DataAccess.Entities;
 
 namespace Ttc.UnitTests
 {
