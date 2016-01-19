@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using AutoMapper;
 using Ttc.DataAccess.Entities;
@@ -13,11 +14,17 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
-                var activeOwnClubPlayers = dbContext.Players
+                var activeOwnClubPlayers = dbContext.Spelers
                     .ToArray()
-                    .Where(x => !x.IsGestopt && x.IsFromOwnClub());
+                    .Where(x => !x.IsGestopt && x.IsFromOwnClub())
+                    .ToList();
 
-                return Mapper.Map<IList<Speler>, IList<Player>>(activeOwnClubPlayers.ToList());
+                var result = Mapper.Map<IList<Speler>, IList<Player>>(activeOwnClubPlayers);
+
+                var first = result.First();
+                Debug.Assert(first.Vttl != null);
+
+                return result;
             }
         }
     }

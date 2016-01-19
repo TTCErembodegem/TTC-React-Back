@@ -19,7 +19,9 @@ namespace Ttc.DataAccess
             Database.SetInitializer<TtcDbContext>(new TtcDbInitializer());
         }
 
-        public DbSet<Speler> Players { get; set; }
+        public DbSet<Speler> Spelers { get; set; }
+        public DbSet<Klassement> Klassementen { get; set; }
+
         //public DbSet<Ttc.Model.Kalender> Kalender { get; set; }
         //public DbSet<Ttc.Model.Club> Clubs { get; set; }
         //public DbSet<Ttc.Model.ClubLokaal> ClubLokalen { get; set; }
