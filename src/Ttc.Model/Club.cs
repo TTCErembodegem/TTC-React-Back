@@ -1,4 +1,6 @@
-﻿namespace Ttc.Model
+﻿using System.Collections.Generic;
+
+namespace Ttc.Model
 {
     public class Club
     {
@@ -9,6 +11,9 @@
         public bool Active { get; set; }
         public bool Shower { get; set; }
         public string Website { get; set; }
+
+        public ClubLocation MainLocation { get; set; }
+        public ICollection<ClubLocation> AlternativeLocations { get; set; }
 
         public override string ToString()
         {

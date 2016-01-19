@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using AutoMapper;
@@ -41,6 +42,19 @@ namespace Ttc.UnitTests
                         Assert.That(speler.VolgnummerSporta, Is.Not.Null);
                     }
                 }
+            }
+        }
+
+        [Test]
+        public void ClubMapping()
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                GlobalBackendConfiguration.ConfigureAutoMapper(new KlassementValueConverter());
+
+                var clubs = dbContext.Clubs.Include(x => x.Lokalen).Where(x => x.Id == 1 || x.Id == 28).ToList();
+                var club = Mapper.Map<IList<ClubEntity>, IList<Club>>(clubs);
+                Assert.That(club.First().MainLocation, Is.Not.Null);
             }
         }
 

@@ -16,9 +16,9 @@ namespace Ttc.DataAccess
     {
         public DbSet<Speler> Spelers { get; set; }
         public DbSet<ClubEntity> Clubs { get; set; }
+        public DbSet<ClubLokaal> ClubLokalen { get; set; }
 
         //public DbSet<Kalender> Kalender { get; set; }
-        //public DbSet<ClubLokaal> ClubLokalen { get; set; }
         //public DbSet<ClubPloeg> ClubPloegen { get; set; }
         //public DbSet<ClubPloegSpeler> ClubPloegSpelers { get; set; }
         //public DbSet<Reeks> Reeksen { get; set; }
@@ -41,6 +41,11 @@ namespace Ttc.DataAccess
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Types().Configure(c => c.ToTable(ToLowerCaseTableName(c.ClrType)));
+
+            modelBuilder.Entity<ClubLokaal>()
+                .HasRequired(c => c.Club)
+                .WithMany(l => l.Lokalen)
+                .HasForeignKey(x => x.ClubId);
         }
 
         private static string ToLowerCaseTableName(Type clrType)

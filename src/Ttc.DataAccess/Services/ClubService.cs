@@ -4,6 +4,7 @@ using System.Linq;
 using AutoMapper;
 using Ttc.DataAccess.Entities;
 using Ttc.Model;
+using System.Data.Entity;
 
 namespace Ttc.DataAccess.Services
 {
@@ -14,8 +15,11 @@ namespace Ttc.DataAccess.Services
             using (var dbContext = new TtcDbContext())
             {
                 var activeClubs = dbContext.Clubs
+                    .Include(x => x.Lokalen)
                     .Where(x => x.Actief.HasValue && x.Actief == 1)
                     .ToList();
+
+                // Include ClubContact
 
                 var result = Mapper.Map<IList<ClubEntity>, IList<Club>>(activeClubs);
                 return result;

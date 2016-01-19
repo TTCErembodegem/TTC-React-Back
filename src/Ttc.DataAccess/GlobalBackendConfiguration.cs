@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Linq.Expressions;
 using AutoMapper;
 using SimpleInjector;
@@ -26,9 +29,10 @@ namespace Ttc.DataAccess
             ClubMapping();
         }
 
+        #region Clubs
         private static void ClubMapping()
         {
-        Mapper.CreateMap<ClubEntity, Club>()
+            Mapper.CreateMap<ClubEntity, Club>()
                 .ForMember(
                     dest => dest.Name,
                     opts => opts.MapFrom(src => src.Naam))
@@ -38,8 +42,50 @@ namespace Ttc.DataAccess
                 .ForMember(
                     dest => dest.Shower,
                     opts => opts.MapFrom(src => src.Douche == 1))
-                ;
+                .ForMember(
+                    dest => dest.MainLocation,
+                    opts => opts.MapFrom(src => CreateMainClubLocation(src.Lokalen)))
+                .ForMember(
+                    dest => dest.AlternativeLocations,
+                    opts => opts.MapFrom(src => CreateSecundaryClubLocations(src.Lokalen)));
         }
+
+        private static ICollection<ClubLocation> CreateSecundaryClubLocations(ICollection<ClubLokaal> lokalen)
+        {
+            var locations = lokalen.Where(x => !x.Hoofd.HasValue || x.Hoofd != 1).ToArray();
+            if (!locations.Any())
+            {
+                return new Collection<ClubLocation>();
+            }
+            return locations.Select(CreateClubLocation).ToArray();
+        }
+
+        private static ClubLocation CreateMainClubLocation(ICollection<ClubLokaal> lokalen)
+        {
+            var mainLocation = lokalen.FirstOrDefault(x => x.Hoofd.HasValue && x.Hoofd == 1);
+            if (mainLocation == null)
+            {
+                return null;
+            }
+            return CreateClubLocation(mainLocation);
+        }
+
+        private static ClubLocation CreateClubLocation(ClubLokaal location)
+        {
+            return new ClubLocation
+            {
+                Id = location.Id,
+                Description = location.Lokaal,
+                Contact = new Contact
+                {
+                    Address = location.Adres,
+                    City = $"{location.Postcode} {location.Gemeente}",
+                    Email = null,
+                    Mobile = location.Telefoon
+                }
+            };
+        }
+        #endregion
 
         #region Automapper Player
         private static void PlayerMapping(KlassementValueConverter klassementToValueConverter)
