@@ -9,20 +9,20 @@ using Ttc.Model;
 
 namespace Ttc.WebApi.Controllers
 {
-    public class PlayersController : ApiController
+    public class ClubsController : ApiController
     {
         #region Constructor
-        private readonly PlayerService _service;
+        private readonly ClubService _service;
 
-        public PlayersController(PlayerService service)
+        public ClubsController(ClubService service)
         {
             _service = service;
         }
         #endregion
 
-        public IEnumerable<Player> Get()
+        public IEnumerable<Club> Get()
         {
-            return _service.GetActiveOwnClub();
+            return _service.GetActiveClubs();
         }
     }
 }

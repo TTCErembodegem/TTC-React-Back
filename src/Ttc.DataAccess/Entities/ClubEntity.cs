@@ -3,21 +3,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ttc.DataAccess.Entities
 {
-    internal class Club
+    /// <summary>
+    /// Entity suffix: Otherwise conflict with <see cref="Model.Club"/>
+    /// </summary>
+    [Table("club")]
+    internal class ClubEntity
     {
         [Key]
         public int Id { get; set; }
-
         public string Naam { get; set; }
-
         public string CodeVttl { get; set; }
-
+        public string CodeSporta { get; set; }
         public int? Actief { get; set; }
-
         public int? Douche { get; set; }
-
         public string Website { get; set; }
 
-        public string CodeSporta { get; set; }
+
+        public override string ToString()
+        {
+            return $"Id={Id}, Name={Naam}, Vttl={CodeVttl}, Sporta={CodeSporta}, Active={Actief}";
+        }
     }
 }

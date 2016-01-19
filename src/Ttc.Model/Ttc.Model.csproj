@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Club.cs" />
     <Compile Include="Contact.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PlayerCompetition.cs" />

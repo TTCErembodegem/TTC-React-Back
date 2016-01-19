@@ -22,6 +22,28 @@ namespace Ttc.DataAccess
 
         internal static void ConfigureAutoMapper(KlassementValueConverter klassementToValueConverter)
         {
+            PlayerMapping(klassementToValueConverter);
+            ClubMapping();
+        }
+
+        private static void ClubMapping()
+        {
+        Mapper.CreateMap<ClubEntity, Club>()
+                .ForMember(
+                    dest => dest.Name,
+                    opts => opts.MapFrom(src => src.Naam))
+                .ForMember(
+                    dest => dest.Active,
+                    opts => opts.MapFrom(src => src.Actief))
+                .ForMember(
+                    dest => dest.Shower,
+                    opts => opts.MapFrom(src => src.Douche == 1))
+                ;
+        }
+
+        #region Automapper Player
+        private static void PlayerMapping(KlassementValueConverter klassementToValueConverter)
+        {
             Mapper.CreateMap<Speler, Player>()
                 .ForMember(
                     dest => dest.Name,
@@ -64,5 +86,6 @@ namespace Ttc.DataAccess
                 Competition.Vttl,
                 clubId, uniqueIndex, frenoyLink, ranking, position, rankingIndex, converter.Vttl(ranking));
         }
+        #endregion
     }
 }

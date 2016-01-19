@@ -13,17 +13,17 @@ namespace Ttc.WebApi.Controllers
     public class ConfigController : ApiController
     {
         #region Constructor
-        private readonly ConfigService _configService;
+        private readonly ConfigService _service;
 
-        public ConfigController(ConfigService configService)
+        public ConfigController(ConfigService service)
         {
-            _configService = configService;
+            _service = service;
         }
         #endregion
 
         public object Get()
         {
-            return _configService.Get();
+            return _service.Get();
         }
     }
 }

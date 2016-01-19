@@ -69,7 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
-    <Compile Include="Entities\Club.cs" />
+    <Compile Include="Entities\ClubEntity.cs" />
     <Compile Include="Entities\ClubLokaal.cs" />
     <Compile Include="Entities\ClubPloeg.cs" />
     <Compile Include="Entities\ClubPloegSpeler.cs" />
@@ -81,6 +81,7 @@
     <Compile Include="Entities\VerslagSpeler.cs" />
     <Compile Include="Entities\SpelerWeek.cs" />
     <Compile Include="GlobalBackendConfiguration.cs" />
+    <Compile Include="Services\ClubService.cs" />
     <Compile Include="Services\ConfigService.cs" />
     <Compile Include="Services\PlayerService.cs" />
     <Compile Include="TtcDbContext.cs" />

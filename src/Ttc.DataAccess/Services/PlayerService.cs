@@ -20,10 +20,6 @@ namespace Ttc.DataAccess.Services
                     .ToList();
 
                 var result = Mapper.Map<IList<Speler>, IList<Player>>(activeOwnClubPlayers);
-
-                var first = result.First();
-                Debug.Assert(first.Vttl != null);
-
                 return result;
             }
         }

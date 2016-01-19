@@ -15,16 +15,16 @@ namespace Ttc.DataAccess
     internal class TtcDbContext : DbContext
     {
         public DbSet<Speler> Spelers { get; set; }
+        public DbSet<ClubEntity> Clubs { get; set; }
 
-        //public DbSet<Ttc.Model.Kalender> Kalender { get; set; }
-        //public DbSet<Ttc.Model.Club> Clubs { get; set; }
-        //public DbSet<Ttc.Model.ClubLokaal> ClubLokalen { get; set; }
-        //public DbSet<Ttc.Model.ClubPloeg> ClubPloegen { get; set; }
-        //public DbSet<Ttc.Model.ClubPloegSpeler> ClubPloegSpelers { get; set; }
-        //public DbSet<Ttc.Model.Reeks> Reeksen { get; set; }
-        //public DbSet<Ttc.Model.Training> Trainingen { get; set; }
-        //public DbSet<Ttc.Model.Verslag> Verslagen { get; set; }
-        //public DbSet<Ttc.Model.VerslagSpeler> SpelersVerslag { get; set; }
+        //public DbSet<Kalender> Kalender { get; set; }
+        //public DbSet<ClubLokaal> ClubLokalen { get; set; }
+        //public DbSet<ClubPloeg> ClubPloegen { get; set; }
+        //public DbSet<ClubPloegSpeler> ClubPloegSpelers { get; set; }
+        //public DbSet<Reeks> Reeksen { get; set; }
+        //public DbSet<Training> Trainingen { get; set; }
+        //public DbSet<Verslag> Verslagen { get; set; }
+        //public DbSet<VerslagSpeler> SpelersVerslag { get; set; }
 
         // Used by the legacy website
         //public DbSet<Ttc.Model.Klassement> Klassementen { get; set; }
