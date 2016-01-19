@@ -27,6 +27,8 @@ namespace Ttc.DataAccess.Entities
             protected set { _lokalen = value; }
         }
 
+        public virtual ICollection<ClubContact> Contacten { get; protected set; }
+
         public override string ToString()
         {
             return $"Id={Id}, Name={Naam}, Vttl={CodeVttl}, Sporta={CodeSporta}, Active={Actief}";

@@ -16,10 +16,9 @@ namespace Ttc.DataAccess.Services
             {
                 var activeClubs = dbContext.Clubs
                     .Include(x => x.Lokalen)
+                    .Include(x => x.Contacten)
                     .Where(x => x.Actief.HasValue && x.Actief == 1)
                     .ToList();
-
-                // Include ClubContact
 
                 var result = Mapper.Map<IList<ClubEntity>, IList<Club>>(activeClubs);
                 return result;

@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Club.cs" />
     <Compile Include="ClubLocation.cs" />
+    <Compile Include="ClubManager.cs" />
     <Compile Include="Contact.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PlayerCompetition.cs" />

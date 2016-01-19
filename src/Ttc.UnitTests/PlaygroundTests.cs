@@ -52,7 +52,7 @@ namespace Ttc.UnitTests
             {
                 GlobalBackendConfiguration.ConfigureAutoMapper(new KlassementValueConverter());
 
-                var clubs = dbContext.Clubs.Include(x => x.Lokalen).Where(x => x.Id == 1 || x.Id == 28).ToList();
+                var clubs = dbContext.Clubs.Include(x => x.Contacten).Where(x => x.Id == 1 || x.Id == 28).ToList();
                 var club = Mapper.Map<IList<ClubEntity>, IList<Club>>(clubs);
                 Assert.That(club.First().MainLocation, Is.Not.Null);
             }

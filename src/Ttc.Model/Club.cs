@@ -15,6 +15,11 @@ namespace Ttc.Model
         public ClubLocation MainLocation { get; set; }
         public ICollection<ClubLocation> AlternativeLocations { get; set; }
 
+        /// <summary>
+        /// Voorzitter, secretaris, ...
+        /// </summary>
+        public ICollection<ClubManager> Managers { get; set; }
+
         public override string ToString()
         {
             return $"Id={Id}, Name={Name}, Vttl={CodeVttl}, Sporta={CodeSporta}, Active={Active}";
