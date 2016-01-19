@@ -28,6 +28,7 @@ namespace Ttc.WebApi
         private static void InitializeContainer(Container container)
         {
             container.Register<PlayerService, PlayerService>(Lifestyle.Scoped);
+            container.Register<ConfigService, ConfigService>(Lifestyle.Scoped);
         }
     }
 }

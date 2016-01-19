@@ -5,7 +5,7 @@
     /// </summary>
     public class PlayerCompetition
     {
-        public Competition Competition { get; set; }
+        public string Competition { get; set; }
         public int ClubId { get; set; }
         public string FrenoyLink { get; set; }
         public string Ranking { get; set; }
@@ -37,7 +37,7 @@
 
         public PlayerCompetition(Competition competition, int clubId, int uniqueIndex, string frenoyLink, string ranking, int position, int rankingIndex, int rankingValue)
         {
-            Competition = competition;
+            Competition = competition.ToString();
             ClubId = clubId;
             FrenoyLink = frenoyLink;
             Ranking = ranking;
@@ -45,20 +45,6 @@
             UniqueIndex = uniqueIndex;
             RankingIndex = rankingIndex;
             RankingValue = rankingValue;
-        }
-
-        public static PlayerCompetition Sporta(int clubId, int uniqueIndex, string frenoyLink, string ranking, int position, int rankingIndex, int rankingValue)
-        {
-            return new PlayerCompetition(
-                Competition.Sporta,
-                clubId, uniqueIndex, frenoyLink, ranking, position, rankingIndex, rankingValue);
-        }
-
-        public static PlayerCompetition Vttl(int clubId, int uniqueIndex, string frenoyLink, string ranking, int position, int rankingIndex, int rankingValue)
-        {
-            return new PlayerCompetition(
-                Competition.Vttl,
-                clubId, uniqueIndex, frenoyLink, ranking, position, rankingIndex, rankingValue);
         }
 
         public override string ToString()

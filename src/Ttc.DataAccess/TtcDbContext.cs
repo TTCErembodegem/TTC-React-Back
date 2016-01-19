@@ -14,25 +14,28 @@ namespace Ttc.DataAccess
 {
     internal class TtcDbContext : DbContext
     {
-        public TtcDbContext() : base("ttc")
-        {
-            Database.SetInitializer<TtcDbContext>(new TtcDbInitializer());
-        }
-
         public DbSet<Speler> Spelers { get; set; }
-        public DbSet<Klassement> Klassementen { get; set; }
 
         //public DbSet<Ttc.Model.Kalender> Kalender { get; set; }
         //public DbSet<Ttc.Model.Club> Clubs { get; set; }
         //public DbSet<Ttc.Model.ClubLokaal> ClubLokalen { get; set; }
         //public DbSet<Ttc.Model.ClubPloeg> ClubPloegen { get; set; }
         //public DbSet<Ttc.Model.ClubPloegSpeler> ClubPloegSpelers { get; set; }
-        //public DbSet<Ttc.Model.Klassement> Klassementen { get; set; }
         //public DbSet<Ttc.Model.Reeks> Reeksen { get; set; }
         //public DbSet<Ttc.Model.Training> Trainingen { get; set; }
         //public DbSet<Ttc.Model.Verslag> Verslagen { get; set; }
         //public DbSet<Ttc.Model.VerslagSpeler> SpelersVerslag { get; set; }
+
+        // Used by the legacy website
+        //public DbSet<Ttc.Model.Klassement> Klassementen { get; set; }
+
+        // No longer in use
         //public DbSet<Ttc.Model.WeekSpeler> SpelerVanDeWeek { get; set; }
+
+        public TtcDbContext() : base("ttc")
+        {
+            Database.SetInitializer<TtcDbContext>(new TtcDbInitializer());
+        }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

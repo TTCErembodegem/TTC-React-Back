@@ -19,5 +19,10 @@ namespace Ttc.Model
 
         public PlayerCompetition Vttl { get; set; }
         public PlayerCompetition Sporta { get; set; }
+
+        public override string ToString()
+        {
+            return $"Id={Id}, Alias={Alias}, IsActive={IsActive}";
+        }
     }
 }

@@ -6,14 +6,24 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using Ttc.DataAccess;
+using Ttc.DataAccess.Services;
 
 namespace Ttc.WebApi.Controllers
 {
     public class ConfigController : ApiController
     {
-        public string Get()
+        #region Constructor
+        private readonly ConfigService _configService;
+
+        public ConfigController(ConfigService configService)
         {
-            return "";
+            _configService = configService;
+        }
+        #endregion
+
+        public object Get()
+        {
+            return _configService.Get();
         }
     }
 }

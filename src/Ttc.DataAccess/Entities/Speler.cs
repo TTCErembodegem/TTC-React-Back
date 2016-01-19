@@ -22,9 +22,6 @@ namespace Ttc.DataAccess.Entities
         public string KlassementVttl { get; set; }
         public int? ComputerNummerVttl { get; set; }
         public int? VolgnummerVttl { get; set; }
-
-        [ForeignKey("KlassementVttl")]
-        public Klassement KlassementWaardeVttl { get; set; }
         #endregion
 
         #region Sporta
@@ -34,9 +31,6 @@ namespace Ttc.DataAccess.Entities
         public string KlassementSporta { get; set; }
         public int? LidNummerSporta { get; set; }
         public int? VolgnummerSporta { get; set; }
-
-        [ForeignKey("KlassementSporta")]
-        public Klassement KlassementWaardeSporta { get; set; }
         #endregion
 
         #region Address

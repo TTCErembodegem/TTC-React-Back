@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using AutoMapper;
 using SimpleInjector;
 using Ttc.DataAccess.Entities;
+using Ttc.DataAccess.Utilities;
 using Ttc.Model;
 
 namespace Ttc.DataAccess
@@ -11,7 +12,7 @@ namespace Ttc.DataAccess
     {
         public static void Configure()
         {
-            ConfigureAutoMapper();
+            ConfigureAutoMapper(new KlassementValueConverter());
         }
 
         public static void ConfigureIoC(Container container)
@@ -19,7 +20,7 @@ namespace Ttc.DataAccess
 
         }
 
-        private static void ConfigureAutoMapper()
+        internal static void ConfigureAutoMapper(KlassementValueConverter klassementToValueConverter)
         {
             Mapper.CreateMap<Speler, Player>()
                 .ForMember(
@@ -40,19 +41,28 @@ namespace Ttc.DataAccess
                 .ForMember(
                     dest => dest.Vttl,
                     opts => opts.MapFrom(src => src.ClubIdVttl.HasValue ?
-                        PlayerCompetition.Vttl(src.ClubIdVttl.Value, src.ComputerNummerVttl.Value, src.LinkKaartVttl, src.KlassementVttl, src.VolgnummerVttl.Value, src.IndexVttl.Value, src.KlassementWaardeVttl.WaardeVttl) :
-                        null))
-                //.ForMember(
-                //    dest => dest.Vttl,
-                //    opts => opts.MapFrom(src => src.ClubIdVttl.HasValue ?
-                //        PlayerCompetition.Vttl(src.ClubIdVttl.Value, src.ComputerNummerVttl.Value, src.LinkKaartVttl, src.KlassementVttl, src.VolgnummerVttl.Value, src.IndexVttl.Value, src.KlassementWaardeVttl.WaardeVttl) :
-                //        null))
-                //.ForMember(
-                //    dest => dest.Sporta,
-                //    opts => opts.MapFrom(src => src.ClubIdSporta.HasValue ?
-                //        PlayerCompetition.Sporta(src.ClubIdSporta.Value, src.LidNummerSporta.Value, src.LinkKaartSporta, src.KlassementSporta, src.VolgnummerSporta.Value, src.IndexSporta.Value, src.KlassementWaardeSporta.WaardeSporta)
-                //        : null))
+                        CreateVttlPlayer(klassementToValueConverter, src.ClubIdVttl.Value, src.ComputerNummerVttl.Value, src.LinkKaartVttl, src.KlassementVttl, src.VolgnummerVttl.Value, src.IndexVttl.Value)
+                        : null))
+                .ForMember(
+                    dest => dest.Sporta,
+                    opts => opts.MapFrom(src => src.ClubIdSporta.HasValue ?
+                        CreateSportaPlayer(klassementToValueConverter, src.ClubIdSporta.Value, src.LidNummerSporta.Value, src.LinkKaartSporta, src.KlassementSporta, src.VolgnummerSporta.Value, src.IndexSporta.Value)
+                        : null))
                 ;
+        }
+
+        private static PlayerCompetition CreateSportaPlayer(KlassementValueConverter converter, int clubId, int uniqueIndex, string frenoyLink, string ranking, int position, int rankingIndex)
+        {
+            return new PlayerCompetition(
+                Competition.Sporta,
+                clubId, uniqueIndex, frenoyLink, ranking, position, rankingIndex, converter.Sporta(ranking));
+        }
+
+        private static PlayerCompetition CreateVttlPlayer(KlassementValueConverter converter, int clubId, int uniqueIndex, string frenoyLink, string ranking, int position, int rankingIndex)
+        {
+            return new PlayerCompetition(
+                Competition.Vttl,
+                clubId, uniqueIndex, frenoyLink, ranking, position, rankingIndex, converter.Vttl(ranking));
         }
     }
 }
