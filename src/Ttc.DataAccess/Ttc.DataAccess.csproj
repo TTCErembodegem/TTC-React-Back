@@ -82,8 +82,10 @@
     <Compile Include="Entities\VerslagSpeler.cs" />
     <Compile Include="Entities\SpelerWeek.cs" />
     <Compile Include="GlobalBackendConfiguration.cs" />
+    <Compile Include="Services\CalendarService.cs" />
     <Compile Include="Services\ClubService.cs" />
     <Compile Include="Services\ConfigService.cs" />
+    <Compile Include="Services\DivisionService.cs" />
     <Compile Include="Services\PlayerService.cs" />
     <Compile Include="TtcDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

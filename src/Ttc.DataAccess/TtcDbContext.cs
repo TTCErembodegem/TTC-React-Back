@@ -19,13 +19,18 @@ namespace Ttc.DataAccess
         public DbSet<ClubLokaal> ClubLokalen { get; set; }
         public DbSet<ClubContact> ClubContacten { get; set; }
 
-        //public DbSet<Kalender> Kalender { get; set; }
-        //public DbSet<ClubPloeg> ClubPloegen { get; set; }
+        public DbSet<Reeks> Reeksen { get; set; }
+        public DbSet<ClubPloeg> ClubPloegen { get; set; }
+        public DbSet<Kalender> Kalender { get; set; }
+
         //public DbSet<ClubPloegSpeler> ClubPloegSpelers { get; set; }
-        //public DbSet<Reeks> Reeksen { get; set; }
-        //public DbSet<Training> Trainingen { get; set; }
+
+
         //public DbSet<Verslag> Verslagen { get; set; }
         //public DbSet<VerslagSpeler> SpelersVerslag { get; set; }
+
+        // To be evaluated:
+        //public DbSet<Training> Trainingen { get; set; }
 
         // Used by the legacy website
         //public DbSet<Ttc.Model.Klassement> Klassementen { get; set; }
@@ -52,6 +57,11 @@ namespace Ttc.DataAccess
                 .HasRequired(c => c.Club)
                 .WithMany(c => c.Contacten)
                 .HasForeignKey(x => x.ClubId);
+
+            modelBuilder.Entity<ClubPloeg>()
+                .HasRequired(c => c.Reeks)
+                .WithMany(c => c.Ploegen)
+                .HasForeignKey(x => x.ReeksId);
         }
 
         private static string ToLowerCaseTableName(Type clrType)

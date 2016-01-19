@@ -7,19 +7,16 @@ namespace Ttc.DataAccess.Entities
     {
         [Key]
         public int Id { get; set; }
-
-        // Foreign Key voor Reeks
         public int? ReeksId { get; set; }
-
-        // Foreign Key voor Club
+        public Reeks Reeks { get; set; }
         public int? ClubId { get; set; }
 
         //[ForeignKey("ClubId")]
         //public Club Club { get; set; }
 
-        //[ForeignKey("ReeksId")]
-        //public Reeks Reeks { get; set; }
-
+        /// <summary>
+        /// Team A, B, C, ...
+        /// </summary>
         public string Code { get; set; }
     }
 }

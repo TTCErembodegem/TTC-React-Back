@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
@@ -42,6 +43,44 @@ namespace Ttc.UnitTests
                         Assert.That(speler.VolgnummerSporta, Is.Not.Null);
                     }
                 }
+            }
+        }
+
+        [Test]
+        public void ReeksMapping()
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                GlobalBackendConfiguration.ConfigureAutoMapper(new KlassementValueConverter());
+
+                var calendar = dbContext.Reeksen
+                    .Where(x => x.Jaar.Value == 2015)
+                    .ToList();
+
+
+                var club = Mapper.Map<IList<Reeks>, IList<Division>>(calendar);
+                Assert.That(club.First().Year, Is.EqualTo(2015));
+            }
+        }
+
+        [Test]
+        public void CalendarMapping()
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                GlobalBackendConfiguration.ConfigureAutoMapper(new KlassementValueConverter());
+
+                var dateBegin = DateTime.Now.AddDays(-7);
+                var dateEnd = DateTime.Now.AddDays(7);
+
+                var calendar = dbContext.Kalender
+                    .Where(x => x.Datum >= dateBegin)
+                    .Where(x => x.Datum <= dateEnd)
+                    .ToList();
+
+
+                //var club = Mapper.Map<IList<ClubEntity>, IList<Club>>(clubs);
+                //Assert.That(club.First().MainLocation, Is.Not.Null);
             }
         }
 

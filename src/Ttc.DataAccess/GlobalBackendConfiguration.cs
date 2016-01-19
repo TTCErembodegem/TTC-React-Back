@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using AutoMapper;
@@ -27,7 +28,67 @@ namespace Ttc.DataAccess
         {
             PlayerMapping(klassementToValueConverter);
             ClubMapping();
+            CalendarMapping();
+            DivisionMapping();
         }
+
+        private static void DivisionMapping()
+        {
+            Mapper.CreateMap<Reeks, Division>()
+                .ForMember(
+                    dest => dest.Competition,
+                    opts => opts.MapFrom(src => Constants.NormalizeCompetition(src.Competitie)))
+                .ForMember(
+                    dest => dest.Year,
+                    opts => opts.MapFrom(src => src.Jaar.Value))
+                .ForMember(
+                    dest => dest.DivisionName,
+                    opts => opts.MapFrom(src => src.ReeksNummer + src.ReeksCode))
+                .ForMember(
+                    dest => dest.Frenoy,
+                    opts => opts.MapFrom(src => new FrenoyTeam
+                    {
+                        DivisionId = src.FrenoyDivisionId,
+                        LinkId = src.LinkId,
+                        TeamId = src.FrenoyTeamId
+                    }))
+                //.ForMember(
+                //    dest => dest.TeamCode,
+                //    opts => opts.MapFrom(src => src.))
+                ;
+        }
+
+        //private static Division CreateDivision(Reeks src)
+        //{
+        //    Debug.Assert(src.Jaar.HasValue);
+        //    return new Division
+        //    {
+        //        Id = src.Id,
+        //        Competition = Constants.NormalizeCompetition(src.Competitie),
+        //        Year = src.Jaar.Value,
+        //        DivisionName = src.ReeksNummer + src.ReeksCode,
+        //        Frenoy = new FrenoyTeam
+        //        {
+        //            DivisionId = src.FrenoyDivisionId,
+        //            LinkId = src.LinkId,
+        //            TeamId = src.FrenoyTeamId
+        //        }
+        //    };
+        //}
+
+        #region CalendarItems
+        private static void CalendarMapping()
+        {
+            Mapper.CreateMap<Kalender, Match>()
+                .ForMember(
+                    dest => dest.Date,
+                    opts => opts.MapFrom(src => src.Datum + src.Uur))
+               .ForMember(
+                    dest => dest.IsHomeMatch,
+                    opts => opts.MapFrom(src => src.Thuis.HasValue && src.Thuis == 1))
+            ;
+        }
+        #endregion
 
         #region Clubs
         private static void ClubMapping()
@@ -103,7 +164,7 @@ namespace Ttc.DataAccess
         }
         #endregion
 
-        #region Automapper Player
+        #region Players
         private static void PlayerMapping(KlassementValueConverter klassementToValueConverter)
         {
             Mapper.CreateMap<Speler, Player>()

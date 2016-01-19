@@ -30,6 +30,7 @@ namespace Ttc.WebApi
             container.Register<PlayerService, PlayerService>(Lifestyle.Scoped);
             container.Register<ConfigService, ConfigService>(Lifestyle.Scoped);
             container.Register<ClubService, ClubService>(Lifestyle.Scoped);
+            container.Register<DivisionService, DivisionService>(Lifestyle.Scoped);
         }
     }
 }

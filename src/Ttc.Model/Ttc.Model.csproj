@@ -45,6 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Division.cs" />
+    <Compile Include="FrenoyTeam.cs" />
+    <Compile Include="Match.cs" />
     <Compile Include="Club.cs" />
     <Compile Include="ClubLocation.cs" />
     <Compile Include="ClubManager.cs" />
@@ -53,6 +56,7 @@
     <Compile Include="PlayerCompetition.cs" />
     <Compile Include="PlayerStyle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Team.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
