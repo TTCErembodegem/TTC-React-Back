@@ -77,14 +77,9 @@
     <Compile Include="Entities\ClubEntity.cs" />
     <Compile Include="Entities\ClubLokaal.cs" />
     <Compile Include="Entities\ClubPloeg.cs" />
-    <Compile Include="Entities\ClubPloegSpeler.cs" />
     <Compile Include="Entities\Kalender.cs" />
     <Compile Include="Entities\Reeks.cs" />
     <Compile Include="Entities\Speler.cs" />
-    <Compile Include="Entities\Training.cs" />
-    <Compile Include="Entities\Verslag.cs" />
-    <Compile Include="Entities\VerslagSpeler.cs" />
-    <Compile Include="Entities\SpelerWeek.cs" />
     <Compile Include="GlobalBackendConfiguration.cs" />
     <Compile Include="Services\CalendarService.cs" />
     <Compile Include="Services\ClubService.cs" />

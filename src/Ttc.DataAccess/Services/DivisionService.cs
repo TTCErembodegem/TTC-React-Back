@@ -8,6 +8,7 @@ using Ttc.DataAccess.Entities;
 using Ttc.Model;
 using System.Data.Entity;
 using Omu.ValueInjecter;
+using Ttc.Model.Divisions;
 using Mapper = AutoMapper.Mapper;
 
 namespace Ttc.DataAccess.Services
@@ -29,7 +30,7 @@ namespace Ttc.DataAccess.Services
                 // filter out own team
                 foreach (var division in result)
                 {
-                    division.Opponents = division.Opponents.Where(x => x.ClubId != Constants.OwnClubId || x.Code != division.TeamCode).ToArray();
+                    division.Opponents = division.Opponents.Where(x => x.ClubId != Constants.OwnClubId || x.TeamCode != division.TeamCode).ToArray();
                 }
 
                 return result.Concat(otherTeamDivisions).ToArray();
@@ -50,8 +51,8 @@ namespace Ttc.DataAccess.Services
                 {
                     var clone = new Division();
                     clone.InjectFrom(division);
-                    clone.TeamCode = otherOwnTeam.Code;
-                    clone.Opponents = division.Opponents.Where(x => x.ClubId != Constants.OwnClubId || x.Code != otherOwnTeam.Code).ToArray();
+                    clone.TeamCode = otherOwnTeam.TeamCode;
+                    clone.Opponents = division.Opponents.Where(x => x.ClubId != Constants.OwnClubId || x.TeamCode != otherOwnTeam.TeamCode).ToArray();
 
                     otherTeamDivisions.Add(clone);
                 }

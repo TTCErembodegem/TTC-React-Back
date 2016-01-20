@@ -11,6 +11,8 @@ using Ttc.DataAccess.Entities;
 using Ttc.DataAccess.Services;
 using Ttc.DataAccess.Utilities;
 using Ttc.Model;
+using Ttc.Model.Clubs;
+using Ttc.Model.Players;
 
 namespace Ttc.UnitTests
 {

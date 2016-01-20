@@ -6,6 +6,7 @@ using System.Web.Http;
 using Ttc.DataAccess;
 using Ttc.DataAccess.Services;
 using Ttc.Model;
+using Ttc.Model.Players;
 
 namespace Ttc.WebApi.Controllers
 {

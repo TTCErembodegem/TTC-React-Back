@@ -5,6 +5,7 @@ using AutoMapper;
 using Ttc.DataAccess.Entities;
 using Ttc.Model;
 using System.Data.Entity;
+using Ttc.Model.Clubs;
 
 namespace Ttc.DataAccess.Services
 {

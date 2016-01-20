@@ -1,9 +1,9 @@
-﻿namespace Ttc.Model
+﻿namespace Ttc.Model.Divisions
 {
     /// <summary>
     /// Team details for linking with Frenoy
     /// </summary>
-    public class FrenoyTeam
+    public class FrenoyTeamLinks
     {
         /// <summary>
         /// Frenoy's unique division identifier

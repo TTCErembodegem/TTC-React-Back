@@ -1,4 +1,4 @@
-﻿namespace Ttc.Model
+﻿namespace Ttc.Model.Clubs
 {
     /// <summary>
     /// Voorzitter, secretaris, ...

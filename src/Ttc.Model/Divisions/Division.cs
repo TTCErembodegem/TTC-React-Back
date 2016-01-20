@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace Ttc.Model
+namespace Ttc.Model.Divisions
 {
+    /// <summary>
+    /// Division details for one TTC Erembodegem Team
+    /// </summary>
     public class Division
     {
         /// <summary>
@@ -13,7 +16,7 @@ namespace Ttc.Model
         /// TTC Erembodegem Team code (A, B, C, ...)
         /// </summary>
         public string TeamCode { get; set; }
-        public ICollection<Team> Opponents { get; set; }
+        public ICollection<OpposingTeams> Opponents { get; set; }
 
         /// <summary>
         /// Vttl or Sporta
@@ -28,9 +31,9 @@ namespace Ttc.Model
         public string DivisionName { get; set; }
 
         /// <summary>
-        /// Links to Frenoy website and API
+        /// Links to Frenoy website and API details of TTC Erembodegem Team
         /// </summary>
-        public FrenoyTeam Frenoy { get; set; }
+        public FrenoyTeamLinks Frenoy { get; set; }
 
         public override string ToString()
         {

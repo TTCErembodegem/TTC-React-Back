@@ -2,11 +2,12 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Ttc.Model.Clubs;
 
 namespace Ttc.DataAccess.Entities
 {
     /// <summary>
-    /// Entity suffix: Otherwise conflict with <see cref="Model.Club"/>
+    /// Entity suffix: Otherwise conflict with <see cref="Club"/>
     /// </summary>
     [Table("club")]
     internal class ClubEntity

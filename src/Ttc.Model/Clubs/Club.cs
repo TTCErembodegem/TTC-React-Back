@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Ttc.Model
+namespace Ttc.Model.Clubs
 {
     public class Club
     {

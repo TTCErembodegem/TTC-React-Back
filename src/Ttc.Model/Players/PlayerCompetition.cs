@@ -1,4 +1,4 @@
-﻿namespace Ttc.Model
+﻿namespace Ttc.Model.Players
 {
     /// <summary>
     /// Details for VTTL or Sporta competition

@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Ttc.DataAccess.Services;
 using Ttc.Model;
+using Ttc.Model.Divisions;
 
 namespace Ttc.WebApi.Controllers
 {

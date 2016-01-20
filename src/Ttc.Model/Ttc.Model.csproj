@@ -45,18 +45,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Division.cs" />
-    <Compile Include="FrenoyTeam.cs" />
+    <Compile Include="Divisions\Division.cs" />
+    <Compile Include="Divisions\FrenoyTeamLinks.cs" />
     <Compile Include="Match.cs" />
-    <Compile Include="Club.cs" />
-    <Compile Include="ClubLocation.cs" />
-    <Compile Include="ClubManager.cs" />
+    <Compile Include="Clubs\Club.cs" />
+    <Compile Include="Clubs\ClubLocation.cs" />
+    <Compile Include="Clubs\ClubManager.cs" />
     <Compile Include="Contact.cs" />
-    <Compile Include="Player.cs" />
-    <Compile Include="PlayerCompetition.cs" />
-    <Compile Include="PlayerStyle.cs" />
+    <Compile Include="Players\Player.cs" />
+    <Compile Include="Players\PlayerCompetition.cs" />
+    <Compile Include="Players\PlayerStyle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Team.cs" />
+    <Compile Include="Divisions\OpposingTeams.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

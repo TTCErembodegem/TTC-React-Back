@@ -9,6 +9,9 @@ using SimpleInjector;
 using Ttc.DataAccess.Entities;
 using Ttc.DataAccess.Utilities;
 using Ttc.Model;
+using Ttc.Model.Clubs;
+using Ttc.Model.Divisions;
+using Ttc.Model.Players;
 
 namespace Ttc.DataAccess
 {
@@ -46,7 +49,7 @@ namespace Ttc.DataAccess
                     opts => opts.MapFrom(src => src.ReeksNummer + src.ReeksCode))
                 .ForMember(
                     dest => dest.Frenoy,
-                    opts => opts.MapFrom(src => new FrenoyTeam
+                    opts => opts.MapFrom(src => new FrenoyTeamLinks
                     {
                         DivisionId = src.FrenoyDivisionId,
                         LinkId = src.LinkId,
@@ -65,12 +68,12 @@ namespace Ttc.DataAccess
         /// Map all teams including TTC Erembodegem.
         /// We'll fix this later because multiple TTC Erembodegems could be playing in same Reeks
         /// </summary>
-        private static ICollection<Team> MapAllTeams(Reeks src)
+        private static ICollection<OpposingTeams> MapAllTeams(Reeks src)
         {
-            return src.Ploegen.Select(ploeg => new Team
+            return src.Ploegen.Select(ploeg => new OpposingTeams
             {
                 ClubId = ploeg.ClubId.Value,
-                Code = ploeg.Code
+                TeamCode = ploeg.Code
             }).ToArray();
         }
 
@@ -81,24 +84,6 @@ namespace Ttc.DataAccess
         {
             return src.Ploegen.First(x => x.ClubId == Constants.OwnClubId).Code;
         }
-
-        //private static Division CreateDivision(Reeks src)
-        //{
-        //    Debug.Assert(src.Jaar.HasValue);
-        //    return new Division
-        //    {
-        //        Id = src.Id,
-        //        Competition = Constants.NormalizeCompetition(src.Competitie),
-        //        Year = src.Jaar.Value,
-        //        DivisionName = src.ReeksNummer + src.ReeksCode,
-        //        Frenoy = new FrenoyTeam
-        //        {
-        //            DivisionId = src.FrenoyDivisionId,
-        //            LinkId = src.LinkId,
-        //            TeamId = src.FrenoyTeamId
-        //        }
-        //    };
-        //}
 
         #region CalendarItems
         private static void CalendarMapping()
