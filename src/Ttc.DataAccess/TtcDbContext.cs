@@ -23,20 +23,15 @@ namespace Ttc.DataAccess
         public DbSet<ClubPloeg> ClubPloegen { get; set; }
         public DbSet<Kalender> Kalender { get; set; }
 
+        // These are used by the legacy website own
+        // Let's start with brand new tables... :p
+        //public DbSet<Training> Trainingen { get; set; }
         //public DbSet<ClubPloegSpeler> ClubPloegSpelers { get; set; }
-
-
         //public DbSet<Verslag> Verslagen { get; set; }
         //public DbSet<VerslagSpeler> SpelersVerslag { get; set; }
 
-        // To be evaluated:
-        //public DbSet<Training> Trainingen { get; set; }
-
-        // Used by the legacy website
-        //public DbSet<Ttc.Model.Klassement> Klassementen { get; set; }
-
-        // No longer in use
-        //public DbSet<Ttc.Model.WeekSpeler> SpelerVanDeWeek { get; set; }
+        // Used by the legacy website only
+        //public DbSet<Klassement> Klassementen { get; set; }
 
         public TtcDbContext() : base("ttc")
         {

@@ -4,9 +4,11 @@ using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using AutoMapper;
+using Newtonsoft.Json.Serialization;
 using NUnit.Framework;
 using Ttc.DataAccess;
 using Ttc.DataAccess.Entities;
+using Ttc.DataAccess.Services;
 using Ttc.DataAccess.Utilities;
 using Ttc.Model;
 
@@ -53,13 +55,9 @@ namespace Ttc.UnitTests
             {
                 GlobalBackendConfiguration.ConfigureAutoMapper(new KlassementValueConverter());
 
-                var calendar = dbContext.Reeksen
-                    .Where(x => x.Jaar.Value == 2015)
-                    .ToList();
-
-
-                var club = Mapper.Map<IList<Reeks>, IList<Division>>(calendar);
-                Assert.That(club.First().Year, Is.EqualTo(2015));
+                var serv = new DivisionService();
+                var club = serv.GetForCurrentYear();
+                Assert.That(club.First().Year, Is.EqualTo(Constants.CurrentSeason));
             }
         }
 

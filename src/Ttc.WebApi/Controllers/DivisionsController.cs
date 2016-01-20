@@ -22,7 +22,8 @@ namespace Ttc.WebApi.Controllers
 
         public IEnumerable<Division> Get()
         {
-            return _service.GetForCurrentYear();
+            var divisions = _service.GetForCurrentYear();
+            return divisions;
         }
     }
 }

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
-using AutoMapper;
 using Ttc.DataAccess.Entities;
 using Ttc.Model;
+using System.Data.Entity;
+using Omu.ValueInjecter;
+using Mapper = AutoMapper.Mapper;
 
 namespace Ttc.DataAccess.Services
 {
@@ -16,12 +19,44 @@ namespace Ttc.DataAccess.Services
             using (var dbContext = new TtcDbContext())
             {
                 var activeClubs = dbContext.Reeksen
+                    .Include(x => x.Ploegen)
                     .Where(x => x.Jaar == Constants.CurrentSeason)
                     .ToList();
 
                 var result = Mapper.Map<IList<Reeks>, IList<Division>>(activeClubs);
-                return result;
+                var otherTeamDivisions = GetMultipleTeamsInDivisions(result);
+
+                // filter out own team
+                foreach (var division in result)
+                {
+                    division.Opponents = division.Opponents.Where(x => x.ClubId != Constants.OwnClubId || x.Code != division.TeamCode).ToArray();
+                }
+
+                return result.Concat(otherTeamDivisions).ToArray();
             }
+        }
+
+        /// <summary>
+        /// 'Fix' when having multiple Teams in same Reeks/Division
+        /// </summary>
+        private static IEnumerable<Division> GetMultipleTeamsInDivisions(IEnumerable<Division> result)
+        {
+            var otherTeamDivisions = new List<Division>(3);
+            var multiple = result.Where(x => x.Opponents.Count(team => team.ClubId == Constants.OwnClubId) > 1);
+            foreach (var division in multiple)
+            {
+                var otherOwnOpponents = division.Opponents.Where(x => x.ClubId == Constants.OwnClubId).Skip(1); // original mapping took the first own club team as TeamCode
+                foreach (var otherOwnTeam in otherOwnOpponents)
+                {
+                    var clone = new Division();
+                    clone.InjectFrom(division);
+                    clone.TeamCode = otherOwnTeam.Code;
+                    clone.Opponents = division.Opponents.Where(x => x.ClubId != Constants.OwnClubId || x.Code != otherOwnTeam.Code).ToArray();
+
+                    otherTeamDivisions.Add(clone);
+                }
+            }
+            return otherTeamDivisions;
         }
     }
 }

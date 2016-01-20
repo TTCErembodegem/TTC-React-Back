@@ -13,5 +13,10 @@ namespace Ttc.Model
 
         //public int DivisionId { get; set; }
         //public Division Division { get; set; }
+
+        public override string ToString()
+        {
+            return $"ClubId={ClubId}, Code={Code}";
+        }
     }
 }

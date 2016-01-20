@@ -52,10 +52,34 @@ namespace Ttc.DataAccess
                         LinkId = src.LinkId,
                         TeamId = src.FrenoyTeamId
                     }))
-                //.ForMember(
-                //    dest => dest.TeamCode,
-                //    opts => opts.MapFrom(src => src.))
+                .ForMember(
+                    dest => dest.TeamCode,
+                    opts => opts.MapFrom(src => FindOwnTeamCode(src)))
+                .ForMember(
+                    dest => dest.Opponents,
+                    opts => opts.MapFrom(src => MapAllTeams(src)))
                 ;
+        }
+
+        /// <summary>
+        /// Map all teams including TTC Erembodegem.
+        /// We'll fix this later because multiple TTC Erembodegems could be playing in same Reeks
+        /// </summary>
+        private static ICollection<Team> MapAllTeams(Reeks src)
+        {
+            return src.Ploegen.Select(ploeg => new Team
+            {
+                ClubId = ploeg.ClubId.Value,
+                Code = ploeg.Code
+            }).ToArray();
+        }
+
+        /// <summary>
+        /// Incorrect when multiple own club teams in Reeks
+        /// </summary>
+        private static string FindOwnTeamCode(Reeks src)
+        {
+            return src.Ploegen.First(x => x.ClubId == Constants.OwnClubId).Code;
         }
 
         //private static Division CreateDivision(Reeks src)

@@ -11,12 +11,14 @@ namespace Ttc.DataAccess.Entities
         public Reeks Reeks { get; set; }
         public int? ClubId { get; set; }
 
-        //[ForeignKey("ClubId")]
-        //public Club Club { get; set; }
-
         /// <summary>
         /// Team A, B, C, ...
         /// </summary>
         public string Code { get; set; }
+
+        public override string ToString()
+        {
+            return $"Id={Id}, Reeks=_{Reeks}_, ClubId={ClubId}, TeamCode={Code}";
+        }
     }
 }
