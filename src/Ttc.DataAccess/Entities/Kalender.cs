@@ -14,7 +14,7 @@ namespace Ttc.DataAccess.Entities
         public int? Thuis { get; set; }
         public int? Week { get; set; }
         public string FrenoyMatchId { get; set; }
-
+        
         /// <summary>
         /// De ThuisClubId is altijd TTC Erembodegem
         /// (don't ask!)
@@ -32,6 +32,7 @@ namespace Ttc.DataAccess.Entities
         /// nodig voor de Kalender op zich
         /// </summary>
         public int? ThuisClubPloegId { get; set; }
+        public ClubPloeg ThuisClubPloeg { get; set; }
 
         public int? UitClubId { get; set; }
         public string UitPloeg { get; set; }

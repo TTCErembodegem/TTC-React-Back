@@ -23,14 +23,16 @@ namespace Ttc.DataAccess
         public DbSet<ClubPloeg> ClubPloegen { get; set; }
         public DbSet<Kalender> Kalender { get; set; }
 
-        // These are used by the legacy website own
+        // Not (yet?) mapped: DbSet<Parameter>
+
+        // Entities used by the legacy website only:
         // Let's start with brand new tables... :p
+        // (The entity classes have been excluded in the VS project)
+        //
         //public DbSet<Training> Trainingen { get; set; }
         //public DbSet<ClubPloegSpeler> ClubPloegSpelers { get; set; }
         //public DbSet<Verslag> Verslagen { get; set; }
         //public DbSet<VerslagSpeler> SpelersVerslag { get; set; }
-
-        // Used by the legacy website only
         //public DbSet<Klassement> Klassementen { get; set; }
 
         public TtcDbContext() : base("ttc")
@@ -57,6 +59,11 @@ namespace Ttc.DataAccess
                 .HasRequired(c => c.Reeks)
                 .WithMany(c => c.Ploegen)
                 .HasForeignKey(x => x.ReeksId);
+
+            modelBuilder.Entity<Kalender>()
+                .HasRequired(c => c.ThuisClubPloeg)
+                .WithMany(c => c.Matchen)
+                .HasForeignKey(x => x.ThuisClubPloegId);
         }
 
         private static string ToLowerCaseTableName(Type clrType)

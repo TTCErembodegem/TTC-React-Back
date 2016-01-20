@@ -1,6 +1,6 @@
-﻿namespace Ttc.Model.Divisions
+﻿namespace Ttc.Model.Teams
 {
-    public class OpposingTeams
+    public class OpposingTeam
     {
         /// <summary>
         /// Team A, B, C, ...

@@ -1,4 +1,5 @@
 ﻿using System;
+using Ttc.Model.Teams;
 
 namespace Ttc.Model
 {
@@ -11,13 +12,12 @@ namespace Ttc.Model
         public bool IsHomeMatch { get; set; }
         public int Week { get; set; }
 
-        // TODO vanaf hier
-        public int? ThuisClubId { get; set; }
-        public string ThuisPloeg { get; set; }
-        public int? ThuisClubPloegId { get; set; }
+        public int ReeksId { get; set; }
+        public OpposingTeam Opponent { get; set; }
 
-        public int? UitClubId { get; set; }
-        public string UitPloeg { get; set; }
-        public int? UitClubPloegId { get; set; }
+        public override string ToString()
+        {
+            return $"Id={Id} on {Date.ToString("g")}, Home={IsHomeMatch}, ReeksId={ReeksId}, Opponent=({Opponent})";
+        }
     }
 }

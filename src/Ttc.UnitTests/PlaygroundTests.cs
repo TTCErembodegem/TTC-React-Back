@@ -7,6 +7,7 @@ using AutoMapper;
 using Newtonsoft.Json.Serialization;
 using NUnit.Framework;
 using Ttc.DataAccess;
+using Ttc.DataAccess.App_Start;
 using Ttc.DataAccess.Entities;
 using Ttc.DataAccess.Services;
 using Ttc.DataAccess.Utilities;
@@ -55,9 +56,9 @@ namespace Ttc.UnitTests
         {
             using (var dbContext = new TtcDbContext())
             {
-                GlobalBackendConfiguration.ConfigureAutoMapper(new KlassementValueConverter());
+                AutoMapperConfig.Configure(new KlassementValueConverter());
 
-                var serv = new DivisionService();
+                var serv = new TeamService();
                 var club = serv.GetForCurrentYear();
                 Assert.That(club.First().Year, Is.EqualTo(Constants.CurrentSeason));
             }
@@ -68,19 +69,11 @@ namespace Ttc.UnitTests
         {
             using (var dbContext = new TtcDbContext())
             {
-                GlobalBackendConfiguration.ConfigureAutoMapper(new KlassementValueConverter());
+                AutoMapperConfig.Configure(new KlassementValueConverter());
 
-                var dateBegin = DateTime.Now.AddDays(-7);
-                var dateEnd = DateTime.Now.AddDays(7);
-
-                var calendar = dbContext.Kalender
-                    .Where(x => x.Datum >= dateBegin)
-                    .Where(x => x.Datum <= dateEnd)
-                    .ToList();
-
-
-                //var club = Mapper.Map<IList<ClubEntity>, IList<Club>>(clubs);
-                //Assert.That(club.First().MainLocation, Is.Not.Null);
+                var serv = new CalendarService();
+                var result = serv.GetRelevantCalendarItems();
+                Assert.That(result.First().FrenoyMatchId, Is.Not.Null);
             }
         }
 
@@ -89,7 +82,7 @@ namespace Ttc.UnitTests
         {
             using (var dbContext = new TtcDbContext())
             {
-                GlobalBackendConfiguration.ConfigureAutoMapper(new KlassementValueConverter());
+                AutoMapperConfig.Configure(new KlassementValueConverter());
 
                 var clubs = dbContext.Clubs.Include(x => x.Contacten).Where(x => x.Id == 1 || x.Id == 28).ToList();
                 var club = Mapper.Map<IList<ClubEntity>, IList<Club>>(clubs);
@@ -102,7 +95,7 @@ namespace Ttc.UnitTests
         {
             using (var dbContext = new TtcDbContext())
             {
-                GlobalBackendConfiguration.ConfigureAutoMapper(new KlassementValueConverter());
+                AutoMapperConfig.Configure(new KlassementValueConverter());
                 Speler speler = dbContext.Spelers.First();
                 Player player = Mapper.Map<Speler, Player>(speler);
                 Assert.That(player.Vttl, Is.Not.Null);

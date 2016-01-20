@@ -72,6 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Entities\ClubContact.cs" />
     <Compile Include="Entities\ClubEntity.cs" />
@@ -84,7 +85,7 @@
     <Compile Include="Services\CalendarService.cs" />
     <Compile Include="Services\ClubService.cs" />
     <Compile Include="Services\ConfigService.cs" />
-    <Compile Include="Services\DivisionService.cs" />
+    <Compile Include="Services\TeamService.cs" />
     <Compile Include="Services\PlayerService.cs" />
     <Compile Include="TtcDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

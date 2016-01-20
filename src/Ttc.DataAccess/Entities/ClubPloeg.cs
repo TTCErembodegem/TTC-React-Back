@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ttc.DataAccess.Entities
@@ -10,6 +11,7 @@ namespace Ttc.DataAccess.Entities
         public int? ReeksId { get; set; }
         public Reeks Reeks { get; set; }
         public int? ClubId { get; set; }
+        public virtual ICollection<Kalender> Matchen { get; set; }
 
         /// <summary>
         /// Team A, B, C, ...

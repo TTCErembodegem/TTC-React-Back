@@ -1,22 +1,19 @@
 ﻿using System.Collections.Generic;
 
-namespace Ttc.Model.Divisions
+namespace Ttc.Model.Teams
 {
     /// <summary>
-    /// Division details for one TTC Erembodegem Team
+    /// One TTC Erembodegem Team with Division/Reeks details
     /// </summary>
-    public class Division
+    public class Team
     {
-        /// <summary>
-        /// Our Reeks.Id
-        /// </summary>
-        public int Id { get; set; }
+        public int ReeksId { get; set; }
 
         /// <summary>
         /// TTC Erembodegem Team code (A, B, C, ...)
         /// </summary>
         public string TeamCode { get; set; }
-        public ICollection<OpposingTeams> Opponents { get; set; }
+        public ICollection<OpposingTeam> Opponents { get; set; }
 
         /// <summary>
         /// Vttl or Sporta
@@ -37,7 +34,7 @@ namespace Ttc.Model.Divisions
 
         public override string ToString()
         {
-            return $"{Competition} {Year}: {DivisionName}";
+            return $"{Competition} {Year} {TeamCode}: {DivisionName}";
         }
     }
 }

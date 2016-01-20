@@ -1,4 +1,4 @@
-﻿namespace Ttc.Model.Divisions
+﻿namespace Ttc.Model.Teams
 {
     /// <summary>
     /// Team details for linking with Frenoy

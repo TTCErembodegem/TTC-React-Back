@@ -6,25 +6,24 @@ using System.Net.Http;
 using System.Web.Http;
 using Ttc.DataAccess.Services;
 using Ttc.Model;
-using Ttc.Model.Divisions;
+using Ttc.Model.Teams;
 
 namespace Ttc.WebApi.Controllers
 {
-    public class DivisionsController : ApiController
+    public class TeamsController : ApiController
     {
         #region Constructor
-        private readonly DivisionService _service;
+        private readonly TeamService _service;
 
-        public DivisionsController(DivisionService service)
+        public TeamsController(TeamService service)
         {
             _service = service;
         }
         #endregion
 
-        public IEnumerable<Division> Get()
+        public IEnumerable<Team> Get()
         {
-            var divisions = _service.GetForCurrentYear();
-            return divisions;
+            return _service.GetForCurrentYear();
         }
     }
 }
