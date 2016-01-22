@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Ttc.Model.Contact">
+    <Position X="2.5" Y="3.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAMAAAAAAAAAAAAAACCAAAAAAAAAAA=</HashCode>
+      <FileName>Contact.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ttc.Model.Match">
+    <Position X="7.75" Y="4.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="IsTegen" Type="Ttc.Model.Teams.OpposingTeam">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.839" Y="-0.357" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAUAABAAAAAAACAAAABAAAAAIAAgBA=</HashCode>
+      <FileName>Match.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="IsTegen" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Ttc.Model.Clubs.Club">
+    <Position X="3.75" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="BestuurdDoor" Type="Ttc.Model.Clubs.ClubManager">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.381" Y="0.112" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="SpeeltOp" Type="Ttc.Model.Clubs.ClubLocation">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.579" Y="0.081" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>EACCAAAAAAAAggAEGAQgAAQAAAAAAAAghAAAAAAAAAA=</HashCode>
+      <FileName>Clubs\Club.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="BestuurdDoor" />
+      <Property Name="SpeeltOp" />
+      <Property Name="Contact" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Ttc.Model.Clubs.ClubLocation">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAgAAAECAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Clubs\ClubLocation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ttc.Model.Clubs.ClubManager" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAEAAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>Clubs\ClubManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ttc.Model.Players.Player">
+    <Position X="5.5" Y="4.25" Width="1.5" />
+    <Members>
+      <Property Name="Contact1" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="SpeeltHoe" Type="Ttc.Model.Players.PlayerStyle">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.183" Y="-0.315" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAIAEAAkGAIAAAQAAAAAACAABACAAAAAAAE=</HashCode>
+      <FileName>Players\Player.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Contact1" />
+      <Property Name="Contact2" />
+      <Property Name="SpeeltHoe" />
+      <Property Name="HeeftCompetitieDetails" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Ttc.Model.Players.PlayerCompetition">
+    <Position X="0.5" Y="4.75" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAEAgAAAAACAAkAgAAAAAAAACAAAAAAAAAEBAAAAA=</HashCode>
+      <FileName>Players\PlayerCompetition.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ttc.Model.Players.PlayerStyle" Collapsed="true">
+    <Position X="3" Y="6.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAQAAQAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Players\PlayerStyle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ttc.Model.Teams.FrenoyTeamLinks">
+    <Position X="9" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAACAAAgAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Teams\FrenoyTeamLinks.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ttc.Model.Teams.OpposingTeam">
+    <Position X="9.25" Y="2.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAEAAAAAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Teams\OpposingTeam.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ttc.Model.Teams.Team">
+    <Position X="6.25" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="ZittenInReeks" Type="Ttc.Model.Teams.OpposingTeam">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.204" Y="0.102" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Heeft" Type="Ttc.Model.Teams.FrenoyTeamLinks">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.373" Y="0.12" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="HeeftSpelers" Type="Ttc.Model.Players.Player">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.141" Y="0.539" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAABAAAAABEAABAAAAEAAiAAAAAAAAIAAAAhAA=</HashCode>
+      <FileName>Teams\Team.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ZittenInReeks" />
+      <Property Name="Heeft" />
+      <Property Name="HeeftSpelers" />
+    </ShowAsAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
