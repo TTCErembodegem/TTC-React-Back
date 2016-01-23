@@ -26,6 +26,7 @@ namespace Ttc.WebApi
         private static void ConfigureJson(HttpConfiguration config)
         {
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            config.Formatters.JsonFormatter.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
 
             //JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             //{

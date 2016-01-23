@@ -5,7 +5,7 @@
     /// </summary>
     public class PlayerCompetition
     {
-        public string Competition { get; set; }
+        public Competition Competition { get; set; }
         public int ClubId { get; set; }
         public string FrenoyLink { get; set; }
         public string Ranking { get; set; }
@@ -37,7 +37,7 @@
 
         public PlayerCompetition(Competition competition, int clubId, int uniqueIndex, string frenoyLink, string ranking, int position, int rankingIndex, int rankingValue)
         {
-            Competition = competition.ToString();
+            Competition = competition;
             ClubId = clubId;
             FrenoyLink = frenoyLink;
             Ranking = ranking;
