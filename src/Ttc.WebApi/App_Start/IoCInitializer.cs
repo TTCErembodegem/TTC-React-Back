@@ -1,5 +1,6 @@
 using System.Web.Http;
 using SimpleInjector;
+using SimpleInjector.Extensions.ExecutionContextScoping;
 using SimpleInjector.Integration.WebApi;
 using Ttc.DataAccess;
 using Ttc.DataAccess.Services;
@@ -11,21 +12,20 @@ namespace Ttc.WebApi
 {
     public static class IoCInitializer
     {
-        public static void Initialize()
+        public static Container Initialize()
         {
             var container = new Container();
-            container.Options.DefaultScopedLifestyle = new WebApiRequestLifestyle();
+            container.Options.DefaultScopedLifestyle = new ExecutionContextScopeLifestyle();
             
-            InitializeContainer(container);
+            RegisterDependencies(container);
             container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
+            GlobalBackendConfiguration.ConfigureIoC(container);
             container.Verify();
 
-            GlobalBackendConfiguration.ConfigureIoC(container);
-
-            GlobalConfiguration.Configuration.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container);
+            return container;
         }
      
-        private static void InitializeContainer(Container container)
+        private static void RegisterDependencies(Container container)
         {
             container.Register<PlayerService, PlayerService>(Lifestyle.Scoped);
             container.Register<ConfigService, ConfigService>(Lifestyle.Scoped);
