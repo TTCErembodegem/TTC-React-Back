@@ -78,6 +78,7 @@
     <Compile Include="Entities\ClubEntity.cs" />
     <Compile Include="Entities\ClubLokaal.cs" />
     <Compile Include="Entities\ClubPloeg.cs" />
+    <Compile Include="Entities\ClubPloegSpeler.cs" />
     <Compile Include="Entities\Kalender.cs" />
     <Compile Include="Entities\Reeks.cs" />
     <Compile Include="Entities\Speler.cs" />

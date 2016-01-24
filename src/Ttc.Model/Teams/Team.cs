@@ -3,7 +3,7 @@
 namespace Ttc.Model.Teams
 {
     /// <summary>
-    /// One TTC Erembodegem Team with Division/Reeks details
+    /// One TTC Erembodegem Team in a Division/Reeks
     /// </summary>
     public class Team
     {
@@ -13,6 +13,7 @@ namespace Ttc.Model.Teams
         /// TTC Erembodegem Team code (A, B, C, ...)
         /// </summary>
         public string TeamCode { get; set; }
+        public ICollection<TeamPlayer> Players { get; set; }
         public ICollection<OpposingTeam> Opponents { get; set; }
 
         /// <summary>

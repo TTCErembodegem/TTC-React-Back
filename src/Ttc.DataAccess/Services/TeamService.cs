@@ -27,13 +27,29 @@ namespace Ttc.DataAccess.Services
                 var result = Mapper.Map<IList<Reeks>, IList<Team>>(activeClubs);
                 var otherTeamDivisions = GetMultipleTeamsInDivisions(result);
 
-                // filter out own team
+                // filter own team from opponents
                 foreach (var division in result)
                 {
                     division.Opponents = division.Opponents.Where(x => x.ClubId != Constants.OwnClubId || x.TeamCode != division.TeamCode).ToArray();
                 }
 
-                return result.Concat(otherTeamDivisions).ToArray();
+                result = result.Concat(otherTeamDivisions).ToArray();
+
+                // add erembodegem players to team
+                foreach (var division in result)
+                {
+                    var clubTeam = dbContext.ClubPloegen
+                        .Include(x => x.Spelers)
+                        .First(x => x.ReeksId == division.ReeksId && x.ClubId == Constants.OwnClubId && x.Code == division.TeamCode);
+
+                    division.Players = clubTeam.Spelers.Select(x => new TeamPlayer
+                    {
+                        PlayerId = x.SpelerId.Value,
+                        Type = (TeamPlayerType)x.Kapitein
+                    }).ToArray();
+                }
+
+                return result;
             }
         }
 

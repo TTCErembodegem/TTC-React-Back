@@ -35,6 +35,9 @@ namespace Ttc.DataAccess.App_Start
                     dest => dest.DivisionName,
                     opts => opts.MapFrom(src => src.ReeksNummer + src.ReeksCode))
                 .ForMember(
+                    dest => dest.ReeksId,
+                    opts => opts.MapFrom(src => src.Id))
+                .ForMember(
                     dest => dest.Frenoy,
                     opts => opts.MapFrom(src => new FrenoyTeamLinks
                     {

@@ -12,6 +12,7 @@ namespace Ttc.DataAccess.Entities
         public Reeks Reeks { get; set; }
         public int? ClubId { get; set; }
         public virtual ICollection<Kalender> Matchen { get; set; }
+        public virtual ICollection<ClubPloegSpeler> Spelers { get; set; }
 
         /// <summary>
         /// Team A, B, C, ...

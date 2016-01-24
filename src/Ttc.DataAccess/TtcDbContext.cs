@@ -21,6 +21,7 @@ namespace Ttc.DataAccess
 
         public DbSet<Reeks> Reeksen { get; set; }
         public DbSet<ClubPloeg> ClubPloegen { get; set; }
+        public DbSet<ClubPloegSpeler> ClubPloegSpelers { get; set; }
         public DbSet<Kalender> Kalender { get; set; }
 
         // Not (yet?) mapped: DbSet<Parameter>
@@ -30,7 +31,6 @@ namespace Ttc.DataAccess
         // (The entity classes have been excluded in the VS project)
         //
         //public DbSet<Training> Trainingen { get; set; }
-        //public DbSet<ClubPloegSpeler> ClubPloegSpelers { get; set; }
         //public DbSet<Verslag> Verslagen { get; set; }
         //public DbSet<VerslagSpeler> SpelersVerslag { get; set; }
         //public DbSet<Klassement> Klassementen { get; set; }
@@ -64,6 +64,11 @@ namespace Ttc.DataAccess
                 .HasRequired(c => c.ThuisClubPloeg)
                 .WithMany(c => c.Matchen)
                 .HasForeignKey(x => x.ThuisClubPloegId);
+
+            modelBuilder.Entity<ClubPloegSpeler>()
+                .HasRequired(c => c.Ploeg)
+                .WithMany(c => c.Spelers)
+                .HasForeignKey(x => x.ClubPloegId);
         }
 
         private static string ToLowerCaseTableName(Type clrType)

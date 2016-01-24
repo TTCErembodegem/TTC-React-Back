@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Ttc.Model.Teams;
 
 namespace Ttc.DataAccess.Entities
 {
@@ -7,19 +8,14 @@ namespace Ttc.DataAccess.Entities
     {
         [Key]
         public int Id { get; set; }
-
-        // Foreign Key voor ClubPloeg
         public int? ClubPloegId { get; set; }
-
-        // Foreign Key voor Speler
         public int? SpelerId { get; set; }
+        public TeamPlayerType Kapitein { get; set; }
+        public ClubPloeg Ploeg { get; set; }
 
-        public int Kapitein { get; set; }
-
-        //[ForeignKey("ClubPloegId")]
-        //public ClubPloeg Ploeg { get; set; }
-
-        //[ForeignKey("SpelerId")]
-        //public Speler Speler { get; set; }
+        public override string ToString()
+        {
+            return $"Id={Id}, ClubPloegId={ClubPloegId}, SpelerId={SpelerId}, Kapitein={Kapitein}";
+        }
     }
 }
