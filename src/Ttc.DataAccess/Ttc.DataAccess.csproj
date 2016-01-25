@@ -90,7 +90,6 @@
     <Compile Include="Services\PlayerService.cs" />
     <Compile Include="TtcDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TtcDbInitializer.cs" />
     <Compile Include="Utilities\KlassementValueConverter.cs" />
   </ItemGroup>
   <ItemGroup>

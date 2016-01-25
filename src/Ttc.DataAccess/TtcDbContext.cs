@@ -37,7 +37,7 @@ namespace Ttc.DataAccess
 
         public TtcDbContext() : base("ttc")
         {
-            Database.SetInitializer<TtcDbContext>(new TtcDbInitializer());
+            Database.SetInitializer<TtcDbContext>(new CreateDatabaseIfNotExists<TtcDbContext>());
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
