@@ -156,6 +156,7 @@
     <Compile Include="Controllers\ConfigController.cs" />
     <Compile Include="Controllers\TeamsController.cs" />
     <Compile Include="Controllers\PlayersController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
