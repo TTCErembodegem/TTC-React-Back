@@ -16,9 +16,6 @@
             BestStroke = bestStroke;
         }
 
-        public override string ToString()
-        {
-            return $"Name={Name}, BestStroke={BestStroke}";
-        }
+        public override string ToString() => $"Name={Name}, BestStroke={BestStroke}";
     }
 }

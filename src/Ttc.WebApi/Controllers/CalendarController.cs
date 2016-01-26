@@ -20,9 +20,6 @@ namespace Ttc.WebApi.Controllers
         }
         #endregion
 
-        public IEnumerable<Match> Get()
-        {
-            return _service.GetRelevantCalendarItems();
-        }
+        public IEnumerable<Match> Get() => _service.GetRelevantCalendarItems();
     }
 }

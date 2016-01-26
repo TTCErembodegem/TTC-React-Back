@@ -16,9 +16,6 @@ namespace Ttc.DataAccess.Entities
         public string Telefoon { get; set; }
         public ClubEntity Club { get; set; }
 
-        public override string ToString()
-        {
-            return $"Id={Id}, ClubId={ClubId}, Lokaal={Lokaal}, Adres={Adres}, Gemeente={Gemeente}";
-        }
+        public override string ToString() => $"Id={Id}, ClubId={ClubId}, Lokaal={Lokaal}, Adres={Adres}, Gemeente={Gemeente}";
     }
 }

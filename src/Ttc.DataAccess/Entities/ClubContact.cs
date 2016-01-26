@@ -19,9 +19,6 @@ namespace Ttc.DataAccess.Entities
         public string Omschrijving { get; set; }
         public int Sortering { get; set; }
 
-        public override string ToString()
-        {
-            return $"Club={ClubId}, Desc={Omschrijving}, Sort={Sortering}, Player={SpelerId}";
-        }
+        public override string ToString() => $"Club={ClubId}, Desc={Omschrijving}, Sort={Sortering}, Player={SpelerId}";
     }
 }

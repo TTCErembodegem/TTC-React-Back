@@ -33,9 +33,6 @@ namespace Ttc.Model.Teams
         /// </summary>
         public FrenoyTeamLinks Frenoy { get; set; }
 
-        public override string ToString()
-        {
-            return $"{Competition} {Year} {TeamCode}: {DivisionName}";
-        }
+        public override string ToString() => $"{Competition} {Year} {TeamCode}: {DivisionName}";
     }
 }

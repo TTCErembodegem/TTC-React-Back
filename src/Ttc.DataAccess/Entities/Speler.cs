@@ -46,14 +46,8 @@ namespace Ttc.DataAccess.Entities
         public int? Gestopt { get; set; }
         public bool IsGestopt => Gestopt != null;
 
-        public bool IsFromOwnClub()
-        {
-            return ClubIdSporta == Constants.OwnClubId || ClubIdVttl == Constants.OwnClubId;
-        }
+        public bool IsFromOwnClub() => ClubIdSporta == Constants.OwnClubId || ClubIdVttl == Constants.OwnClubId;
 
-        public override string ToString()
-        {
-            return $"Id={Id}, Alias={NaamKort} ({ClubIdVttl}, {ClubIdSporta}), Vttl={KlassementVttl}, Sporta={KlassementSporta}, IsGestopt={IsGestopt}";
-        }
+        public override string ToString() => $"Id={Id}, Alias={NaamKort} ({ClubIdVttl}, {ClubIdSporta}), Vttl={KlassementVttl}, Sporta={KlassementSporta}, IsGestopt={IsGestopt}";
     }
 }

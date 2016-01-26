@@ -72,9 +72,6 @@ namespace Ttc.UnitTests
             }
         }
 
-        private static string FixGsm(string gsm)
-        {
-            return gsm?.Trim().Replace(" ", "").Replace("/", "").Replace(".", "");
-        }
+        private static string FixGsm(string gsm) => gsm?.Trim().Replace(" ", "").Replace("/", "").Replace(".", "");
     }
 }

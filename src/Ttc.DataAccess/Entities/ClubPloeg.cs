@@ -19,9 +19,6 @@ namespace Ttc.DataAccess.Entities
         /// </summary>
         public string Code { get; set; }
 
-        public override string ToString()
-        {
-            return $"Id={Id}, Reeks=_{Reeks}_, ClubId={ClubId}, TeamCode={Code}";
-        }
+        public override string ToString() => $"Id={Id}, Reeks=_{Reeks}_, ClubId={ClubId}, TeamCode={Code}";
     }
 }

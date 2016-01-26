@@ -10,10 +10,7 @@ namespace Ttc.Model.Teams
         public int PlayerId { get; set; }
         public TeamPlayerType Type { get; set; }
 
-        public override string ToString()
-        {
-            return $"PlayerId={PlayerId}, Type={Type}";
-        }
+        public override string ToString() => $"PlayerId={PlayerId}, Type={Type}";
     }
 
     public enum TeamPlayerType

@@ -13,9 +13,6 @@ namespace Ttc.DataAccess.Entities
         public TeamPlayerType Kapitein { get; set; }
         public ClubPloeg Ploeg { get; set; }
 
-        public override string ToString()
-        {
-            return $"Id={Id}, ClubPloegId={ClubPloegId}, SpelerId={SpelerId}, Kapitein={Kapitein}";
-        }
+        public override string ToString() => $"Id={Id}, ClubPloegId={ClubPloegId}, SpelerId={SpelerId}, Kapitein={Kapitein}";
     }
 }

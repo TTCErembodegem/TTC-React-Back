@@ -22,9 +22,6 @@
         /// </summary>
         public string TeamId { get; set; }
 
-        public override string ToString()
-        {
-            return $"DivisionId={DivisionId}, LinkId={LinkId}, TeamId={TeamId}";
-        }
+        public override string ToString() => $"DivisionId={DivisionId}, LinkId={LinkId}, TeamId={TeamId}";
     }
 }

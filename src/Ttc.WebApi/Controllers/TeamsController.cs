@@ -21,9 +21,6 @@ namespace Ttc.WebApi.Controllers
         }
         #endregion
 
-        public IEnumerable<Team> Get()
-        {
-            return _service.GetForCurrentYear();
-        }
+        public IEnumerable<Team> Get() => _service.GetForCurrentYear();
     }
 }

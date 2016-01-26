@@ -20,9 +20,6 @@ namespace Ttc.DataAccess.Entities
 
         public virtual ICollection<ClubPloeg> Ploegen { get; set; }
 
-        public override string ToString()
-        {
-            return $"Id={Id}, Competitie={Competitie} {Jaar}, Reeks={ReeksNummer}{ReeksCode}, FrenoyLink={LinkId}";
-        }
+        public override string ToString() => $"Id={Id}, Competitie={Competitie} {Jaar}, Reeks={ReeksNummer}{ReeksCode}, FrenoyLink={LinkId}";
     }
 }

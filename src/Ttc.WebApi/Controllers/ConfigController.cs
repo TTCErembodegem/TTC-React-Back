@@ -21,9 +21,6 @@ namespace Ttc.WebApi.Controllers
         }
         #endregion
 
-        public object Get()
-        {
-            return _service.Get();
-        }
+        public object Get() => _service.Get();
     }
 }

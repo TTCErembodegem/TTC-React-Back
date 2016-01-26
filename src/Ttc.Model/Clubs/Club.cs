@@ -20,9 +20,6 @@ namespace Ttc.Model.Clubs
         /// </summary>
         public ICollection<ClubManager> Managers { get; set; }
 
-        public override string ToString()
-        {
-            return $"Id={Id}, Name={Name}, Vttl={CodeVttl}, Sporta={CodeSporta}, Active={Active}";
-        }
+        public override string ToString() => $"Id={Id}, Name={Name}, Vttl={CodeVttl}, Sporta={CodeSporta}, Active={Active}";
     }
 }

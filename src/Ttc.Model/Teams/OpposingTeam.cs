@@ -9,9 +9,6 @@
 
         public int ClubId { get; set; }
 
-        public override string ToString()
-        {
-            return $"ClubId={ClubId}, Team={TeamCode}";
-        }
+        public override string ToString() => $"ClubId={ClubId}, Team={TeamCode}";
     }
 }

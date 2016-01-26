@@ -12,14 +12,8 @@ namespace Ttc.DataAccess
         /// </summary>
         public const int CurrentSeason = 2015;
 
-        private static bool IsVttl(string value)
-        {
-            return string.Equals(value.Trim(), Vttl, StringComparison.InvariantCultureIgnoreCase);
-        }
+        private static bool IsVttl(string value) => string.Equals(value.Trim(), Vttl, StringComparison.InvariantCultureIgnoreCase);
 
-        public static string NormalizeCompetition(string value)
-        {
-            return IsVttl(value) ? Vttl : Sporta;
-        }
+        public static string NormalizeCompetition(string value) => IsVttl(value) ? Vttl : Sporta;
     }
 }

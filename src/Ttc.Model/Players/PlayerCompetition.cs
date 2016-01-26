@@ -47,10 +47,7 @@
             RankingValue = rankingValue;
         }
 
-        public override string ToString()
-        {
-            return $"Competition={Competition}, ClubId={ClubId}, Ranking={Ranking}, UniqueIndex={UniqueIndex}";
-        }
+        public override string ToString() => $"Competition={Competition}, ClubId={ClubId}, Ranking={Ranking}, UniqueIndex={UniqueIndex}";
     }
 
     public enum Competition

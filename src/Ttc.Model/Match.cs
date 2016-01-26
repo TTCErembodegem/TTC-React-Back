@@ -15,9 +15,6 @@ namespace Ttc.Model
         public int ReeksId { get; set; }
         public OpposingTeam Opponent { get; set; }
 
-        public override string ToString()
-        {
-            return $"Id={Id} on {Date.ToString("g")}, Home={IsHomeMatch}, ReeksId={ReeksId}, Opponent=({Opponent})";
-        }
+        public override string ToString() => $"Id={Id} on {Date.ToString("g")}, Home={IsHomeMatch}, ReeksId={ReeksId}, Opponent=({Opponent})";
     }
 }

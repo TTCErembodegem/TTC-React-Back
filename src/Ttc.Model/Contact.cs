@@ -20,9 +20,6 @@
             Email = email;
         }
 
-        public override string ToString()
-        {
-            return $"Address={Address}, City={City}, Mobile={Mobile}, Email={Email}";
-        }
+        public override string ToString() => $"Address={Address}, City={City}, Mobile={Mobile}, Email={Email}";
     }
 }

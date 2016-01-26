@@ -30,9 +30,6 @@ namespace Ttc.DataAccess.Entities
 
         public virtual ICollection<ClubContact> Contacten { get; protected set; }
 
-        public override string ToString()
-        {
-            return $"Id={Id}, Name={Naam}, Vttl={CodeVttl}, Sporta={CodeSporta}, Active={Actief}";
-        }
+        public override string ToString() => $"Id={Id}, Name={Naam}, Vttl={CodeVttl}, Sporta={CodeSporta}, Active={Actief}";
     }
 }

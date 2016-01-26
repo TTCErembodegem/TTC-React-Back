@@ -21,9 +21,6 @@ namespace Ttc.WebApi.Controllers
         }
         #endregion
 
-        public IEnumerable<Player> Get()
-        {
-            return _service.GetActiveOwnClub();
-        }
+        public IEnumerable<Player> Get() => _service.GetActiveOwnClub();
     }
 }

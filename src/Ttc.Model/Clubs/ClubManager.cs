@@ -8,9 +8,6 @@
         public int SpelerId { get; set; }
         public string Description { get; set; }
 
-        public override string ToString()
-        {
-            return $"SpelerId={SpelerId}, Desc={Description}";
-        }
+        public override string ToString() => $"SpelerId={SpelerId}, Desc={Description}";
     }
 }
