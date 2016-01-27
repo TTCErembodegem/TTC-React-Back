@@ -12,6 +12,14 @@ using Ttc.Model;
 
 namespace Ttc.DataAccess
 {
+    /// <remarks>
+    /// Not(yet?) mapped: DbSet Parameter
+    /// Entities used by the legacy website only:
+    /// (The entity classes have been excluded in the VS project)
+    /// public DbSet Training Trainingen { get; set; }
+    /// public DbSet Klassement Klassementen { get; set; }
+    /// </remarks>
+    [DbConfigurationType(typeof(MySql.Data.Entity.MySqlEFConfiguration))]
     internal class TtcDbContext : DbContext
     {
         public DbSet<Speler> Spelers { get; set; }
@@ -23,22 +31,9 @@ namespace Ttc.DataAccess
         public DbSet<ClubPloeg> ClubPloegen { get; set; }
         public DbSet<ClubPloegSpeler> ClubPloegSpelers { get; set; }
         public DbSet<Kalender> Kalender { get; set; }
-
-        // Not (yet?) mapped: DbSet<Parameter>
-
-        // Entities used by the legacy website only:
-        // Let's start with brand new tables... :p
-        // (The entity classes have been excluded in the VS project)
-        //
-        //public DbSet<Training> Trainingen { get; set; }
-        //public DbSet<Verslag> Verslagen { get; set; }
-        //public DbSet<VerslagSpeler> SpelersVerslag { get; set; }
-        //public DbSet<Klassement> Klassementen { get; set; }
-
-        public TtcDbContext() : base("ttc")
-        {
-            Database.SetInitializer<TtcDbContext>(new CreateDatabaseIfNotExists<TtcDbContext>());
-        }
+        public DbSet<Verslag> Verslagen { get; set; }
+        public DbSet<VerslagSpeler> VerslagenSpelers { get; set; }
+        public DbSet<VerslagIndividueel> VerslagenIndividueel { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -69,6 +64,27 @@ namespace Ttc.DataAccess
                 .HasRequired(c => c.Ploeg)
                 .WithMany(c => c.Spelers)
                 .HasForeignKey(x => x.ClubPloegId);
+
+            //modelBuilder.Entity<VerslagIndividueel>()
+            //    .HasRequired(c => c.Verslag)
+            //    .WithMany(c => c.Individueel)
+            //    .HasForeignKey(x => x.VerslagId);
+
+            //modelBuilder.Entity<VerslagSpeler>()
+            //    .HasRequired(c => c.Verslag)
+            //    .WithMany(c => c.Spelers)
+            //    .HasForeignKey(x => x.VerslagId);
+        }
+
+        public TtcDbContext() : base("ttc")
+        {
+            //Configuration.ValidateOnSaveEnabled = false;
+            Database.SetInitializer<TtcDbContext>(new CreateDatabaseIfNotExists<TtcDbContext>());
+        }
+
+        static TtcDbContext()
+        {
+            DbConfiguration.SetConfiguration(new MySql.Data.Entity.MySqlEFConfiguration());
         }
 
         private static string ToLowerCaseTableName(Type clrType)

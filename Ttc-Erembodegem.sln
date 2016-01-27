@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ttc.DataAccess", "src\Ttc.DataAccess\Ttc.DataAccess.csproj", "{BDFC6F37-3B94-467B-BEEE-53FFBA49918E}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ttc.WebApi", "src\Ttc.WebApi\Ttc.WebApi.csproj", "{3964F219-FB18-4BE6-B135-7BA117748783}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ttc.UnitTests", "src\Ttc.UnitTests\Ttc.UnitTests.csproj", "{225946EC-B6FC-4385-BD9E-47E93A194F98}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrenoySyncer", "src\FrenoySyncer\FrenoySyncer.csproj", "{D3FDABD3-8D5F-4A24-8AE9-7BAAED1D62C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{225946EC-B6FC-4385-BD9E-47E93A194F98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{225946EC-B6FC-4385-BD9E-47E93A194F98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{225946EC-B6FC-4385-BD9E-47E93A194F98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3FDABD3-8D5F-4A24-8AE9-7BAAED1D62C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3FDABD3-8D5F-4A24-8AE9-7BAAED1D62C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3FDABD3-8D5F-4A24-8AE9-7BAAED1D62C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3FDABD3-8D5F-4A24-8AE9-7BAAED1D62C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
