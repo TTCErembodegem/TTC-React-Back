@@ -45,7 +45,7 @@ namespace FrenoySyncer
             // -> Perhaps Glimpse can help here? It got some parameter replacement thingie
 
             _options = options;
-            CheckPlayers();
+            //CheckPlayers();
 
             _isVttl = isVttl;
             //string wsdl;
@@ -152,6 +152,8 @@ namespace FrenoySyncer
                     // Wedstrijdverslagen
                     if (frenoyMatch.MatchDetails != null)
                     {
+                        bool isForfeit = frenoyMatch.Score == null;
+
                         var verslag = _db.Verslagen.SingleOrDefault(x => x.KalenderId == kalender.Id);
                         if (verslag == null)
                         {
@@ -162,18 +164,25 @@ namespace FrenoySyncer
                                 KalenderId = kalender.Id,
                                 Details = 0,
                                 SpelerId = 4, // Dirk DS
-                                UitslagThuis = int.Parse(frenoyMatch.Score.Substring(0, frenoyMatch.Score.IndexOf("-"))),
-                                UitslagUit = int.Parse(frenoyMatch.Score.Substring(frenoyMatch.Score.IndexOf("-") + 1)),
-                                WO = 0 // TODO: Don't add verslag for WO (will crash around here probably:)
+                                WO = 0
                             };
+                            if (!isForfeit)
+                            {
+                                verslag.UitslagThuis = int.Parse(frenoyMatch.Score.Substring(0, frenoyMatch.Score.IndexOf("-")));
+                                verslag.UitslagUit = int.Parse(frenoyMatch.Score.Substring(frenoyMatch.Score.IndexOf("-") + 1));
+                                verslag.WO = 1;
+                            }
                             _db.Verslagen.Add(verslag);
                         }
 
-                        var oldVerslagSpelers = _db.SpelersVerslag.Where(x => x.VerslagId == verslag.Id).ToArray();
-                        _db.SpelersVerslag.RemoveRange(oldVerslagSpelers);
+                        if (!isForfeit)
+                        {
+                            var oldVerslagSpelers = _db.SpelersVerslag.Where(x => x.VerslagId == verslag.Id).ToArray();
+                            _db.SpelersVerslag.RemoveRange(oldVerslagSpelers);
 
-                        AddVerslagPlayers(frenoyMatch.MatchDetails.HomePlayers.Players, verslag, true);
-                        AddVerslagPlayers(frenoyMatch.MatchDetails.AwayPlayers.Players, verslag, false);
+                            AddVerslagPlayers(frenoyMatch.MatchDetails.HomePlayers.Players, verslag, true);
+                            AddVerslagPlayers(frenoyMatch.MatchDetails.AwayPlayers.Players, verslag, false);
+                        }
                     }
                     CommitChanges();
                 }
@@ -184,23 +193,21 @@ namespace FrenoySyncer
         {
             if (!_isVttl)
             {
-                // Sporta API does not (yet?) return MatchDetails
+                // TODO: Sporta API does not (yet?) return MatchDetails
                 return;
             }
 
             foreach (var frenoyVerslagSpeler in players)
             {
-                //TODO: we zaten hier   
-                // Moeten ook de positie opslaan
-                // En UniqueIndex
-
                 VerslagSpeler verslagSpeler = new VerslagSpeler
                 {
                     Verslag = verslag,
                     VerslagId = verslag.Id,
                     Klassement = frenoyVerslagSpeler.Ranking,
                     Thuis = thuisSpeler ? 1 : 0,
-                    SpelerNaam = GetSpelerNaam(frenoyVerslagSpeler)
+                    SpelerNaam = GetSpelerNaam(frenoyVerslagSpeler),
+                    Positie = int.Parse(frenoyVerslagSpeler.Position),
+                    UniqueIndex = int.Parse(frenoyVerslagSpeler.UniqueIndex)
                 };
                 if (frenoyVerslagSpeler.VictoryCount != null)
                 {

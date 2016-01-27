@@ -89,6 +89,10 @@
     <Compile Include="Migrations\201601270124192_LegacyMysqlDb.Designer.cs">
       <DependentUpon>201601270124192_LegacyMysqlDb.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201601270125349_VerslagSpelerPositionAndUniqueIndex.cs" />
+    <Compile Include="Migrations\201601270125349_VerslagSpelerPositionAndUniqueIndex.Designer.cs">
+      <DependentUpon>201601270125349_VerslagSpelerPositionAndUniqueIndex.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\CalendarService.cs" />
     <Compile Include="Services\ClubService.cs" />
@@ -112,6 +116,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201601270124192_LegacyMysqlDb.resx">
       <DependentUpon>201601270124192_LegacyMysqlDb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601270125349_VerslagSpelerPositionAndUniqueIndex.resx">
+      <DependentUpon>201601270125349_VerslagSpelerPositionAndUniqueIndex.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -25,7 +25,7 @@ namespace Ttc.DataAccess.Entities
         public int? Thuis { get; set; }
         public string Klassement { get; set; }
 
-        //public int Positie { get; set; }
-        //public int UniqueIndex { get; set; }
+        public int Positie { get; set; }
+        public int UniqueIndex { get; set; }
     }
 }
