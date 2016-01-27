@@ -85,6 +85,11 @@
     <Compile Include="Entities\Verslag.cs" />
     <Compile Include="Entities\VerslagSpeler.cs" />
     <Compile Include="GlobalBackendConfiguration.cs" />
+    <Compile Include="Migrations\201601270124192_LegacyMysqlDb.cs" />
+    <Compile Include="Migrations\201601270124192_LegacyMysqlDb.Designer.cs">
+      <DependentUpon>201601270124192_LegacyMysqlDb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\CalendarService.cs" />
     <Compile Include="Services\ClubService.cs" />
     <Compile Include="Services\ConfigService.cs" />
@@ -104,7 +109,11 @@
       <Name>Ttc.Model</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201601270124192_LegacyMysqlDb.resx">
+      <DependentUpon>201601270124192_LegacyMysqlDb.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
