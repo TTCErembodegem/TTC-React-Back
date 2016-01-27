@@ -27,7 +27,7 @@ namespace FrenoySyncer
         //private readonly FileInfo _logFileInfo;
         //private readonly StreamWriter _logFile;
 
-        private const bool MapTeamPlayers = false;
+        private bool MapTeamPlayers = false;
         #endregion
 
         #region Constructor
