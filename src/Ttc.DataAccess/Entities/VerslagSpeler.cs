@@ -7,12 +7,8 @@ namespace Ttc.DataAccess.Entities
     {
         [Key]
         public int Id { get; set; }
-
-        // Foreign Key voor Verslag
         public int VerslagId { get; set; }
-        
-        // Foreign Key voor Speler
-        public int SpelerId { get; set; }
+        public int? SpelerId { get; set; }
 
         [ForeignKey("VerslagId")]
         public Verslag Verslag { get; set; }
@@ -21,11 +17,8 @@ namespace Ttc.DataAccess.Entities
         public Speler Speler { get; set; }
 
         public int? Winst { get; set; }
-
         public string SpelerNaam { get; set; }
-
         public int? Thuis { get; set; }
-
         public string Klassement { get; set; }
     }
 }

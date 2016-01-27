@@ -82,6 +82,8 @@
     <Compile Include="Entities\Kalender.cs" />
     <Compile Include="Entities\Reeks.cs" />
     <Compile Include="Entities\Speler.cs" />
+    <Compile Include="Entities\Verslag.cs" />
+    <Compile Include="Entities\VerslagSpeler.cs" />
     <Compile Include="GlobalBackendConfiguration.cs" />
     <Compile Include="Services\CalendarService.cs" />
     <Compile Include="Services\ClubService.cs" />
