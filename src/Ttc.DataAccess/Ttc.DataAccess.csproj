@@ -83,6 +83,7 @@
     <Compile Include="Entities\Reeks.cs" />
     <Compile Include="Entities\Speler.cs" />
     <Compile Include="Entities\Verslag.cs" />
+    <Compile Include="Entities\VerslagIndividueel.cs" />
     <Compile Include="Entities\VerslagSpeler.cs" />
     <Compile Include="GlobalBackendConfiguration.cs" />
     <Compile Include="Migrations\201601270124192_LegacyMysqlDb.cs" />
@@ -92,6 +93,14 @@
     <Compile Include="Migrations\201601270125349_VerslagSpelerPositionAndUniqueIndex.cs" />
     <Compile Include="Migrations\201601270125349_VerslagSpelerPositionAndUniqueIndex.Designer.cs">
       <DependentUpon>201601270125349_VerslagSpelerPositionAndUniqueIndex.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601270212274_VerslagIndividueel.cs" />
+    <Compile Include="Migrations\201601270212274_VerslagIndividueel.Designer.cs">
+      <DependentUpon>201601270212274_VerslagIndividueel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601270219508_VerslagIndividueelWalkOver.cs" />
+    <Compile Include="Migrations\201601270219508_VerslagIndividueelWalkOver.Designer.cs">
+      <DependentUpon>201601270219508_VerslagIndividueelWalkOver.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\CalendarService.cs" />
@@ -119,6 +128,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201601270125349_VerslagSpelerPositionAndUniqueIndex.resx">
       <DependentUpon>201601270125349_VerslagSpelerPositionAndUniqueIndex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601270212274_VerslagIndividueel.resx">
+      <DependentUpon>201601270212274_VerslagIndividueel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601270219508_VerslagIndividueelWalkOver.resx">
+      <DependentUpon>201601270219508_VerslagIndividueelWalkOver.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

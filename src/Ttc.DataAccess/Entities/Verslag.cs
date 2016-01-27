@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Ttc.Model;
@@ -15,8 +16,8 @@ namespace Ttc.DataAccess.Entities
         [ForeignKey("KalenderId")]
         public Kalender Kalender { get; set; }
 
-        //[ForeignKey("SpelerId")]
-        //public Speler Speler { get; set; }
+        //public ICollection<VerslagIndividueel> Individueel { get; set; }
+        //public ICollection<VerslagSpeler> Spelers { get; set; }
 
         public string Beschrijving { get; set; }
         public int? UitslagThuis { get; set; }

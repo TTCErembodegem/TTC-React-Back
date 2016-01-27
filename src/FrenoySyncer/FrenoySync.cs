@@ -77,6 +77,8 @@ namespace FrenoySyncer
         #region Public API
         public void Sync()
         {
+            // TODO: map all other results of the teams in the division aswell...            
+
             var frenoyTeams = _frenoy.GetClubTeams(new GetClubTeamsRequest
             {
                 Club = _options.FrenoyClub,
@@ -152,7 +154,7 @@ namespace FrenoySyncer
                     // Wedstrijdverslagen
                     if (frenoyMatch.MatchDetails != null)
                     {
-                        bool isForfeit = frenoyMatch.Score == null;
+                        bool isForfeit = frenoyMatch.Score == null || frenoyMatch.Score.ToLowerInvariant().Contains("ff") || frenoyMatch.Score.ToLowerInvariant().Contains("af");
 
                         var verslag = _db.Verslagen.SingleOrDefault(x => x.KalenderId == kalender.Id);
                         if (verslag == null)
@@ -175,13 +177,45 @@ namespace FrenoySyncer
                             _db.Verslagen.Add(verslag);
                         }
 
+                        bool deleteExisting = false;
                         if (!isForfeit)
                         {
-                            var oldVerslagSpelers = _db.SpelersVerslag.Where(x => x.VerslagId == verslag.Id).ToArray();
-                            _db.SpelersVerslag.RemoveRange(oldVerslagSpelers);
+                            if (deleteExisting)
+                            {
+                                var oldVerslagSpelers = _db.VerslagenSpelers.Where(x => x.VerslagId == verslag.Id).ToArray();
+                                _db.VerslagenSpelers.RemoveRange(oldVerslagSpelers);
 
-                            AddVerslagPlayers(frenoyMatch.MatchDetails.HomePlayers.Players, verslag, true);
-                            AddVerslagPlayers(frenoyMatch.MatchDetails.AwayPlayers.Players, verslag, false);
+                                AddVerslagPlayers(frenoyMatch.MatchDetails.HomePlayers.Players, verslag, true);
+                                AddVerslagPlayers(frenoyMatch.MatchDetails.AwayPlayers.Players, verslag, false);
+                            }
+
+                            var hasIndividualMatches = _db.VerslagenIndividueel.Any(x => x.VerslagId == verslag.Id);
+                            if (!hasIndividualMatches)
+                            {
+                                int id = 0;
+                                foreach (var frenoyIndividual in frenoyMatch.MatchDetails.IndividualMatchResults)
+                                {
+                                    var matchResult = new VerslagIndividueel
+                                    {
+                                        Id = id--,
+                                        VerslagId = verslag.Id,
+                                        MatchNummer = int.Parse(frenoyIndividual.Position),
+                                        ThuisSpelerUniqueIndex = int.Parse(frenoyIndividual.HomePlayerUniqueIndex),
+                                        UitSpelerUniqueIndex = int.Parse(frenoyIndividual.AwayPlayerUniqueIndex),
+                                        WalkOver = WalkOver.None
+                                    };
+                                    if (frenoyIndividual.IsHomeForfeited || frenoyIndividual.IsAwayForfeited)
+                                    {
+                                        matchResult.WalkOver = frenoyIndividual.IsHomeForfeited ? WalkOver.Thuis : WalkOver.Uit;
+                                    }
+                                    else
+                                    {
+                                        matchResult.ThuisSpelerSets = int.Parse(frenoyIndividual.HomeSetCount);
+                                        matchResult.UitSpelerSets = int.Parse(frenoyIndividual.AwaySetCount);
+                                    }
+                                    _db.VerslagenIndividueel.Add(matchResult);
+                                }
+                            }
                         }
                     }
                     CommitChanges();
@@ -227,7 +261,7 @@ namespace FrenoySyncer
                     }
                 }
 
-                _db.SpelersVerslag.Add(verslagSpeler);
+                _db.VerslagenSpelers.Add(verslagSpeler);
             }
         }
 
