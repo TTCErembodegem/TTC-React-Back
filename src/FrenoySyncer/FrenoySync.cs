@@ -34,6 +34,8 @@ namespace FrenoySyncer
         public FrenoySync(FrenoySyncOptions options, bool isVttl = true)
         {
             _db = new TtcDbContext();
+
+            #region Switch between VTTL and Sporta here
             // TODO: Pointless to use the EF logging: Parameter values are not part of the output...
             //_logFileInfo = new FileInfo(@"C:\temp\log" + DateTime.Now.ToString("hh:mm:ss").Replace(":", "") + ".txt");
             //_logFile = new StreamWriter(_logFileInfo.FullName);
@@ -65,41 +67,14 @@ namespace FrenoySyncer
             //binding.Security.Mode = BasicHttpSecurityMode.None;
             //var endpoint = new EndpointAddress(wsdl);
             //_frenoy = new TabTAPI_PortTypeClient(binding, endpoint);
+            #endregion
 
             // Right click the Service Reference and update with different Url...
             _frenoy = new FrenoyVttl.TabTAPI_PortTypeClient();
         }
-
-        [Conditional("DEBUG")]
-        private void CheckPlayers()
-        {
-            foreach (string player in _options.Players.Values.SelectMany(x => x))
-            {
-                try
-                {
-                    GetSpelerId(player);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("No player with NaamKort " + player, ex);
-                }
-            }
-        }
         #endregion
 
         #region Public API
-        public void WriteLog()
-        {
-            //var queries = _log.ToString();
-
-            //var nonQuery = new Regex(@"^(Opened connection|Started transaction|Committed transaction|Closed connection|Disposed transaction|--).*$", RegexOptions.Multiline);
-            //queries = nonQuery.Replace(queries, "");
-            //queries = queries.Replace("SET SESSION sql_mode='ANSI';", "");
-            //queries = Regex.Replace(queries, @"(\r|\n){2,}", "\r\n");
-
-            //File.WriteAllText(@"C:\temp\log" + DateTime.Now.ToString("hh:mm:ss").Replace(":", "") + "_" + (_isVttl ? "VTTL" : "Sporta") + ".txt", queries);
-        }
-
         public void Sync()
         {
             var frenoyTeams = _frenoy.GetClubTeams(new GetClubTeamsRequest
@@ -253,18 +228,6 @@ namespace FrenoySyncer
         {
             System.Globalization.TextInfo ti = System.Globalization.CultureInfo.CurrentCulture.TextInfo;
             return ti.ToTitleCase((frenoyVerslagSpeler.FirstName + " " + frenoyVerslagSpeler.LastName).ToLowerInvariant());
-        }
-        #endregion
-
-        #region Logging
-        //private readonly StringBuilder _log = new StringBuilder();
-        private void CommitChanges()
-        {
-            //_db.Database.Log = Console.Write;
-            //_db.Database.Log = message => _log.AppendLine(message);
-            //_db.Database.Log = _logFile.Write;
-            _db.SaveChanges();
-            //_db.Database.Log = null;
         }
         #endregion
 
@@ -422,10 +385,50 @@ namespace FrenoySyncer
         }
         #endregion
 
+        #region Debug & Tech Stuff
+        [Conditional("DEBUG")]
+        private void CheckPlayers()
+        {
+            foreach (string player in _options.Players.Values.SelectMany(x => x))
+            {
+                try
+                {
+                    GetSpelerId(player);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("No player with NaamKort " + player, ex);
+                }
+            }
+        }
+
         public void Dispose()
         {
             _db.Dispose();
             //_logFile.Close();
         }
+
+        //private readonly StringBuilder _log = new StringBuilder();
+        private void CommitChanges()
+        {
+            //_db.Database.Log = Console.Write;
+            //_db.Database.Log = message => _log.AppendLine(message);
+            //_db.Database.Log = _logFile.Write;
+            _db.SaveChanges();
+            //_db.Database.Log = null;
+        }
+
+        public void WriteLog()
+        {
+            //var queries = _log.ToString();
+
+            //var nonQuery = new Regex(@"^(Opened connection|Started transaction|Committed transaction|Closed connection|Disposed transaction|--).*$", RegexOptions.Multiline);
+            //queries = nonQuery.Replace(queries, "");
+            //queries = queries.Replace("SET SESSION sql_mode='ANSI';", "");
+            //queries = Regex.Replace(queries, @"(\r|\n){2,}", "\r\n");
+
+            //File.WriteAllText(@"C:\temp\log" + DateTime.Now.ToString("hh:mm:ss").Replace(":", "") + "_" + (_isVttl ? "VTTL" : "Sporta") + ".txt", queries);
+        }
+        #endregion
     }
 }
