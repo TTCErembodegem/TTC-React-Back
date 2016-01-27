@@ -16,9 +16,16 @@ namespace Ttc.DataAccess.Entities
         [ForeignKey("SpelerId")]
         public Speler Speler { get; set; }
 
+        /// <summary>
+        /// Aantal gewonnen matchen.
+        /// Null => Forfeit
+        /// </summary>
         public int? Winst { get; set; }
         public string SpelerNaam { get; set; }
         public int? Thuis { get; set; }
         public string Klassement { get; set; }
+
+        //public int Positie { get; set; }
+        //public int UniqueIndex { get; set; }
     }
 }
