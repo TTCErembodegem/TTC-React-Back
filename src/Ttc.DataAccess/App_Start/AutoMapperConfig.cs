@@ -59,21 +59,17 @@ namespace Ttc.DataAccess.App_Start
         /// We'll fix this later because multiple TTC Erembodegems could be playing in same Reeks
         /// </summary>
         private static ICollection<OpposingTeam> MapAllTeams(Reeks src)
-        {
-            return src.Ploegen.Select(ploeg => new OpposingTeam
+        =>  src.Ploegen.Select(ploeg => new OpposingTeam
             {
                 ClubId = ploeg.ClubId.Value,
                 TeamCode = ploeg.Code
             }).ToArray();
-        }
 
         /// <summary>
         /// Incorrect when multiple own club teams in Reeks
         /// </summary>
-        private static string FindOwnTeamCode(Reeks src)
-        {
-            return src.Ploegen.First(x => x.ClubId == Constants.OwnClubId).Code;
-        }
+        private static string FindOwnTeamCode(Reeks src) => src.Ploegen.First(x => x.ClubId == Constants.OwnClubId).Code;
+
         #endregion
 
         #region Matches
@@ -158,8 +154,7 @@ namespace Ttc.DataAccess.App_Start
         }
 
         private static ClubLocation CreateClubLocation(ClubLokaal location)
-        {
-            return new ClubLocation
+        =>  new ClubLocation
             {
                 Id = location.Id,
                 Description = location.Lokaal,
@@ -171,7 +166,7 @@ namespace Ttc.DataAccess.App_Start
                     Mobile = location.Telefoon
                 }
             };
-        }
+
         #endregion
 
         #region Players
@@ -207,18 +202,15 @@ namespace Ttc.DataAccess.App_Start
         }
 
         private static PlayerCompetition CreateSportaPlayer(KlassementValueConverter converter, int clubId, int uniqueIndex, string frenoyLink, string ranking, int position, int rankingIndex)
-        {
-            return new PlayerCompetition(
+            => new PlayerCompetition(
                 Competition.Sporta,
                 clubId, uniqueIndex, frenoyLink, ranking, position, rankingIndex, converter.Sporta(ranking));
-        }
 
         private static PlayerCompetition CreateVttlPlayer(KlassementValueConverter converter, int clubId, int uniqueIndex, string frenoyLink, string ranking, int position, int rankingIndex)
-        {
-            return new PlayerCompetition(
+            => new PlayerCompetition(
                 Competition.Vttl,
                 clubId, uniqueIndex, frenoyLink, ranking, position, rankingIndex, converter.Vttl(ranking));
-        }
+
         #endregion
     }
 }

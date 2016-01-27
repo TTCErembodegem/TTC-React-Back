@@ -87,9 +87,6 @@ namespace Ttc.DataAccess
             DbConfiguration.SetConfiguration(new MySql.Data.Entity.MySqlEFConfiguration());
         }
 
-        private static string ToLowerCaseTableName(Type clrType)
-        {
-            return clrType.Name.ToLowerInvariant();
-        }
+        private static string ToLowerCaseTableName(Type clrType) => clrType.Name.ToLowerInvariant();
     }
 }

@@ -12,10 +12,7 @@ namespace Ttc.DataAccess
     /// </summary>
     public static class GlobalBackendConfiguration
     {
-        public static void ConfigureAutoMapper()
-        {
-            AutoMapperConfig.Configure(new KlassementValueConverter());
-        }
+        public static void ConfigureAutoMapper() => AutoMapperConfig.Configure(new KlassementValueConverter());
 
         public static void ConfigureIoC(Container container)
         {

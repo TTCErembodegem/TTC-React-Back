@@ -22,10 +22,7 @@ namespace Ttc.DataAccess.Entities
         public int UitSpelerSets { get; set; }
         public WalkOver WalkOver { get; set; }
 
-        public override string ToString()
-        {
-            return $"VerslagId={VerslagId}, Match#={MatchNummer}, ThuisSpeler={ThuisSpelerUniqueIndex}:{ThuisSpelerSets}, UitSpeler={UitSpelerUniqueIndex}:{UitSpelerSets}";
-        }
+        public override string ToString() =>$"VerslagId={VerslagId}, Match#={MatchNummer}, ThuisSpeler={ThuisSpelerUniqueIndex}:{ThuisSpelerSets}, UitSpeler={UitSpelerUniqueIndex}:{UitSpelerSets}";
     }
 
     internal enum WalkOver
