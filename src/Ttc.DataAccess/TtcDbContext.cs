@@ -12,6 +12,7 @@ using Ttc.Model;
 
 namespace Ttc.DataAccess
 {
+    [DbConfigurationType(typeof(MySql.Data.Entity.MySqlEFConfiguration))]
     internal class TtcDbContext : DbContext
     {
         public DbSet<Speler> Spelers { get; set; }
@@ -36,7 +37,13 @@ namespace Ttc.DataAccess
 
         public TtcDbContext() : base("ttc")
         {
+            //Configuration.ValidateOnSaveEnabled = false;
             Database.SetInitializer<TtcDbContext>(new CreateDatabaseIfNotExists<TtcDbContext>());
+        }
+
+        static TtcDbContext()
+        {
+            DbConfiguration.SetConfiguration(new MySql.Data.Entity.MySqlEFConfiguration());
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
