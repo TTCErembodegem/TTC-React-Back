@@ -8,6 +8,7 @@ using Ttc.Model;
 using Ttc.Model.Clubs;
 using Ttc.Model.Players;
 using Ttc.Model.Teams;
+using Ttc.Model.Matches;
 
 namespace Ttc.DataAccess.App_Start
 {

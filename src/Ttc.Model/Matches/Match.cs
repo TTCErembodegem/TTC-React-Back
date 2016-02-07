@@ -1,7 +1,7 @@
 ﻿using System;
 using Ttc.Model.Teams;
 
-namespace Ttc.Model
+namespace Ttc.Model.Matches
 {
     public class Match
     {
@@ -14,6 +14,8 @@ namespace Ttc.Model
 
         public int ReeksId { get; set; }
         public OpposingTeam Opponent { get; set; }
+
+        //public MatchReport Report { get; set; }
 
         public override string ToString() => $"Id={Id} on {Date.ToString("g")}, Home={IsHomeMatch}, ReeksId={ReeksId}, Opponent=({Opponent})";
     }

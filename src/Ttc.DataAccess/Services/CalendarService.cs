@@ -4,7 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using AutoMapper;
 using Ttc.DataAccess.Entities;
-using Ttc.Model;
+using Ttc.Model.Matches;
 
 namespace Ttc.DataAccess.Services
 {
