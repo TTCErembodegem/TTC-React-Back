@@ -6,9 +6,9 @@ using Ttc.DataAccess.Entities;
 using Ttc.DataAccess.Utilities;
 using Ttc.Model;
 using Ttc.Model.Clubs;
+using Ttc.Model.Matches;
 using Ttc.Model.Players;
 using Ttc.Model.Teams;
-using Ttc.Model.Matches;
 
 namespace Ttc.DataAccess.App_Start
 {
@@ -20,6 +20,46 @@ namespace Ttc.DataAccess.App_Start
             ClubMapping();
             CalendarMapping();
             TeamMapping();
+            //ReportMapping();
+        }
+
+        //private static void ReportMapping()
+        //{
+        //    Mapper.CreateMap<Verslag, MatchReport>()
+        //        .ForMember(
+        //            dest => dest.Description,
+        //            opts => opts.MapFrom(src => src.Beschrijving))
+        //        .ForMember(
+        //            dest => dest.KalenderId,
+        //            opts => opts.MapFrom(src => src.Id))
+        //        .ForMember(
+        //            dest => dest.PlayerId,
+        //            opts => opts.MapFrom(src => src.SpelerId))
+        //        .ForMember(
+        //            dest => dest.ScoreType,
+        //            opts => opts.MapFrom(src => GetScoreType(src)))
+        //        .ForMember(
+        //            dest => dest.Score,
+        //            opts => opts.MapFrom(src => src.WO == 0 || src.UitslagThuis.HasValue ? $"{src.UitslagThuis}-{src.UitslagUit}" : null))
+        //        ;
+        //}
+
+        private static MatchOutcome GetScoreType(Verslag verslag)
+        {
+            if (verslag.WO == 1)
+            {
+                return MatchOutcome.WalkOver;
+            }
+            if (!verslag.UitslagThuis.HasValue || !verslag.UitslagUit.HasValue)
+            {
+                return MatchOutcome.NotYetPlayed;
+            }
+            if (verslag.UitslagThuis.Value == verslag.UitslagUit.Value)
+            {
+                return MatchOutcome.Draw;
+            }
+
+            return verslag.UitslagThuis.Value < verslag.UitslagUit.Value ? MatchOutcome.Lost : MatchOutcome.Won;
         }
 
         #region Teams

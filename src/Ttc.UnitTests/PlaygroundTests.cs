@@ -13,6 +13,7 @@ using Ttc.DataAccess.Services;
 using Ttc.DataAccess.Utilities;
 using Ttc.Model;
 using Ttc.Model.Clubs;
+using Ttc.Model.Matches;
 using Ttc.Model.Players;
 
 namespace Ttc.UnitTests
@@ -20,6 +21,22 @@ namespace Ttc.UnitTests
     [TestFixture]
     public class PlaygroundTests
     {
+        //[Test]
+        //public void KalenderToVerslag()
+        //{
+        //    using (var dbContext = new TtcDbContext())
+        //    {
+        //        var calendar = dbContext.Kalender
+        //            .Include(x => x.ThuisClubPloeg)
+        //            .Include(x => x.Verslag)
+        //            .Where(x => x.Verslag != null)
+        //            .ToList();
+
+        //        //var result = Mapper.Map<IList<Kalender>, IList<Match>>(calendar);
+        //        Assert.That(calendar.Any());
+        //    }
+        //}
+
         [Test]
         public void ReeksMapping()
         {

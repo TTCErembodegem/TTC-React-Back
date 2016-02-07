@@ -137,7 +137,7 @@ namespace FrenoySyncer
                     WithDetailsSpecified = true,
                     WithDetails = true,
                 });
-                int newVerlsagId = 0;
+
                 foreach (TeamMatchEntryType frenoyMatch in matches.TeamMatchesEntries.Where(x => x.HomeTeam.Trim() != "Vrij" && x.AwayTeam.Trim() != "Vrij"))
                 {
                     Debug.Assert(frenoyMatch.DateSpecified);
@@ -161,7 +161,6 @@ namespace FrenoySyncer
                         {
                             verslag = new Verslag
                             {
-                                Id = newVerlsagId--,
                                 Kalender = kalender,
                                 KalenderId = kalender.Id,
                                 Details = 0,

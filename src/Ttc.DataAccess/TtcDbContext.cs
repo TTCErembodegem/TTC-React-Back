@@ -65,6 +65,10 @@ namespace Ttc.DataAccess
                 .WithMany(c => c.Spelers)
                 .HasForeignKey(x => x.ClubPloegId);
 
+            //modelBuilder.Entity<Verslag>()
+            //    .HasRequired(x => x.Kalender)
+            //    .WithRequiredPrincipal(x => x.Verslag);
+
             //modelBuilder.Entity<VerslagIndividueel>()
             //    .HasRequired(c => c.Verslag)
             //    .WithMany(c => c.Individueel)

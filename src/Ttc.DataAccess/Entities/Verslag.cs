@@ -10,6 +10,8 @@ namespace Ttc.DataAccess.Entities
     {
         [Key]
         public int Id { get; set; }
+
+        //[ForeignKey("Kalender")]
         public int KalenderId { get; set; }
         public int SpelerId { get; set; }
 
