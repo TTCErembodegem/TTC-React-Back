@@ -44,7 +44,7 @@ namespace Ttc.DataAccess.Entities
 
         public override string ToString()
         {
-            var str = $"Id={Id}, Date={Datum.ToString("d")}{Uur.ToString("hh:MM")}";
+            var str = $"Id={Id}, Date={Datum.ToString("d")} {Uur.ToString(@"hh\:mm")}";
             if (!Thuis.HasValue)
             {
                 return $"{str}, {Beschrijving} / {GeleideTraining}";
