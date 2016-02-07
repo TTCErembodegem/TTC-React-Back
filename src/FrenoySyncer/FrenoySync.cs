@@ -177,7 +177,7 @@ namespace FrenoySyncer
                             _db.Verslagen.Add(verslag);
                         }
 
-                        bool deleteExisting = false;
+                        bool deleteExisting = true;
                         if (!isForfeit)
                         {
                             if (deleteExisting)
