@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Data.Entity.Migrations;
+using NUnit.Framework;
 using Ttc.DataAccess;
 using Ttc.DataAccess.Entities;
 
@@ -7,6 +8,25 @@ namespace Ttc.UnitTests
     [TestFixture]
     public class IntegrationTests
     {
+        [Test]
+        [Category("Integration")]
+        public void MigrateToLatestVersion()
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var config = new DbMigrationsConfiguration()
+                {
+                    MigrationsAssembly = typeof (TtcDbContext).Assembly,
+                    ContextType = typeof (TtcDbContext),
+                    MigrationsNamespace = "Ttc.DataAccess.Migrations"
+                };
+
+                var migrator = new DbMigrator(config);
+                migrator.Update();
+                //migrator.Update("0");
+            }
+        }
+
         [Test]
         [Category("Integration")]
         [Description("Find players in the database that would make AutoMapper fail silently")]
