@@ -7,25 +7,29 @@ namespace Ttc.DataAccess.Entities
     {
         [Key]
         public int Id { get; set; }
-        public int VerslagId { get; set; }
-        public int? SpelerId { get; set; }
 
-        [ForeignKey("VerslagId")]
-        public Verslag Verslag { get; set; }
+        //[ForeignKey("VerslagId")]
+        //public Verslag Verslag { get; set; }
+        //public int VerslagId { get; set; }
+
+        [ForeignKey("KalenderId")]
+        public Kalender Kalender { get; set; }
+        public int KalenderId { get; set; }
 
         [ForeignKey("SpelerId")]
         public Speler Speler { get; set; }
+        public int SpelerId { get; set; }
 
         /// <summary>
         /// Aantal gewonnen matchen.
         /// Null => Forfeit
         /// </summary>
         public int? Winst { get; set; }
-        public string SpelerNaam { get; set; }
-        public int? Thuis { get; set; }
-        public string Klassement { get; set; }
+        public int Thuis { get; set; }
 
         public int Positie { get; set; }
+        public string SpelerNaam { get; set; }
+        public string Klassement { get; set; }
         public int UniqueIndex { get; set; }
     }
 }

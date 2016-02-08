@@ -16,6 +16,9 @@ namespace Ttc.DataAccess.Migrations
 
         protected override void Seed(Ttc.DataAccess.TtcDbContext context)
         {
+            //context.Database.ExecuteSqlCommand("DELETE FROM dbo.verslagspeler");
+            //context.Database.ExecuteSqlCommand("DELETE FROM dbo.verslagindividueel");
+
             //  This method will be called after migrating to the latest version.
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
@@ -30,4 +33,28 @@ namespace Ttc.DataAccess.Migrations
             //
         }
     }
+
+    //CodeGenerator = new MyCodeGenerator();
+    //class MyCodeGenerator : CSharpMigrationCodeGenerator
+    //{
+    //    protected override void Generate(
+    //        DropIndexOperation dropIndexOperation, IndentedTextWriter writer)
+    //    {
+    //        dropIndexOperation.Table = StripDbo(dropIndexOperation.Table);
+
+    //        base.Generate(dropIndexOperation, writer);
+    //    }
+
+    //    // TODO: Override other Generate overloads that involve table names
+
+    //    private string StripDbo(string table)
+    //    {
+    //        if (table.StartsWith("dbo."))
+    //        {
+    //            return table.Substring(4);
+    //        }
+
+    //        return table;
+    //    }
+    //}
 }

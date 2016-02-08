@@ -15,9 +15,9 @@ namespace Ttc.DataAccess.Entities
         public int? Week { get; set; }
         public string FrenoyMatchId { get; set; }
 
-        //[ForeignKey("Id")]
+        [ForeignKey("Id")]
         //[InverseProperty("Kalender")]
-        //public Verslag Verslag { get; set; }
+        public Verslag Verslag { get; set; }
         
         /// <summary>
         /// De ThuisClubId is altijd TTC Erembodegem

@@ -20,29 +20,26 @@ namespace Ttc.DataAccess.App_Start
             ClubMapping();
             CalendarMapping();
             TeamMapping();
-            //ReportMapping();
+            ReportMapping();
         }
 
-        //private static void ReportMapping()
-        //{
-        //    Mapper.CreateMap<Verslag, MatchReport>()
-        //        .ForMember(
-        //            dest => dest.Description,
-        //            opts => opts.MapFrom(src => src.Beschrijving))
-        //        .ForMember(
-        //            dest => dest.KalenderId,
-        //            opts => opts.MapFrom(src => src.Id))
-        //        .ForMember(
-        //            dest => dest.PlayerId,
-        //            opts => opts.MapFrom(src => src.SpelerId))
-        //        .ForMember(
-        //            dest => dest.ScoreType,
-        //            opts => opts.MapFrom(src => GetScoreType(src)))
-        //        .ForMember(
-        //            dest => dest.Score,
-        //            opts => opts.MapFrom(src => src.WO == 0 || src.UitslagThuis.HasValue ? $"{src.UitslagThuis}-{src.UitslagUit}" : null))
-        //        ;
-        //}
+        private static void ReportMapping()
+        {
+            Mapper.CreateMap<Verslag, MatchReport>()
+                .ForMember(
+                    dest => dest.Description,
+                    opts => opts.MapFrom(src => src.Beschrijving))
+                .ForMember(
+                    dest => dest.PlayerId,
+                    opts => opts.MapFrom(src => src.SpelerId))
+                .ForMember(
+                    dest => dest.ScoreType,
+                    opts => opts.MapFrom(src => GetScoreType(src)))
+                .ForMember(
+                    dest => dest.Score,
+                    opts => opts.MapFrom(src => src.WO == 0 || src.UitslagThuis.HasValue ? $"{src.UitslagThuis}-{src.UitslagUit}" : null))
+                ;
+        }
 
         private static MatchOutcome GetScoreType(Verslag verslag)
         {

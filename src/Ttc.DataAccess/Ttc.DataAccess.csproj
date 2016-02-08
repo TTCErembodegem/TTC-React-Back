@@ -102,6 +102,14 @@
     <Compile Include="Migrations\201601270219508_VerslagIndividueelWalkOver.Designer.cs">
       <DependentUpon>201601270219508_VerslagIndividueelWalkOver.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602072343097_Verslagen.cs" />
+    <Compile Include="Migrations\201602072343097_Verslagen.Designer.cs">
+      <DependentUpon>201602072343097_Verslagen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602072347309_Verslagen2.cs" />
+    <Compile Include="Migrations\201602072347309_Verslagen2.Designer.cs">
+      <DependentUpon>201602072347309_Verslagen2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\CalendarService.cs" />
     <Compile Include="Services\ClubService.cs" />
@@ -134,6 +142,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201601270219508_VerslagIndividueelWalkOver.resx">
       <DependentUpon>201601270219508_VerslagIndividueelWalkOver.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602072343097_Verslagen.resx">
+      <DependentUpon>201602072343097_Verslagen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602072347309_Verslagen2.resx">
+      <DependentUpon>201602072347309_Verslagen2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

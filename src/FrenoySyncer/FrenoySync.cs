@@ -181,14 +181,14 @@ namespace FrenoySyncer
                         {
                             if (deleteExisting)
                             {
-                                var oldVerslagSpelers = _db.VerslagenSpelers.Where(x => x.VerslagId == verslag.Id).ToArray();
+                                var oldVerslagSpelers = _db.VerslagenSpelers.Where(x => x.KalenderId == verslag.KalenderId).ToArray();
                                 _db.VerslagenSpelers.RemoveRange(oldVerslagSpelers);
 
                                 AddVerslagPlayers(frenoyMatch.MatchDetails.HomePlayers.Players, verslag, true);
                                 AddVerslagPlayers(frenoyMatch.MatchDetails.AwayPlayers.Players, verslag, false);
                             }
 
-                            var hasIndividualMatches = _db.VerslagenIndividueel.Any(x => x.VerslagId == verslag.Id);
+                            var hasIndividualMatches = _db.VerslagenIndividueel.Any(x => x.KalenderId == verslag.KalenderId);
                             if (!hasIndividualMatches)
                             {
                                 int id = 0;
@@ -197,7 +197,7 @@ namespace FrenoySyncer
                                     var matchResult = new VerslagIndividueel
                                     {
                                         Id = id--,
-                                        VerslagId = verslag.Id,
+                                        KalenderId = verslag.KalenderId,
                                         MatchNummer = int.Parse(frenoyIndividual.Position),
                                         ThuisSpelerUniqueIndex = int.Parse(frenoyIndividual.HomePlayerUniqueIndex),
                                         UitSpelerUniqueIndex = int.Parse(frenoyIndividual.AwayPlayerUniqueIndex),
@@ -234,8 +234,7 @@ namespace FrenoySyncer
             {
                 VerslagSpeler verslagSpeler = new VerslagSpeler
                 {
-                    Verslag = verslag,
-                    VerslagId = verslag.Id,
+                    KalenderId = verslag.KalenderId,
                     Klassement = frenoyVerslagSpeler.Ranking,
                     Thuis = thuisSpeler ? 1 : 0,
                     SpelerNaam = GetSpelerNaam(frenoyVerslagSpeler),

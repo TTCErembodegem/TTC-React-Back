@@ -19,10 +19,11 @@ namespace Ttc.DataAccess.Services
 
                 var calendar = dbContext.Kalender
                     .Include(x => x.ThuisClubPloeg)
-                    //.Include(x => x.Verslag)
+                    .Include(x => x.Verslag)
                     .Where(x => x.Datum >= dateBegin)
                     .Where(x => x.Datum <= dateEnd)
                     .Where(x => x.ThuisClubId.HasValue)
+                    .Where(x => x.ThuisPloeg == "A")
                     .OrderBy(x => x.Datum)
                     .ToList();
 
