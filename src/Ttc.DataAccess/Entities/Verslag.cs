@@ -8,13 +8,11 @@ namespace Ttc.DataAccess.Entities
 {
     internal class Verslag
     {
-        public int SpelerId { get; set; }
-
-        [ForeignKey("KalenderId")]
-        public Kalender Kalender { get; set; }
-
         [Key]
         public int KalenderId { get; set; }
+        public Kalender Kalender { get; set; }
+
+        public int SpelerId { get; set; }
 
         //public ICollection<VerslagIndividueel> Individueel { get; set; }
         //public ICollection<VerslagSpeler> Spelers { get; set; }

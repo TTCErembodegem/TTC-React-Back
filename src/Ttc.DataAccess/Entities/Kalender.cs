@@ -16,7 +16,6 @@ namespace Ttc.DataAccess.Entities
         public string FrenoyMatchId { get; set; }
 
         [ForeignKey("Id")]
-        //[InverseProperty("Kalender")]
         public Verslag Verslag { get; set; }
         
         /// <summary>

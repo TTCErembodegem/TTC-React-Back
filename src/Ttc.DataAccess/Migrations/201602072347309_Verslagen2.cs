@@ -17,7 +17,6 @@ namespace Ttc.DataAccess.Migrations
             AddColumn("verslag", "Id", c => c.Int(nullable: false));
             AddPrimaryKey("verslag", "id");
             AlterColumn("verslag", "Id", c => c.Int(nullable: false, identity: true));
-
         }
     }
 }
