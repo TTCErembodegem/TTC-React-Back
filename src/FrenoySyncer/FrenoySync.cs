@@ -9,6 +9,7 @@ using Ttc.DataAccess;
 using Ttc.DataAccess.Entities;
 using Ttc.Model;
 using Ttc.Model.Clubs;
+using Ttc.Model.Matches;
 using Ttc.Model.Teams;
 
 namespace FrenoySyncer
@@ -208,7 +209,7 @@ namespace FrenoySyncer
                                     };
                                     if (frenoyIndividual.IsHomeForfeited || frenoyIndividual.IsAwayForfeited)
                                     {
-                                        matchResult.WalkOver = frenoyIndividual.IsHomeForfeited ? WalkOver.Thuis : WalkOver.Uit;
+                                        matchResult.WalkOver = frenoyIndividual.IsHomeForfeited ? WalkOver.Home : WalkOver.Out;
                                     }
                                     else
                                     {

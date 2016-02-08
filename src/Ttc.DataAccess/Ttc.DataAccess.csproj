@@ -110,6 +110,10 @@
     <Compile Include="Migrations\201602072347309_Verslagen2.Designer.cs">
       <DependentUpon>201602072347309_Verslagen2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602080124535_VerslagDetails.cs" />
+    <Compile Include="Migrations\201602080124535_VerslagDetails.Designer.cs">
+      <DependentUpon>201602080124535_VerslagDetails.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\CalendarService.cs" />
     <Compile Include="Services\ClubService.cs" />
@@ -148,6 +152,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201602072347309_Verslagen2.resx">
       <DependentUpon>201602072347309_Verslagen2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602080124535_VerslagDetails.resx">
+      <DependentUpon>201602080124535_VerslagDetails.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

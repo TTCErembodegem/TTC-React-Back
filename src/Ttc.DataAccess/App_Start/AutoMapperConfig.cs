@@ -21,6 +21,7 @@ namespace Ttc.DataAccess.App_Start
             ClubMapping();
             CalendarMapping();
             TeamMapping();
+            ReportMapping();
         }
 
         #region Teams
@@ -75,7 +76,7 @@ namespace Ttc.DataAccess.App_Start
         #endregion
 
         #region Matches
-        private static void CalendarMapping()
+        private static void ReportMapping()
         {
             Mapper.CreateMap<Verslag, MatchReport>()
                 .ForMember(
@@ -90,8 +91,59 @@ namespace Ttc.DataAccess.App_Start
                 .ForMember(
                     dest => dest.Score,
                     opts => opts.MapFrom(src => src.WO == 0 || src.UitslagThuis.HasValue ? new MatchScore(src.UitslagThuis.Value, src.UitslagUit.Value) : null))
+                .ForMember(
+                    dest => dest.Players,
+                    opts => opts.MapFrom(src => src.Spelers))
+                .ForMember(
+                    dest => dest.Games,
+                    opts => opts.MapFrom(src => src.Individueel))
                 ;
 
+            Mapper.CreateMap<VerslagSpeler, MatchPlayer>()
+                .ForMember(
+                    dest => dest.Home,
+                    opts => opts.MapFrom(src => src.Thuis == 1))
+                .ForMember(
+                    dest => dest.Name,
+                    opts => opts.MapFrom(src => src.SpelerNaam))
+                .ForMember(
+                    dest => dest.Position,
+                    opts => opts.MapFrom(src => src.Positie))
+                .ForMember(
+                    dest => dest.Ranking,
+                    opts => opts.MapFrom(src => src.Klassement))
+                .ForMember(
+                    dest => dest.UniqueIndex,
+                    opts => opts.MapFrom(src => src.UniqueIndex))
+                .ForMember(
+                    dest => dest.Won,
+                    opts => opts.MapFrom(src => src.Winst))
+                .ForMember(
+                    dest => dest.PlayerId,
+                    opts => opts.MapFrom(src => src.SpelerId == 0 ? (int?)null : src.SpelerId))
+                ;
+        
+            Mapper.CreateMap<VerslagIndividueel, MatchGame>()
+                .ForMember(
+                    dest => dest.MatchNumber,
+                    opts => opts.MapFrom(src => src.MatchNummer))
+                .ForMember(
+                    dest => dest.HomePlayerUniqueIndex,
+                    opts => opts.MapFrom(src => src.ThuisSpelerUniqueIndex))
+                .ForMember(
+                    dest => dest.HomePlayerSets,
+                    opts => opts.MapFrom(src => src.ThuisSpelerSets))
+                .ForMember(
+                    dest => dest.OutPlayerUniqueIndex,
+                    opts => opts.MapFrom(src => src.UitSpelerUniqueIndex))
+                .ForMember(
+                    dest => dest.OutPlayerSets,
+                    opts => opts.MapFrom(src => src.UitSpelerSets))
+                ;
+        }
+
+        private static void CalendarMapping()
+        {
             Mapper.CreateMap<Kalender, Match>()
                 .ForMember(
                     dest => dest.Date,

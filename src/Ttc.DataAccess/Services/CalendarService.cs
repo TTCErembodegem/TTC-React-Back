@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using AutoMapper;
 using Ttc.DataAccess.Entities;
 using Ttc.Model.Matches;
@@ -20,10 +21,11 @@ namespace Ttc.DataAccess.Services
                 var calendar = dbContext.Kalender
                     .Include(x => x.ThuisClubPloeg)
                     .Include(x => x.Verslag)
+                    .Include("Verslag.Individueel")
+                    .Include("Verslag.Spelers")
                     .Where(x => x.Datum >= dateBegin)
                     .Where(x => x.Datum <= dateEnd)
                     .Where(x => x.ThuisClubId.HasValue)
-                    .Where(x => x.ThuisPloeg == "A")
                     .OrderBy(x => x.Datum)
                     .ToList();
 

@@ -69,15 +69,15 @@ namespace Ttc.DataAccess
                 .HasOptional(x => x.Verslag)
                 .WithRequired(x => x.Kalender);
 
-            //modelBuilder.Entity<VerslagIndividueel>()
-            //    .HasRequired(c => c.Verslag)
-            //    .WithMany(c => c.Individueel)
-            //    .HasForeignKey(x => x.VerslagId);
+            modelBuilder.Entity<VerslagIndividueel>()
+                .HasRequired(c => c.Verslag)
+                .WithMany(c => c.Individueel)
+                .HasForeignKey(x => x.KalenderId);
 
-            //modelBuilder.Entity<VerslagSpeler>()
-            //    .HasRequired(c => c.Verslag)
-            //    .WithMany(c => c.Spelers)
-            //    .HasForeignKey(x => x.VerslagId);
+            modelBuilder.Entity<VerslagSpeler>()
+                .HasRequired(c => c.Verslag)
+                .WithMany(c => c.Spelers)
+                .HasForeignKey(x => x.KalenderId);
         }
 
         public TtcDbContext() : base("ttc")

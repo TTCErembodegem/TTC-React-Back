@@ -14,8 +14,8 @@ namespace Ttc.DataAccess.Entities
 
         public int SpelerId { get; set; }
 
-        //public ICollection<VerslagIndividueel> Individueel { get; set; }
-        //public ICollection<VerslagSpeler> Spelers { get; set; }
+        public ICollection<VerslagIndividueel> Individueel { get; set; }
+        public ICollection<VerslagSpeler> Spelers { get; set; }
 
         public string Beschrijving { get; set; }
         public int? UitslagThuis { get; set; }
