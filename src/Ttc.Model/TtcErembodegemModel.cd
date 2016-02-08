@@ -10,48 +10,15 @@
       <FileName>Contact.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Ttc.Model.Match">
-    <Position X="7.75" Y="4.75" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
-    <AssociationLine Name="IsTegen" Type="Ttc.Model.Teams.OpposingTeam">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.839" Y="-0.357" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAAAUAABAAAAAAACAAAABAAAAAIAAgBA=</HashCode>
-      <FileName>Match.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="IsTegen" />
-    </ShowAsAssociation>
-  </Class>
   <Class Name="Ttc.Model.Clubs.Club">
     <Position X="3.75" Y="0.5" Width="1.5" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <AssociationLine Name="BestuurdDoor" Type="Ttc.Model.Clubs.ClubManager">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.381" Y="0.112" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <AssociationLine Name="SpeeltOp" Type="Ttc.Model.Clubs.ClubLocation">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.579" Y="0.081" />
-      </MemberNameLabel>
-    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>EACCAAAAAAAAggAEGAQgAAQAAAAAAAAghAAAAAAAAAA=</HashCode>
+      <HashCode>EACCAAAAAAAAgAAEAAQgAAQAAAAAAAAghAAAAAAAAAA=</HashCode>
       <FileName>Clubs\Club.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="BestuurdDoor" />
-      <Property Name="SpeeltOp" />
-      <Property Name="Contact" />
-    </ShowAsAssociation>
   </Class>
   <Class Name="Ttc.Model.Clubs.ClubLocation">
     <Position X="0.5" Y="0.5" Width="1.5" />
@@ -75,27 +42,13 @@
   </Class>
   <Class Name="Ttc.Model.Players.Player">
     <Position X="5.5" Y="4.25" Width="1.5" />
-    <Members>
-      <Property Name="Contact1" Hidden="true" />
-    </Members>
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <AssociationLine Name="SpeeltHoe" Type="Ttc.Model.Players.PlayerStyle">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.183" Y="-0.315" />
-      </MemberNameLabel>
-    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAACAAAAAAIAEAAkGAIAAAQAAAAAACAABACAAAAAAAE=</HashCode>
+      <HashCode>AAACAAAAAAIAEAAEGAAAAAQAAAAAAAAABACAAAAAAAA=</HashCode>
       <FileName>Players\Player.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Contact1" />
-      <Property Name="Contact2" />
-      <Property Name="SpeeltHoe" />
-      <Property Name="HeeftCompetitieDetails" />
-    </ShowAsAssociation>
   </Class>
   <Class Name="Ttc.Model.Players.PlayerCompetition">
     <Position X="0.5" Y="4.75" Width="1.75" />
@@ -128,7 +81,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Ttc.Model.Teams.OpposingTeam">
-    <Position X="9.25" Y="2.5" Width="1.5" />
+    <Position X="8.5" Y="2.5" Width="1.5" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
@@ -142,30 +95,50 @@
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <AssociationLine Name="ZittenInReeks" Type="Ttc.Model.Teams.OpposingTeam">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.204" Y="0.102" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <AssociationLine Name="Heeft" Type="Ttc.Model.Teams.FrenoyTeamLinks">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.373" Y="0.12" />
-      </MemberNameLabel>
-    </AssociationLine>
-    <AssociationLine Name="HeeftSpelers" Type="Ttc.Model.Players.Player">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.141" Y="0.539" />
-      </MemberNameLabel>
-    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAACAAAABAAAAABEAABAAAAEAAiAAAAAAAAIAAAAhAA=</HashCode>
+      <HashCode>AAAAAAAABAAAAAAEAABAAAAEAAigAAAAAAAAAAAAhAA=</HashCode>
       <FileName>Teams\Team.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="ZittenInReeks" />
-      <Property Name="Heeft" />
-      <Property Name="HeeftSpelers" />
-    </ShowAsAssociation>
+  </Class>
+  <Class Name="Ttc.Model.Matches.Match">
+    <Position X="7.5" Y="5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAEAABAAAAAAACAAAABAAAAAIAAhBA=</HashCode>
+      <FileName>Matches\Match.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ttc.Model.Matches.MatchGame">
+    <Position X="11" Y="3.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABEAIQAAAAAAAAAAAAAQAAAAAAAAgI=</HashCode>
+      <FileName>Matches\MatchGame.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ttc.Model.Matches.MatchPlayer">
+    <Position X="11" Y="5.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAkAAAAAAQAAAQQAAAAAAAIABAAAAA=</HashCode>
+      <FileName>Matches\MatchPlayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ttc.Model.Matches.MatchReport">
+    <Position X="9.25" Y="5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>QAAAQAAAAAAgAAgUAAAAAAAAAAAgAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>Matches\MatchReport.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
