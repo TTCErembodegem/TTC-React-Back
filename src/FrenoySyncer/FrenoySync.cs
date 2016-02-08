@@ -152,7 +152,7 @@ namespace FrenoySyncer
                     }
 
                     // Wedstrijdverslagen
-                    if (frenoyMatch.MatchDetails != null)
+                    if (frenoyMatch.MatchDetails != null && frenoyMatch.MatchDetails.DetailsCreated)
                     {
                         bool isForfeit = frenoyMatch.Score == null || frenoyMatch.Score.ToLowerInvariant().Contains("ff") || frenoyMatch.Score.ToLowerInvariant().Contains("af");
 
@@ -165,12 +165,15 @@ namespace FrenoySyncer
                                 KalenderId = kalender.Id,
                                 Details = 0,
                                 SpelerId = 4, // Dirk DS
-                                WO = 0
                             };
                             if (!isForfeit)
                             {
                                 verslag.UitslagThuis = int.Parse(frenoyMatch.Score.Substring(0, frenoyMatch.Score.IndexOf("-")));
                                 verslag.UitslagUit = int.Parse(frenoyMatch.Score.Substring(frenoyMatch.Score.IndexOf("-") + 1));
+                                verslag.WO = 0;
+                            }
+                            else
+                            {
                                 verslag.WO = 1;
                             }
                             _db.Verslagen.Add(verslag);
