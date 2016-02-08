@@ -15,8 +15,29 @@ namespace Ttc.Model.Matches
         public int ReeksId { get; set; }
         public OpposingTeam Opponent { get; set; }
 
-        //public MatchReport Report { get; set; }
+        public MatchReport Report { get; set; }
 
         public override string ToString() => $"Id={Id} on {Date.ToString("g")}, Home={IsHomeMatch}, ReeksId={ReeksId}, Opponent=({Opponent})";
+    }
+
+    public class MatchScore
+    {
+        public int Home { get; set; }
+        public int Out { get; set; }
+
+        public MatchScore()
+        {
+        }
+
+        public MatchScore(int homeScore, int outScore)
+        {
+            Home = homeScore;
+            Out = outScore;
+        }
+
+        public override string ToString()
+        {
+            return $"{Home}-{Out}";
+        }
     }
 }

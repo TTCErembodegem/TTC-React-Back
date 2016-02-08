@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using AutoMapper;
+using SimpleInjector.Advanced.Internal;
 using Ttc.DataAccess.Entities;
 using Ttc.DataAccess.Utilities;
 using Ttc.Model;
@@ -20,43 +21,6 @@ namespace Ttc.DataAccess.App_Start
             ClubMapping();
             CalendarMapping();
             TeamMapping();
-            ReportMapping();
-        }
-
-        private static void ReportMapping()
-        {
-            Mapper.CreateMap<Verslag, MatchReport>()
-                .ForMember(
-                    dest => dest.Description,
-                    opts => opts.MapFrom(src => src.Beschrijving))
-                .ForMember(
-                    dest => dest.PlayerId,
-                    opts => opts.MapFrom(src => src.SpelerId))
-                .ForMember(
-                    dest => dest.ScoreType,
-                    opts => opts.MapFrom(src => GetScoreType(src)))
-                .ForMember(
-                    dest => dest.Score,
-                    opts => opts.MapFrom(src => src.WO == 0 || src.UitslagThuis.HasValue ? $"{src.UitslagThuis}-{src.UitslagUit}" : null))
-                ;
-        }
-
-        private static MatchOutcome GetScoreType(Verslag verslag)
-        {
-            if (verslag.WO == 1)
-            {
-                return MatchOutcome.WalkOver;
-            }
-            if (!verslag.UitslagThuis.HasValue || !verslag.UitslagUit.HasValue)
-            {
-                return MatchOutcome.NotYetPlayed;
-            }
-            if (verslag.UitslagThuis.Value == verslag.UitslagUit.Value)
-            {
-                return MatchOutcome.Draw;
-            }
-
-            return verslag.UitslagThuis.Value < verslag.UitslagUit.Value ? MatchOutcome.Lost : MatchOutcome.Won;
         }
 
         #region Teams
@@ -113,6 +77,21 @@ namespace Ttc.DataAccess.App_Start
         #region Matches
         private static void CalendarMapping()
         {
+            Mapper.CreateMap<Verslag, MatchReport>()
+                .ForMember(
+                    dest => dest.Description,
+                    opts => opts.MapFrom(src => src.Beschrijving))
+                .ForMember(
+                    dest => dest.PlayerId,
+                    opts => opts.MapFrom(src => src.SpelerId))
+                .ForMember(
+                    dest => dest.ScoreType,
+                    opts => opts.MapFrom(src => GetScoreType(src)))
+                .ForMember(
+                    dest => dest.Score,
+                    opts => opts.MapFrom(src => src.WO == 0 || src.UitslagThuis.HasValue ? new MatchScore(src.UitslagThuis.Value, src.UitslagUit.Value) : null))
+                ;
+
             Mapper.CreateMap<Kalender, Match>()
                 .ForMember(
                     dest => dest.Date,
@@ -130,7 +109,38 @@ namespace Ttc.DataAccess.App_Start
                         ClubId = src.UitClubId.Value,
                         TeamCode = src.UitPloeg
                     }))
+                .ForMember(
+                    dest => dest.Report,
+                    opts => opts.MapFrom(src => CreateMatchReport(src)))
                 ;
+        }
+
+        private static MatchReport CreateMatchReport(Kalender src)
+        {
+            if (src.Verslag == null)
+            {
+                return null;
+            }
+
+            return Mapper.Map<Verslag, MatchReport>(src.Verslag);
+        }
+
+        private static MatchOutcome GetScoreType(Verslag verslag)
+        {
+            if (verslag.WO == 1)
+            {
+                return MatchOutcome.WalkOver;
+            }
+            if (!verslag.UitslagThuis.HasValue || !verslag.UitslagUit.HasValue)
+            {
+                return MatchOutcome.NotYetPlayed;
+            }
+            if (verslag.UitslagThuis.Value == verslag.UitslagUit.Value)
+            {
+                return MatchOutcome.Draw;
+            }
+
+            return verslag.UitslagThuis.Value < verslag.UitslagUit.Value ? MatchOutcome.Lost : MatchOutcome.Won;
         }
         #endregion
 

@@ -31,5 +31,10 @@ namespace Ttc.DataAccess.Entities
         public string SpelerNaam { get; set; }
         public string Klassement { get; set; }
         public int UniqueIndex { get; set; }
+
+        public override string ToString()
+        {
+            return $"KalenderId={KalenderId}, SpelerNaam={SpelerNaam}, Winst={Winst}, Thuis={Thuis}, Positie={Positie}";
+        }
     }
 }

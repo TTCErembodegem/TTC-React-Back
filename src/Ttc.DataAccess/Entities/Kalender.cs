@@ -15,7 +15,6 @@ namespace Ttc.DataAccess.Entities
         public int? Week { get; set; }
         public string FrenoyMatchId { get; set; }
 
-        [ForeignKey("Id")]
         public Verslag Verslag { get; set; }
         
         /// <summary>
