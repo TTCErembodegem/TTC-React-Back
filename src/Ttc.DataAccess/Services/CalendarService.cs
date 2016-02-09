@@ -15,8 +15,8 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
-                var dateBegin = DateTime.Now.AddDays(-7);
-                var dateEnd = DateTime.Now.AddDays(7);
+                var dateBegin = DateTime.Now.AddDays(-8);
+                var dateEnd = DateTime.Now.AddDays(8);
 
                 var calendar = dbContext.Kalender
                     .Include(x => x.ThuisClubPloeg)

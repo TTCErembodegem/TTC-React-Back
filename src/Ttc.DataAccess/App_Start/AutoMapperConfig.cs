@@ -171,7 +171,7 @@ namespace Ttc.DataAccess.App_Start
         {
             if (src.Verslag == null)
             {
-                return null;
+                return new MatchReport(Constants.OwnClubId, Constants.SuperPlayerId);
             }
 
             return Mapper.Map<Verslag, MatchReport>(src.Verslag);
@@ -192,7 +192,14 @@ namespace Ttc.DataAccess.App_Start
                 return MatchOutcome.Draw;
             }
 
-            return verslag.UitslagThuis.Value < verslag.UitslagUit.Value ? MatchOutcome.Lost : MatchOutcome.Won;
+            if (verslag.Kalender.Thuis.Value == 1)
+            {
+                return verslag.UitslagThuis.Value < verslag.UitslagUit.Value ? MatchOutcome.Lost : MatchOutcome.Won;
+            }
+            else
+            {
+                return verslag.UitslagThuis.Value < verslag.UitslagUit.Value ? MatchOutcome.Won: MatchOutcome.Lost;
+            }
         }
         #endregion
 

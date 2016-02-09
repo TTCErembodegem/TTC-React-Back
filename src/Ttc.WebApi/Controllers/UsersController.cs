@@ -6,9 +6,23 @@ using System.Web.Http;
 
 namespace Ttc.WebApi.Controllers
 {
+    public class User
+    {
+        public int PlayerId { get; set; }
+    }
+
     [AllowAnonymous]
     public class UsersController : ApiController
     {
+        public User Get()
+        {
+            // Heh heh. This will have to be replaced with something more.. dynamic :p
+            return new User
+            {
+                PlayerId = 20
+            };
+        }
+
         [HttpPost]
         public string LegacyLogin(string username, string password)
         {

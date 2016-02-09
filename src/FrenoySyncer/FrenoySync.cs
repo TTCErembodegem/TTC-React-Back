@@ -165,7 +165,7 @@ namespace FrenoySyncer
                                 Kalender = kalender,
                                 KalenderId = kalender.Id,
                                 Details = 0,
-                                SpelerId = 4, // Dirk DS
+                                SpelerId = Constants.SuperPlayerId,
                             };
                             if (!isForfeit)
                             {

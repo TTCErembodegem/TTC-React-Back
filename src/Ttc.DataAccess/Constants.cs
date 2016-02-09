@@ -5,6 +5,10 @@ namespace Ttc.DataAccess
     internal class Constants
     {
         public const int OwnClubId = 1;
+        /// <summary>
+        /// Id van Dirk DS
+        /// </summary>
+        public const int SuperPlayerId = 4;
         public const string Sporta = "Sporta";
         public const string Vttl = "Vttl";
         /// <summary>

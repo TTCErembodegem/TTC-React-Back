@@ -13,6 +13,20 @@ namespace Ttc.Model.Matches
         public ICollection<MatchPlayer> Players { get; set; }
         public ICollection<MatchGame> Games { get; set; }
 
+        public MatchReport()
+        {
+        }
+
+        public MatchReport(int kalenderId, int playerId)
+        {
+            Players = new List<MatchPlayer>();
+            Games = new List<MatchGame>();
+            ScoreType = MatchOutcome.NotYetPlayed;
+            Score = new MatchScore();
+            KalenderId = kalenderId;
+            PlayerId = playerId;
+        }
+
         public override string ToString()
         {
             return $"KalenderId={KalenderId}, Score={Score}, ScoreType={ScoreType}";
