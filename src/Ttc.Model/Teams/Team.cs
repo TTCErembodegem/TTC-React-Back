@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Ttc.Model.Players;
 
 namespace Ttc.Model.Teams
 {
@@ -19,7 +20,7 @@ namespace Ttc.Model.Teams
         /// <summary>
         /// Vttl or Sporta
         /// </summary>
-        public string Competition { get; set; }
+        public Competition Competition { get; set; }
         public int Year { get; set; }
 
         /// <summary>

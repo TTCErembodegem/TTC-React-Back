@@ -1,4 +1,5 @@
 ﻿using System;
+using Ttc.Model.Players;
 
 namespace Ttc.DataAccess
 {
@@ -18,6 +19,6 @@ namespace Ttc.DataAccess
 
         private static bool IsVttl(string value) => string.Equals(value.Trim(), Vttl, StringComparison.InvariantCultureIgnoreCase);
 
-        public static string NormalizeCompetition(string value) => IsVttl(value) ? Vttl : Sporta;
+        public static Competition NormalizeCompetition(string value) => IsVttl(value) ? Competition.Vttl : Competition.Sporta;
     }
 }
