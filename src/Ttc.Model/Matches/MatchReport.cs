@@ -4,7 +4,6 @@ namespace Ttc.Model.Matches
 {
     public class MatchReport
     {
-        public int KalenderId { get; set; }
         public int PlayerId { get; set; }
         public MatchScore Score { get; set; }
         public MatchOutcome ScoreType { get; set; }
@@ -17,19 +16,18 @@ namespace Ttc.Model.Matches
         {
         }
 
-        public MatchReport(int kalenderId, int playerId)
+        public MatchReport(int playerId)
         {
             Players = new List<MatchPlayer>();
             Games = new List<MatchGame>();
             ScoreType = MatchOutcome.NotYetPlayed;
             Score = new MatchScore();
-            KalenderId = kalenderId;
             PlayerId = playerId;
         }
 
         public override string ToString()
         {
-            return $"KalenderId={KalenderId}, Score={Score}, ScoreType={ScoreType}";
+            return $"Score={Score}, ScoreType={ScoreType}";
         }
     }
 

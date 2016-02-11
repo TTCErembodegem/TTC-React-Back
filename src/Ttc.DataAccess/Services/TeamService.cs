@@ -40,7 +40,7 @@ namespace Ttc.DataAccess.Services
                 {
                     var clubTeam = dbContext.ClubPloegen
                         .Include(x => x.Spelers)
-                        .First(x => x.ReeksId == division.TeamId && x.ClubId == Constants.OwnClubId && x.Code == division.TeamCode);
+                        .First(x => x.ReeksId == division.Id && x.ClubId == Constants.OwnClubId && x.Code == division.TeamCode);
 
                     division.Players = clubTeam.Spelers.Select(x => new TeamPlayer
                     {

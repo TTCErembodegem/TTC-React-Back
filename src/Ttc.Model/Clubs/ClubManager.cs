@@ -5,9 +5,9 @@
     /// </summary>
     public class ClubManager
     {
-        public int SpelerId { get; set; }
+        public int PlayerId { get; set; }
         public string Description { get; set; }
 
-        public override string ToString() => $"SpelerId={SpelerId}, Desc={Description}";
+        public override string ToString() => $"PlayerId={PlayerId}, Desc={Description}";
     }
 }

@@ -38,7 +38,7 @@ namespace Ttc.DataAccess.App_Start
                     dest => dest.DivisionName,
                     opts => opts.MapFrom(src => src.ReeksNummer + src.ReeksCode))
                 .ForMember(
-                    dest => dest.TeamId,
+                    dest => dest.Id,
                     opts => opts.MapFrom(src => src.Id))
                 .ForMember(
                     dest => dest.Frenoy,
@@ -171,7 +171,7 @@ namespace Ttc.DataAccess.App_Start
         {
             if (src.Verslag == null)
             {
-                return new MatchReport(Constants.OwnClubId, Constants.SuperPlayerId);
+                return new MatchReport(Constants.SuperPlayerId);
             }
 
             return Mapper.Map<Verslag, MatchReport>(src.Verslag);
@@ -235,7 +235,7 @@ namespace Ttc.DataAccess.App_Start
             }
             return contacten.OrderBy(x => x.Sortering).Select(x => new ClubManager
             {
-                SpelerId = x.SpelerId,
+                PlayerId = x.SpelerId,
                 Description = x.Omschrijving
             }).ToList();
         }
