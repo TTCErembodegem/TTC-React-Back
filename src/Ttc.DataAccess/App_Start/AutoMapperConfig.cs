@@ -38,7 +38,7 @@ namespace Ttc.DataAccess.App_Start
                     dest => dest.DivisionName,
                     opts => opts.MapFrom(src => src.ReeksNummer + src.ReeksCode))
                 .ForMember(
-                    dest => dest.ReeksId,
+                    dest => dest.TeamId,
                     opts => opts.MapFrom(src => src.Id))
                 .ForMember(
                     dest => dest.Frenoy,
@@ -152,7 +152,7 @@ namespace Ttc.DataAccess.App_Start
                     dest => dest.IsHomeMatch,
                     opts => opts.MapFrom(src => src.Thuis.HasValue && src.Thuis == 1))
                 .ForMember(
-                    dest => dest.ReeksId,
+                    dest => dest.TeamId,
                     opts => opts.MapFrom(src => src.ThuisClubPloeg.ReeksId))
                 .ForMember(
                     dest => dest.Opponent,

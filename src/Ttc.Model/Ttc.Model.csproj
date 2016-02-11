@@ -63,9 +63,6 @@
     <Compile Include="Teams\OpposingTeam.cs" />
     <Compile Include="Teams\TeamPlayer.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="TtcErembodegemModel.cd" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

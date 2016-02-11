@@ -8,7 +8,7 @@ namespace Ttc.Model.Teams
     /// </summary>
     public class Team
     {
-        public int ReeksId { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// TTC Erembodegem Team code (A, B, C, ...)
