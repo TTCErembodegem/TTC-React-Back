@@ -284,7 +284,7 @@ namespace Ttc.DataAccess.App_Start
                     dest => dest.Alias,
                     opts => opts.MapFrom(src => src.NaamKort))
                 .ForMember(
-                    dest => dest.IsActive,
+                    dest => dest.Active,
                     opts => opts.MapFrom(src => !src.IsGestopt))
                 .ForMember(
                     dest => dest.Style,

@@ -5,7 +5,7 @@
         public int Id { get; set; }
         public string Name { get; set; }
         public string Alias { get; set; }
-        public bool IsActive { get; set; }
+        public bool Active { get; set; }
 
         public PlayerStyle Style { get; set; }
         public Contact Contact { get; set; }
@@ -13,6 +13,6 @@
         public PlayerCompetition Vttl { get; set; }
         public PlayerCompetition Sporta { get; set; }
 
-        public override string ToString() => $"Id={Id}, Alias={Alias}, IsActive={IsActive}";
+        public override string ToString() => $"Id={Id}, Alias={Alias}, Active={Active}";
     }
 }
