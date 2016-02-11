@@ -255,7 +255,7 @@ namespace Ttc.DataAccess.App_Start
             var mainLocation = lokalen.FirstOrDefault(x => x.Hoofd.HasValue && x.Hoofd == 1);
             if (mainLocation == null)
             {
-                return null;
+                return new ClubLocation();
             }
             return CreateClubLocation(mainLocation);
         }
@@ -265,13 +265,10 @@ namespace Ttc.DataAccess.App_Start
             {
                 Id = location.Id,
                 Description = location.Lokaal,
-                Contact = new Contact
-                {
-                    Address = location.Adres,
-                    City = $"{location.Postcode} {location.Gemeente}",
-                    Email = null,
-                    Mobile = location.Telefoon
-                }
+                Address = location.Adres,
+                PostalCode = location.Postcode.ToString(),
+                City = location.Gemeente,
+                Mobile = location.Telefoon
             };
 
         #endregion
