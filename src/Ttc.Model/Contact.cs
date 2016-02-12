@@ -2,11 +2,14 @@
 {
     public class Contact
     {
+        #region Properties
         public string Address { get; set; }
         public string City { get; set; }
         public string Mobile { get; set; }
         public string Email { get; set; }
+        #endregion
 
+        #region Constructors
         public Contact()
         {
 
@@ -19,6 +22,7 @@
             Mobile = mobile;
             Email = email;
         }
+        #endregion
 
         public override string ToString() => $"Address={Address}, City={City}, Mobile={Mobile}, Email={Email}";
     }
