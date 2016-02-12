@@ -12,7 +12,7 @@ namespace Ttc.Model.Matches
 
         public ICollection<MatchPlayer> Players { get; set; }
         public ICollection<MatchGame> Games { get; set; }
-        #region
+        #endregion
 
         #region Constructors
         public MatchReport()
