@@ -11,7 +11,7 @@ namespace Ttc.DataAccess.Services
 {
     public class CalendarService
     {
-        public IEnumerable<Match> GetRelevantCalendarItems()
+        public IEnumerable<Match> GetRelevantMatches()
         {
             using (var dbContext = new TtcDbContext())
             {
@@ -30,8 +30,75 @@ namespace Ttc.DataAccess.Services
                     .ToList();
 
                 var result = Mapper.Map<IList<Kalender>, IList<Match>>(calendar);
+                foreach (var match in result)
+                {
+                    FixUp(match);
+                }
+                
                 return result;
             }
+        }
+
+        private bool IsOwnClubPlayer(bool isHomeMatch, bool isHomePlayer)
+        {
+            return (isHomeMatch && isHomePlayer) || (!isHomeMatch && !isHomePlayer);
+        }
+
+        private string GetFirstName(string fullName)
+        {
+            if (fullName.IndexOf(" ", StringComparison.InvariantCulture) == -1)
+            {
+                return fullName;
+            }
+            return fullName.Substring(0, fullName.IndexOf(" ", StringComparison.InvariantCulture));
+        }
+
+        private void FixUp(Match match)
+        {
+            // Fix in case two people are called 'Dirk' etc
+            foreach (var ply in match.Report.Players)
+            {
+                ply.Alias = GetFirstName(ply.Name);
+            }
+            foreach (var ply in match.Report.Players)
+            {
+                var otherPlayers = match.Report.Players.Where(otherPly => ply.Position != otherPly.Position);
+                if (otherPlayers.Any(otherPly => GetFirstName(otherPly.Alias) == ply.Alias))
+                {
+                    ply.Alias += ply.Name.Substring(ply.Name.IndexOf(" ", StringComparison.InvariantCulture));
+                }
+            }
+
+            // Change the meaning of 'home' from 'was the player playing in his own club'
+            // to 'is the player a member of TTC Erembodegem'
+            foreach (var ply in match.Report.Players)
+            {
+                ply.Home = IsOwnClubPlayer(match.IsHomeMatch, ply.Home);
+            }
+        }
+
+        public Match GetMatch(int matchId)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                return Mapper.Map<Kalender, Match>(dbContext.Kalender.SingleOrDefault(x => x.Id == matchId));
+            }
+        }
+
+        public void DeleteMatchPlayer(MatchPlayer matchPlayer)
+        {
+        
+        }
+
+        public MatchPlayer AddMatchPlayer(MatchPlayer matchPlayer)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var verslagSpeler = Mapper.Map<MatchPlayer, VerslagSpeler>(matchPlayer);
+                dbContext.VerslagenSpelers.Add(verslagSpeler);
+                dbContext.SaveChanges();
+            }
+            return matchPlayer;
         }
     }
 }

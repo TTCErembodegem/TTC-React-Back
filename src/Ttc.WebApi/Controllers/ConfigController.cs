@@ -7,10 +7,11 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 using Ttc.DataAccess;
 using Ttc.DataAccess.Services;
+using Ttc.WebApi.Utilities;
 
 namespace Ttc.WebApi.Controllers
 {
-    public class ConfigController : ApiController
+    public class ConfigController : BaseController
     {
         #region Constructor
         private readonly ConfigService _service;

@@ -75,5 +75,13 @@ namespace Ttc.DataAccess.Services
             }
             return otherTeamDivisions;
         }
+
+        public Team GetTeam(int teamId)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                return Mapper.Map<Reeks, Team>(dbContext.Reeksen.SingleOrDefault(x => x.Id == teamId));
+            }
+        }
     }
 }

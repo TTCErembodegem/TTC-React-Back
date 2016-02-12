@@ -14,5 +14,10 @@
         public PlayerCompetition Sporta { get; set; }
 
         public override string ToString() => $"Id={Id}, Alias={Alias}, Active={Active}";
+
+        public PlayerCompetition GetCompetition(Competition competition)
+        {
+            return competition == Competition.Vttl ? Vttl : Sporta;
+        }
     }
 }

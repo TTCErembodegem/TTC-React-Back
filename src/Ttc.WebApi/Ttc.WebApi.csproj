@@ -158,6 +158,7 @@
     <Compile Include="Controllers\PlayersController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\BaseController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

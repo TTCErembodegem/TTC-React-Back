@@ -7,10 +7,11 @@ using System.Web.Http;
 using Ttc.DataAccess.Services;
 using Ttc.Model;
 using Ttc.Model.Teams;
+using Ttc.WebApi.Utilities;
 
 namespace Ttc.WebApi.Controllers
 {
-    public class TeamsController : ApiController
+    public class TeamsController : BaseController
     {
         #region Constructor
         private readonly TeamService _service;

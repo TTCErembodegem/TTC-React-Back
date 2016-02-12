@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using Ttc.WebApi.Utilities;
 
 namespace Ttc.WebApi.Controllers
 {
@@ -12,7 +13,7 @@ namespace Ttc.WebApi.Controllers
     }
 
     [AllowAnonymous]
-    public class UsersController : ApiController
+    public class UsersController : BaseController
     {
         public User Get()
         {

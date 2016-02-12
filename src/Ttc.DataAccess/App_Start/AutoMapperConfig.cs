@@ -80,6 +80,9 @@ namespace Ttc.DataAccess.App_Start
         {
             Mapper.CreateMap<Verslag, MatchReport>()
                 .ForMember(
+                    dest => dest.IsPlayed,
+                    opts => opts.MapFrom(src => GetScoreType(src) != MatchOutcome.NotYetPlayed && GetScoreType(src) != MatchOutcome.WalkOver))
+                .ForMember(
                     dest => dest.Description,
                     opts => opts.MapFrom(src => src.Beschrijving))
                 .ForMember(
@@ -121,6 +124,7 @@ namespace Ttc.DataAccess.App_Start
                 .ForMember(
                     dest => dest.PlayerId,
                     opts => opts.MapFrom(src => src.SpelerId == 0 ? (int?)null : src.SpelerId))
+                .ReverseMap()
                 ;
         
             Mapper.CreateMap<VerslagIndividueel, MatchGame>()

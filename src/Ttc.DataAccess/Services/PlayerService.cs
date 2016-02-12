@@ -26,5 +26,13 @@ namespace Ttc.DataAccess.Services
                 return result;
             }
         }
+
+        public Player GetPlayer(int playerId)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                return Mapper.Map<Speler, Player>(dbContext.Spelers.SingleOrDefault(x => x.Id == playerId));
+            }
+        }
     }
 }

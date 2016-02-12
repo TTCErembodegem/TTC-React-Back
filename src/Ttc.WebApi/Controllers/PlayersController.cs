@@ -7,10 +7,11 @@ using Ttc.DataAccess;
 using Ttc.DataAccess.Services;
 using Ttc.Model;
 using Ttc.Model.Players;
+using Ttc.WebApi.Utilities;
 
 namespace Ttc.WebApi.Controllers
 {
-    public class PlayersController : ApiController
+    public class PlayersController : BaseController
     {
         #region Constructor
         private readonly PlayerService _service;

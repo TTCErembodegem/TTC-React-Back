@@ -58,7 +58,7 @@ namespace Ttc.UnitTests
                 AutoMapperConfig.Configure(new KlassementValueConverter());
 
                 var serv = new CalendarService();
-                var result = serv.GetRelevantCalendarItems();
+                var result = serv.GetRelevantMatches();
                 Assert.That(result.First().FrenoyMatchId, Is.Not.Null);
             }
         }
