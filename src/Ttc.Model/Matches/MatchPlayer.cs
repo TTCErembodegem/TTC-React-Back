@@ -12,9 +12,6 @@ namespace Ttc.Model.Matches
         public bool Home { get; set; }
         public int? PlayerId { get; set; }
 
-        public override string ToString()
-        {
-            return $"{Position} {Name} ({Ranking}), Won={Won}";
-        }
+        public override string ToString() =>  $"{Position} {Name} ({Ranking}), Won={Won}";
     }
 }

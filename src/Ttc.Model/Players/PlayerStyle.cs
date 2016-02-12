@@ -2,9 +2,12 @@
 {
     public class PlayerStyle
     {
+        #region Properties
         public string Name { get; }
         public string BestStroke { get; }
+        #endregion
 
+        #region Constructor
         public PlayerStyle()
         {
             
@@ -15,6 +18,7 @@
             Name = styleName;
             BestStroke = bestStroke;
         }
+        #endregion
 
         public override string ToString() => $"Name={Name}, BestStroke={BestStroke}";
     }

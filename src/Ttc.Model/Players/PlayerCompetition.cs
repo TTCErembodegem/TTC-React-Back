@@ -5,6 +5,7 @@
     /// </summary>
     public class PlayerCompetition
     {
+        #region Properties
         public Competition Competition { get; set; }
         public int ClubId { get; set; }
         public string FrenoyLink { get; set; }
@@ -29,7 +30,9 @@
         /// Waarde van de ranking
         /// </summary>
         public int RankingValue { get; set; }
+        #endregion
 
+        #region Constructors
         public PlayerCompetition()
         {
             
@@ -46,6 +49,7 @@
             RankingIndex = rankingIndex;
             RankingValue = rankingValue;
         }
+        #endregion
 
         public override string ToString() => $"Competition={Competition}, ClubId={ClubId}, Ranking={Ranking}, UniqueIndex={UniqueIndex}";
     }

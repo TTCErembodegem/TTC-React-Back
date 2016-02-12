@@ -4,6 +4,7 @@ namespace Ttc.Model.Matches
 {
     public class MatchReport
     {
+        #region Properties
         public int PlayerId { get; set; }
         public MatchScore Score { get; set; }
         public MatchOutcome ScoreType { get; set; }
@@ -11,7 +12,9 @@ namespace Ttc.Model.Matches
 
         public ICollection<MatchPlayer> Players { get; set; }
         public ICollection<MatchGame> Games { get; set; }
+        #region
 
+        #region Constructors
         public MatchReport()
         {
         }
@@ -24,18 +27,20 @@ namespace Ttc.Model.Matches
             Score = new MatchScore();
             PlayerId = playerId;
         }
+        #endregion
 
-        public override string ToString()
-        {
-            return $"Score={Score}, ScoreType={ScoreType}";
-        }
+        public override string ToString() =>  $"Score={Score}, ScoreType={ScoreType}";
+
     }
 
     public class MatchScore
     {
+        #region Properties
         public int Home { get; set; }
         public int Out { get; set; }
+        #endregion
 
+        #region Constructors
         public MatchScore()
         {
         }
@@ -45,11 +50,9 @@ namespace Ttc.Model.Matches
             Home = homeScore;
             Out = outScore;
         }
+        #endregion
 
-        public override string ToString()
-        {
-            return $"{Home}-{Out}";
-        }
+        public override string ToString() => $"{Home}-{Out}";
     }
 
     public enum MatchOutcome
