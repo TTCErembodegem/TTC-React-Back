@@ -120,6 +120,10 @@
     <Compile Include="Migrations\201602130316271_CreateVerslag.Designer.cs">
       <DependentUpon>201602130316271_CreateVerslag.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602130334339_VerslagPrimaryKey.cs" />
+    <Compile Include="Migrations\201602130334339_VerslagPrimaryKey.Designer.cs">
+      <DependentUpon>201602130334339_VerslagPrimaryKey.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="TtcDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -163,6 +167,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201602130316271_CreateVerslag.resx">
       <DependentUpon>201602130316271_CreateVerslag.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602130334339_VerslagPrimaryKey.resx">
+      <DependentUpon>201602130334339_VerslagPrimaryKey.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
