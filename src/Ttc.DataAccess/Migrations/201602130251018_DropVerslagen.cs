@@ -3,7 +3,7 @@ namespace Ttc.DataAccess.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class TEsty : DbMigration
+    public partial class DropVerslagen : DbMigration
     {
         public override void Up()
         {

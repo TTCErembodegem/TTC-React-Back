@@ -7,13 +7,13 @@ namespace Ttc.DataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class TEsty : IMigrationMetadata
+    public sealed partial class DropVerslagen : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(TEsty));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(DropVerslagen));
         
         string IMigrationMetadata.Id
         {
-            get { return "201602130251018_TEsty"; }
+            get { return "201602130251018_DropVerslagen"; }
         }
         
         string IMigrationMetadata.Source

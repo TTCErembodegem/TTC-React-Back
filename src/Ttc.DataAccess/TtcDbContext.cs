@@ -32,8 +32,8 @@ namespace Ttc.DataAccess
         public DbSet<ClubPloegSpeler> ClubPloegSpelers { get; set; }
         public DbSet<Kalender> Kalender { get; set; }
         public DbSet<Verslag> Verslagen { get; set; }
-        //public DbSet<VerslagSpeler> VerslagenSpelers { get; set; }
-        //public DbSet<VerslagIndividueel> VerslagenIndividueel { get; set; }
+        public DbSet<VerslagSpeler> VerslagenSpelers { get; set; }
+        public DbSet<VerslagIndividueel> VerslagenIndividueel { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
