@@ -204,7 +204,7 @@ namespace FrenoySyncer
                                         MatchId = verslag.KalenderId,
                                         MatchNumber = int.Parse(frenoyIndividual.Position),
                                         HomePlayerUniqueIndex = int.Parse(frenoyIndividual.HomePlayerUniqueIndex),
-                                        HomePlayerSets = int.Parse(frenoyIndividual.AwayPlayerUniqueIndex),
+                                        OutPlayerUniqueIndex = int.Parse(frenoyIndividual.AwayPlayerUniqueIndex),
                                         WalkOver = WalkOver.None
                                     };
                                     if (frenoyIndividual.IsHomeForfeited || frenoyIndividual.IsAwayForfeited)
@@ -213,7 +213,7 @@ namespace FrenoySyncer
                                     }
                                     else
                                     {
-                                        matchResult.OutPlayerUniqueIndex = int.Parse(frenoyIndividual.HomeSetCount);
+                                        matchResult.HomePlayerSets = int.Parse(frenoyIndividual.HomeSetCount);
                                         matchResult.OutPlayerSets = int.Parse(frenoyIndividual.AwaySetCount);
                                     }
                                     _db.VerslagenIndividueel.Add(matchResult);
