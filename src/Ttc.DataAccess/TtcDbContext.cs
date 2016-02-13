@@ -16,8 +16,6 @@ namespace Ttc.DataAccess
     /// Not(yet?) mapped: DbSet Parameter
     /// Entities used by the legacy website only:
     /// (The entity classes have been excluded in the VS project)
-    /// public DbSet Training Trainingen { get; set; }
-    /// public DbSet Klassement Klassementen { get; set; }
     /// </remarks>
     [DbConfigurationType(typeof(MySql.Data.Entity.MySqlEFConfiguration))]
     internal class TtcDbContext : DbContext
