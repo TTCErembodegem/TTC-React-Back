@@ -95,7 +95,7 @@ namespace Ttc.DataAccess.Services
             using (var dbContext = new TtcDbContext())
             {
                 var verslagSpeler = Mapper.Map<MatchPlayer, VerslagSpeler>(matchPlayer);
-                dbContext.VerslagenSpelers.Add(verslagSpeler);
+                //dbContext.VerslagenSpelers.Add(verslagSpeler);
                 dbContext.SaveChanges();
             }
             return matchPlayer;
