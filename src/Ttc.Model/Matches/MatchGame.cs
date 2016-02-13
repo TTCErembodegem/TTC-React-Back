@@ -2,6 +2,8 @@
 {
     public class MatchGame
     {
+        public int Id { get; set; }
+        public int MatchId { get; set; }
         public int MatchNumber { get; set; }
         public int HomePlayerUniqueIndex { get; set; }
         public int OutPlayerUniqueIndex { get; set; }

@@ -5,6 +5,7 @@ namespace Ttc.Model.Matches
     public class MatchPlayer
     {
         public int Id { get; set; }
+        public int MatchId { get; set; }
         public int Position { get; set; }
         public string Name { get; set; }
         public string Ranking { get; set; }

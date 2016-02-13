@@ -89,6 +89,9 @@ namespace Ttc.DataAccess.App_Start
                     dest => dest.Position,
                     opts => opts.MapFrom(src => src.Positie))
                 .ForMember(
+                    dest => dest.MatchId,
+                    opts => opts.MapFrom(src => src.KalenderId))
+                .ForMember(
                     dest => dest.Ranking,
                     opts => opts.MapFrom(src => src.Klassement))
                 .ForMember(
@@ -104,6 +107,9 @@ namespace Ttc.DataAccess.App_Start
                 ;
         
             Mapper.CreateMap<VerslagIndividueel, MatchGame>()
+                .ForMember(
+                    dest => dest.MatchId,
+                    opts => opts.MapFrom(src => src.KalenderId))
                 .ForMember(
                     dest => dest.MatchNumber,
                     opts => opts.MapFrom(src => src.MatchNummer))

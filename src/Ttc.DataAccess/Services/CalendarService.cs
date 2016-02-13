@@ -39,12 +39,13 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        private bool IsOwnClubPlayer(bool isHomeMatch, bool isHomePlayer)
+        #region Fixing some stuff from the db
+        private static bool IsOwnClubPlayer(bool isHomeMatch, bool isHomePlayer)
         {
             return (isHomeMatch && isHomePlayer) || (!isHomeMatch && !isHomePlayer);
         }
 
-        private string GetFirstName(string fullName)
+        private static string GetFirstName(string fullName)
         {
             if (fullName.IndexOf(" ", StringComparison.InvariantCulture) == -1)
             {
@@ -53,8 +54,9 @@ namespace Ttc.DataAccess.Services
             return fullName.Substring(0, fullName.IndexOf(" ", StringComparison.InvariantCulture));
         }
 
-        private void FixUp(Match match)
+        private static void FixUp(Match match)
         {
+            // TODO: 'fixing' home might result in derby matches being displayed incorrectly (ex: Sporta A vs Erembodegem A)
             // Fix in case two people are called 'Dirk' etc
             foreach (var ply in match.Players)
             {
@@ -76,6 +78,7 @@ namespace Ttc.DataAccess.Services
                 ply.Home = IsOwnClubPlayer(match.IsHomeMatch, ply.Home);
             }
         }
+        #endregion
 
         public Match GetMatch(int matchId)
         {
