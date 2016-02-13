@@ -112,13 +112,13 @@
     <Compile Include="Migrations\201602080124535_VerslagDetails.Designer.cs">
       <DependentUpon>201602080124535_VerslagDetails.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201602130251018_TEsty.cs" />
-    <Compile Include="Migrations\201602130251018_TEsty.Designer.cs">
-      <DependentUpon>201602130251018_TEsty.cs</DependentUpon>
+    <Compile Include="Migrations\201602130251018_DropVerslagen.cs" />
+    <Compile Include="Migrations\201602130251018_DropVerslagen.Designer.cs">
+      <DependentUpon>201602130251018_DropVerslagen.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201602130255267_NieuweVErslagSpelers.cs" />
-    <Compile Include="Migrations\201602130255267_NieuweVErslagSpelers.Designer.cs">
-      <DependentUpon>201602130255267_NieuweVErslagSpelers.cs</DependentUpon>
+    <Compile Include="Migrations\201602130316271_CreateVerslag.cs" />
+    <Compile Include="Migrations\201602130316271_CreateVerslag.Designer.cs">
+      <DependentUpon>201602130316271_CreateVerslag.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="TtcDbContext.cs" />
@@ -157,11 +157,12 @@
     <EmbeddedResource Include="Migrations\201602080124535_VerslagDetails.resx">
       <DependentUpon>201602080124535_VerslagDetails.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201602130251018_TEsty.resx">
-      <DependentUpon>201602130251018_TEsty.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201602130251018_DropVerslagen.resx">
+      <DependentUpon>201602130251018_DropVerslagen.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201602130255267_NieuweVErslagSpelers.resx">
-      <DependentUpon>201602130255267_NieuweVErslagSpelers.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201602130316271_CreateVerslag.resx">
+      <DependentUpon>201602130316271_CreateVerslag.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
