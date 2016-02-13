@@ -8,10 +8,15 @@ namespace Ttc.DataAccess.Entities
     {
         [Key]
         public int Id { get; set; }
-        public int? ClubPloegId { get; set; }
-        public int? SpelerId { get; set; }
         public TeamPlayerType Kapitein { get; set; }
+
+        [ForeignKey("SpelerId")]
+        public Speler Speler { get; set; }
+        public int? SpelerId { get; set; }
+
+        [ForeignKey("ClubPloegId")]
         public ClubPloeg Ploeg { get; set; }
+        public int? ClubPloegId { get; set; }
 
         public override string ToString() => $"Id={Id}, ClubPloegId={ClubPloegId}, SpelerId={SpelerId}, Kapitein={Kapitein}";
     }

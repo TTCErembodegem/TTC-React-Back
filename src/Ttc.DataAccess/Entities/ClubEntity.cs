@@ -21,14 +21,14 @@ namespace Ttc.DataAccess.Entities
         public int? Douche { get; set; }
         public string Website { get; set; }
 
-        //private ICollection<ClubLokaal> _lokalen;
-        //public virtual ICollection<ClubLokaal> Lokalen
-        //{
-        //    get { return _lokalen ?? (_lokalen = new Collection<ClubLokaal>()); }
-        //    protected set { _lokalen = value; }
-        //}
+        private ICollection<ClubLokaal> _lokalen;
+        public virtual ICollection<ClubLokaal> Lokalen
+        {
+            get { return _lokalen ?? (_lokalen = new Collection<ClubLokaal>()); }
+            protected set { _lokalen = value; }
+        }
 
-        //public virtual ICollection<ClubContact> Contacten { get; protected set; }
+        public ICollection<ClubContact> Contacten { get; set; }
 
         public override string ToString() => $"Id={Id}, Name={Naam}, Vttl={CodeVttl}, Sporta={CodeSporta}, Active={Actief}";
     }

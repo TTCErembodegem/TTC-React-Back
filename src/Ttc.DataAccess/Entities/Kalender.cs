@@ -34,6 +34,7 @@ namespace Ttc.DataAccess.Entities
         /// nodig voor de Kalender op zich
         /// </summary>
         public int? ThuisClubPloegId { get; set; }
+        [ForeignKey("ThuisClubPloegId")]
         public ClubPloeg ThuisClubPloeg { get; set; }
 
         public int? UitClubId { get; set; }

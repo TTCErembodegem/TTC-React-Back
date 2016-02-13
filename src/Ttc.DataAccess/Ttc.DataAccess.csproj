@@ -72,6 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Entities\ClubContact.cs" />
     <Compile Include="Entities\ClubEntity.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Entities\Verslag.cs" />
     <Compile Include="Entities\VerslagIndividueel.cs" />
     <Compile Include="Entities\VerslagSpeler.cs" />
+    <Compile Include="GlobalBackendConfiguration.cs" />
     <Compile Include="Migrations\201601270124192_LegacyMysqlDb.cs" />
     <Compile Include="Migrations\201601270124192_LegacyMysqlDb.Designer.cs">
       <DependentUpon>201601270124192_LegacyMysqlDb.cs</DependentUpon>
@@ -124,7 +126,36 @@
     <Compile Include="Migrations\201602130334339_VerslagPrimaryKey.Designer.cs">
       <DependentUpon>201602130334339_VerslagPrimaryKey.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602130339454_Relations.cs" />
+    <Compile Include="Migrations\201602130339454_Relations.Designer.cs">
+      <DependentUpon>201602130339454_Relations.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602130342442_Relations2.cs" />
+    <Compile Include="Migrations\201602130342442_Relations2.Designer.cs">
+      <DependentUpon>201602130342442_Relations2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602130347045_Relations3.cs" />
+    <Compile Include="Migrations\201602130347045_Relations3.Designer.cs">
+      <DependentUpon>201602130347045_Relations3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602130402415_Relations4.cs" />
+    <Compile Include="Migrations\201602130402415_Relations4.Designer.cs">
+      <DependentUpon>201602130402415_Relations4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602130423064_Relations6.cs" />
+    <Compile Include="Migrations\201602130423064_Relations6.Designer.cs">
+      <DependentUpon>201602130423064_Relations6.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602130428293_Relations7.cs" />
+    <Compile Include="Migrations\201602130428293_Relations7.Designer.cs">
+      <DependentUpon>201602130428293_Relations7.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Services\CalendarService.cs" />
+    <Compile Include="Services\ClubService.cs" />
+    <Compile Include="Services\ConfigService.cs" />
+    <Compile Include="Services\PlayerService.cs" />
+    <Compile Include="Services\TeamService.cs" />
     <Compile Include="TtcDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\KlassementValueConverter.cs" />
@@ -171,10 +202,26 @@
     <EmbeddedResource Include="Migrations\201602130334339_VerslagPrimaryKey.resx">
       <DependentUpon>201602130334339_VerslagPrimaryKey.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602130339454_Relations.resx">
+      <DependentUpon>201602130339454_Relations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602130342442_Relations2.resx">
+      <DependentUpon>201602130342442_Relations2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602130347045_Relations3.resx">
+      <DependentUpon>201602130347045_Relations3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602130402415_Relations4.resx">
+      <DependentUpon>201602130402415_Relations4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602130423064_Relations6.resx">
+      <DependentUpon>201602130423064_Relations6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602130428293_Relations7.resx">
+      <DependentUpon>201602130428293_Relations7.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Start\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

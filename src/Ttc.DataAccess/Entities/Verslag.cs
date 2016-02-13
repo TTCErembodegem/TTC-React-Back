@@ -10,12 +10,12 @@ namespace Ttc.DataAccess.Entities
     {
         [Key]
         public int KalenderId { get; set; }
-        //public Kalender Kalender { get; set; }
+        public Kalender Kalender { get; set; }
 
         public int SpelerId { get; set; }
 
-        //public ICollection<VerslagIndividueel> Individueel { get; set; }
-        //public ICollection<VerslagSpeler> Spelers { get; set; }
+        public ICollection<VerslagIndividueel> Individueel { get; set; }
+        public ICollection<VerslagSpeler> Spelers { get; set; }
 
         public string Beschrijving { get; set; }
         public int? UitslagThuis { get; set; }

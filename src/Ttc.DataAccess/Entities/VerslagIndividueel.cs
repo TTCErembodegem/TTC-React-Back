@@ -14,8 +14,8 @@ namespace Ttc.DataAccess.Entities
         [Key]
         public int Id { get; set; }
 
-        //[ForeignKey("MatchId")]
-        //public Verslag Verslag { get; set; }
+        [ForeignKey("MatchId")]
+        public Verslag Verslag { get; set; }
         public int MatchId { get; set; }
 
         public int MatchNumber { get; set; }
