@@ -15,8 +15,8 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
-                var dateBegin = DateTime.Now.AddDays(-8);
-                var dateEnd = DateTime.Now.AddDays(8);
+                var dateBegin = DateTime.Now.AddDays(-12);
+                var dateEnd = DateTime.Now.AddDays(2);
 
                 var calendar = dbContext.Kalender
                     .Include(x => x.ThuisClubPloeg)
@@ -56,13 +56,13 @@ namespace Ttc.DataAccess.Services
         private void FixUp(Match match)
         {
             // Fix in case two people are called 'Dirk' etc
-            foreach (var ply in match.Report.Players)
+            foreach (var ply in match.Players)
             {
                 ply.Alias = GetFirstName(ply.Name);
             }
-            foreach (var ply in match.Report.Players)
+            foreach (var ply in match.Players)
             {
-                var otherPlayers = match.Report.Players.Where(otherPly => ply.Position != otherPly.Position);
+                var otherPlayers = match.Players.Where(otherPly => ply.Position != otherPly.Position);
                 if (otherPlayers.Any(otherPly => GetFirstName(otherPly.Alias) == ply.Alias))
                 {
                     ply.Alias += ply.Name.Substring(ply.Name.IndexOf(" ", StringComparison.InvariantCulture));
@@ -71,7 +71,7 @@ namespace Ttc.DataAccess.Services
 
             // Change the meaning of 'home' from 'was the player playing in his own club'
             // to 'is the player a member of TTC Erembodegem'
-            foreach (var ply in match.Report.Players)
+            foreach (var ply in match.Players)
             {
                 ply.Home = IsOwnClubPlayer(match.IsHomeMatch, ply.Home);
             }

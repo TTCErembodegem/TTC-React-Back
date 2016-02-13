@@ -78,30 +78,6 @@ namespace Ttc.DataAccess.App_Start
         #region Matches
         private static void ReportMapping()
         {
-            Mapper.CreateMap<Verslag, MatchReport>()
-                .ForMember(
-                    dest => dest.IsPlayed,
-                    opts => opts.MapFrom(src => GetScoreType(src) != MatchOutcome.NotYetPlayed && GetScoreType(src) != MatchOutcome.WalkOver))
-                .ForMember(
-                    dest => dest.Description,
-                    opts => opts.MapFrom(src => src.Beschrijving))
-                .ForMember(
-                    dest => dest.PlayerId,
-                    opts => opts.MapFrom(src => src.SpelerId))
-                .ForMember(
-                    dest => dest.ScoreType,
-                    opts => opts.MapFrom(src => GetScoreType(src)))
-                .ForMember(
-                    dest => dest.Score,
-                    opts => opts.MapFrom(src => src.WO == 0 || src.UitslagThuis.HasValue ? new MatchScore(src.UitslagThuis.Value, src.UitslagUit.Value) : null))
-                .ForMember(
-                    dest => dest.Players,
-                    opts => opts.MapFrom(src => src.Spelers))
-                .ForMember(
-                    dest => dest.Games,
-                    opts => opts.MapFrom(src => src.Individueel))
-                ;
-
             Mapper.CreateMap<VerslagSpeler, MatchPlayer>()
                 .ForMember(
                     dest => dest.Home,
@@ -158,6 +134,11 @@ namespace Ttc.DataAccess.App_Start
                 .ForMember(
                     dest => dest.TeamId,
                     opts => opts.MapFrom(src => src.ThuisClubPloeg.ReeksId))
+
+                .ForMember(
+                    dest => dest.TeamId,
+                    opts => opts.MapFrom(src => src.ThuisClubPloeg.ReeksId))
+
                 .ForMember(
                     dest => dest.Opponent,
                     opts => opts.MapFrom(src => new OpposingTeam
@@ -166,23 +147,35 @@ namespace Ttc.DataAccess.App_Start
                         TeamCode = src.UitPloeg
                     }))
                 .ForMember(
-                    dest => dest.Report,
-                    opts => opts.MapFrom(src => CreateMatchReport(src)))
+                    dest => dest.IsPlayed,
+                    opts => opts.MapFrom(src => GetScoreType(src.Verslag) != MatchOutcome.NotYetPlayed && GetScoreType(src.Verslag) != MatchOutcome.WalkOver))
+                .ForMember(
+                    dest => dest.Description,
+                    opts => opts.MapFrom(src => src.Beschrijving))
+                .ForMember(
+                    dest => dest.ReportPlayerId,
+                    opts => opts.MapFrom(src => src.Verslag.SpelerId))
+                .ForMember(
+                    dest => dest.ScoreType,
+                    opts => opts.MapFrom(src => GetScoreType(src.Verslag)))
+                .ForMember(
+                    dest => dest.Score,
+                    opts => opts.MapFrom(src => src.Verslag.WO == 0 || src.Verslag.UitslagThuis.HasValue ? new MatchScore(src.Verslag.UitslagThuis.Value, src.Verslag.UitslagUit.Value) : null))
+                .ForMember(
+                    dest => dest.Players,
+                    opts => opts.MapFrom(src => src.Verslag.Spelers))
+                .ForMember(
+                    dest => dest.Games,
+                    opts => opts.MapFrom(src => src.Verslag.Individueel))
                 ;
-        }
-
-        private static MatchReport CreateMatchReport(Kalender src)
-        {
-            if (src.Verslag == null)
-            {
-                return new MatchReport(Constants.SuperPlayerId);
-            }
-
-            return Mapper.Map<Verslag, MatchReport>(src.Verslag);
         }
 
         private static MatchOutcome GetScoreType(Verslag verslag)
         {
+            if (verslag == null)
+            {
+                return MatchOutcome.NotYetPlayed;
+            }
             if (verslag.WO == 1)
             {
                 return MatchOutcome.WalkOver;
