@@ -185,14 +185,14 @@ namespace FrenoySyncer
                         {
                             if (deleteExisting)
                             {
-                                var oldVerslagSpelers = _db.VerslagenSpelers.Where(x => x.KalenderId == verslag.KalenderId).ToArray();
+                                var oldVerslagSpelers = _db.VerslagenSpelers.Where(x => x.MatchId == verslag.KalenderId).ToArray();
                                 _db.VerslagenSpelers.RemoveRange(oldVerslagSpelers);
 
                                 AddVerslagPlayers(frenoyMatch.MatchDetails.HomePlayers.Players, verslag, true);
                                 AddVerslagPlayers(frenoyMatch.MatchDetails.AwayPlayers.Players, verslag, false);
                             }
 
-                            var hasIndividualMatches = _db.VerslagenIndividueel.Any(x => x.KalenderId == verslag.KalenderId);
+                            var hasIndividualMatches = _db.VerslagenIndividueel.Any(x => x.MatchId == verslag.KalenderId);
                             if (!hasIndividualMatches)
                             {
                                 int id = 0;
@@ -201,10 +201,10 @@ namespace FrenoySyncer
                                     var matchResult = new VerslagIndividueel
                                     {
                                         Id = id--,
-                                        KalenderId = verslag.KalenderId,
-                                        MatchNummer = int.Parse(frenoyIndividual.Position),
-                                        ThuisSpelerUniqueIndex = int.Parse(frenoyIndividual.HomePlayerUniqueIndex),
-                                        UitSpelerUniqueIndex = int.Parse(frenoyIndividual.AwayPlayerUniqueIndex),
+                                        MatchId = verslag.KalenderId,
+                                        MatchNumber = int.Parse(frenoyIndividual.Position),
+                                        HomePlayerUniqueIndex = int.Parse(frenoyIndividual.HomePlayerUniqueIndex),
+                                        HomePlayerSets = int.Parse(frenoyIndividual.AwayPlayerUniqueIndex),
                                         WalkOver = WalkOver.None
                                     };
                                     if (frenoyIndividual.IsHomeForfeited || frenoyIndividual.IsAwayForfeited)
@@ -213,8 +213,8 @@ namespace FrenoySyncer
                                     }
                                     else
                                     {
-                                        matchResult.ThuisSpelerSets = int.Parse(frenoyIndividual.HomeSetCount);
-                                        matchResult.UitSpelerSets = int.Parse(frenoyIndividual.AwaySetCount);
+                                        matchResult.OutPlayerUniqueIndex = int.Parse(frenoyIndividual.HomeSetCount);
+                                        matchResult.OutPlayerSets = int.Parse(frenoyIndividual.AwaySetCount);
                                     }
                                     _db.VerslagenIndividueel.Add(matchResult);
                                 }
@@ -238,16 +238,16 @@ namespace FrenoySyncer
             {
                 VerslagSpeler verslagSpeler = new VerslagSpeler
                 {
-                    KalenderId = verslag.KalenderId,
-                    Klassement = frenoyVerslagSpeler.Ranking,
-                    Thuis = thuisSpeler ? 1 : 0,
-                    SpelerNaam = GetSpelerNaam(frenoyVerslagSpeler),
-                    Positie = int.Parse(frenoyVerslagSpeler.Position),
+                    MatchId = verslag.KalenderId,
+                    Ranking = frenoyVerslagSpeler.Ranking,
+                    Home = thuisSpeler,
+                    Name = GetSpelerNaam(frenoyVerslagSpeler),
+                    Position = int.Parse(frenoyVerslagSpeler.Position),
                     UniqueIndex = int.Parse(frenoyVerslagSpeler.UniqueIndex)
                 };
                 if (frenoyVerslagSpeler.VictoryCount != null)
                 {
-                    verslagSpeler.Winst = int.Parse(frenoyVerslagSpeler.VictoryCount);
+                    verslagSpeler.Won = int.Parse(frenoyVerslagSpeler.VictoryCount);
                 }
                 else
                 {
@@ -256,10 +256,10 @@ namespace FrenoySyncer
                 var dbPlayer = _db.Spelers.SingleOrDefault(x => x.ComputerNummerVttl.HasValue && x.ComputerNummerVttl.Value.ToString() == frenoyVerslagSpeler.UniqueIndex);
                 if (dbPlayer != null)
                 {
-                    verslagSpeler.SpelerId = dbPlayer.Id;
+                    verslagSpeler.PlayerId = dbPlayer.Id;
                     if (!string.IsNullOrWhiteSpace(dbPlayer.NaamKort))
                     {
-                        verslagSpeler.SpelerNaam = dbPlayer.NaamKort;
+                        verslagSpeler.Name = dbPlayer.NaamKort;
                     }
                 }
 

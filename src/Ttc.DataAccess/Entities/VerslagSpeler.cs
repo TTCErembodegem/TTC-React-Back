@@ -8,29 +8,29 @@ namespace Ttc.DataAccess.Entities
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey("KalenderId")]
+        [ForeignKey("MatchId")]
         public Verslag Verslag { get; set; }
-        public int KalenderId { get; set; }
+        public int MatchId { get; set; }
 
-        [ForeignKey("SpelerId")]
+        [ForeignKey("PlayerId")]
         public Speler Speler { get; set; }
-        public int SpelerId { get; set; }
+        public int PlayerId { get; set; }
 
         /// <summary>
         /// Aantal gewonnen matchen.
         /// Null => Forfeit
         /// </summary>
-        public int? Winst { get; set; }
-        public int Thuis { get; set; }
+        public int? Won { get; set; }
+        public bool Home { get; set; }
 
-        public int Positie { get; set; }
-        public string SpelerNaam { get; set; }
-        public string Klassement { get; set; }
+        public int Position { get; set; }
+        public string Name { get; set; }
+        public string Ranking { get; set; }
         public int UniqueIndex { get; set; }
 
         public override string ToString()
         {
-            return $"KalenderId={KalenderId}, SpelerNaam={SpelerNaam}, Winst={Winst}, Thuis={Thuis}, Positie={Positie}";
+            return $"MatchId={MatchId}, NAme={Name}, Won={Won}, Home={Home}, Position={Position}";
         }
     }
 }

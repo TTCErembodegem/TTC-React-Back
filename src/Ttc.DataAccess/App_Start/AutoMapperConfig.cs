@@ -79,46 +79,11 @@ namespace Ttc.DataAccess.App_Start
         private static void ReportMapping()
         {
             Mapper.CreateMap<VerslagSpeler, MatchPlayer>()
-                .ForMember(
-                    dest => dest.Home,
-                    opts => opts.MapFrom(src => src.Thuis == 1))
-                .ForMember(
-                    dest => dest.Name,
-                    opts => opts.MapFrom(src => src.SpelerNaam))
-                .ForMember(
-                    dest => dest.Position,
-                    opts => opts.MapFrom(src => src.Positie))
-                .ForMember(
-                    dest => dest.Ranking,
-                    opts => opts.MapFrom(src => src.Klassement))
-                .ForMember(
-                    dest => dest.UniqueIndex,
-                    opts => opts.MapFrom(src => src.UniqueIndex))
-                .ForMember(
-                    dest => dest.Won,
-                    opts => opts.MapFrom(src => src.Winst))
-                .ForMember(
-                    dest => dest.PlayerId,
-                    opts => opts.MapFrom(src => src.SpelerId == 0 ? (int?)null : src.SpelerId))
                 .ReverseMap()
                 ;
         
             Mapper.CreateMap<VerslagIndividueel, MatchGame>()
-                .ForMember(
-                    dest => dest.MatchNumber,
-                    opts => opts.MapFrom(src => src.MatchNummer))
-                .ForMember(
-                    dest => dest.HomePlayerUniqueIndex,
-                    opts => opts.MapFrom(src => src.ThuisSpelerUniqueIndex))
-                .ForMember(
-                    dest => dest.HomePlayerSets,
-                    opts => opts.MapFrom(src => src.ThuisSpelerSets))
-                .ForMember(
-                    dest => dest.OutPlayerUniqueIndex,
-                    opts => opts.MapFrom(src => src.UitSpelerUniqueIndex))
-                .ForMember(
-                    dest => dest.OutPlayerSets,
-                    opts => opts.MapFrom(src => src.UitSpelerSets))
+                .ReverseMap()
                 ;
         }
 

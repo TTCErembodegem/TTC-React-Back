@@ -32,8 +32,8 @@ namespace Ttc.DataAccess
         public DbSet<ClubPloegSpeler> ClubPloegSpelers { get; set; }
         public DbSet<Kalender> Kalender { get; set; }
         public DbSet<Verslag> Verslagen { get; set; }
-        public DbSet<VerslagSpeler> VerslagenSpelers { get; set; }
-        public DbSet<VerslagIndividueel> VerslagenIndividueel { get; set; }
+        //public DbSet<VerslagSpeler> VerslagenSpelers { get; set; }
+        //public DbSet<VerslagIndividueel> VerslagenIndividueel { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -72,12 +72,12 @@ namespace Ttc.DataAccess
             modelBuilder.Entity<VerslagIndividueel>()
                 .HasRequired(c => c.Verslag)
                 .WithMany(c => c.Individueel)
-                .HasForeignKey(x => x.KalenderId);
+                .HasForeignKey(x => x.MatchId);
 
             modelBuilder.Entity<VerslagSpeler>()
                 .HasRequired(c => c.Verslag)
                 .WithMany(c => c.Spelers)
-                .HasForeignKey(x => x.KalenderId);
+                .HasForeignKey(x => x.MatchId);
         }
 
         public TtcDbContext() : base("ttc")

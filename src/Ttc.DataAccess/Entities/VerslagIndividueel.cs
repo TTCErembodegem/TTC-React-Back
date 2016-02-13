@@ -14,17 +14,17 @@ namespace Ttc.DataAccess.Entities
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey("KalenderId")]
+        [ForeignKey("MatchId")]
         public Verslag Verslag { get; set; }
-        public int KalenderId { get; set; }
+        public int MatchId { get; set; }
 
-        public int MatchNummer { get; set; }
-        public int ThuisSpelerUniqueIndex { get; set; }
-        public int UitSpelerUniqueIndex { get; set; }
-        public int ThuisSpelerSets { get; set; }
-        public int UitSpelerSets { get; set; }
+        public int MatchNumber { get; set; }
+        public int HomePlayerUniqueIndex { get; set; }
+        public int HomePlayerSets { get; set; }
+        public int OutPlayerUniqueIndex { get; set; }
+        public int OutPlayerSets { get; set; }
         public WalkOver WalkOver { get; set; }
 
-        public override string ToString() => $"KalenderId={KalenderId}, Match#={MatchNummer}, ThuisSpeler={ThuisSpelerUniqueIndex}:{ThuisSpelerSets}, UitSpeler={UitSpelerUniqueIndex}:{UitSpelerSets}";
+        public override string ToString() => $"KalenderId={MatchId}, Match#={MatchNumber}, ThuisSpeler={HomePlayerUniqueIndex}:{OutPlayerUniqueIndex}, UitSpeler={HomePlayerSets}:{OutPlayerSets}";
     }
 }
