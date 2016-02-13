@@ -55,11 +55,18 @@ namespace Ttc.UnitTests
         {
             using (var dbContext = new TtcDbContext())
             {
+                var pastMatchEntity = dbContext.Kalender
+                    .Include(x => x.Verslag)
+                    .Include("Verslag.Spelers")
+                    .Single(x => x.Id == 1597);
+                Assert.That(pastMatchEntity.Verslag, Is.Not.Null);
+
                 AutoMapperConfig.Configure(new KlassementValueConverter());
 
                 var serv = new CalendarService();
-                var result = serv.GetRelevantMatches();
-                var pastMatch = result.First();
+                //var result = serv.GetRelevantMatches();
+                //var pastMatch = result.First();
+                var pastMatch = serv.GetMatch(1597);
                 Assert.That(pastMatch.Players.Count, Is.Not.EqualTo(0), "Players not loaded");
                 Assert.That(pastMatch.Games.Count, Is.Not.EqualTo(0), "Games not loaded");
                 Assert.That(pastMatch.Score, Is.Not.Null, "Score not set");
