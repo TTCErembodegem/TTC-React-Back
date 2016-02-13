@@ -15,15 +15,12 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
-                var dateBegin = DateTime.Now.AddDays(-12);
+                var dateBegin = DateTime.Now.AddDays(-16);
                 var dateEnd = DateTime.Now.AddDays(2);
 
                 var calendar = dbContext.Kalender
-                    .Include(x => x.ThuisClubPloeg)
-                    .Include(x => x.Verslag)
-                    .Include("Verslag.Individueel")
-                    .Include("Verslag.Spelers")
-                    //.Where(x => x.Id == 1597)
+                    .WithIncludes()
+                    //.Where(x => x.Id == 1500)
                     .Where(x => x.Datum >= dateBegin)
                     .Where(x => x.Datum <= dateEnd)
                     .Where(x => x.ThuisClubId.HasValue)
@@ -31,78 +28,72 @@ namespace Ttc.DataAccess.Services
                     .ToList();
 
                 var result = Mapper.Map<IList<Kalender>, IList<Match>>(calendar);
-                foreach (var match in result)
-                {
-                    FixUp(match);
-                }
-                
                 return result;
             }
         }
-
-        #region Fixing some stuff from the db
-        private static bool IsOwnClubPlayer(bool isHomeMatch, bool isHomePlayer)
-        {
-            return (isHomeMatch && isHomePlayer) || (!isHomeMatch && !isHomePlayer);
-        }
-
-        private static string GetFirstName(string fullName)
-        {
-            if (fullName.IndexOf(" ", StringComparison.InvariantCulture) == -1)
-            {
-                return fullName;
-            }
-            return fullName.Substring(0, fullName.IndexOf(" ", StringComparison.InvariantCulture));
-        }
-
-        private static void FixUp(Match match)
-        {
-            // TODO: 'fixing' home might result in derby matches being displayed incorrectly (ex: Sporta A vs Erembodegem A)
-            // Fix in case two people are called 'Dirk' etc
-            foreach (var ply in match.Players)
-            {
-                ply.Alias = GetFirstName(ply.Name);
-            }
-            foreach (var ply in match.Players)
-            {
-                var otherPlayers = match.Players.Where(otherPly => ply.Position != otherPly.Position);
-                if (otherPlayers.Any(otherPly => GetFirstName(otherPly.Alias) == ply.Alias))
-                {
-                    ply.Alias += ply.Name.Substring(ply.Name.IndexOf(" ", StringComparison.InvariantCulture));
-                }
-            }
-
-            // Change the meaning of 'home' from 'was the player playing in his own club'
-            // to 'is the player a member of TTC Erembodegem'
-            foreach (var ply in match.Players)
-            {
-                ply.Home = IsOwnClubPlayer(match.IsHomeMatch, ply.Home);
-            }
-        }
-        #endregion
 
         public Match GetMatch(int matchId)
         {
             using (var dbContext = new TtcDbContext())
             {
-                return Mapper.Map<Kalender, Match>(dbContext.Kalender.SingleOrDefault(x => x.Id == matchId));
+                var calendar = dbContext.Kalender
+                    .WithIncludes()
+                    .SingleOrDefault(x => x.Id == matchId);
+                return Map(calendar);
             }
         }
 
-        public void DeleteMatchPlayer(MatchPlayer matchPlayer)
-        {
-        
-        }
-
-        public MatchPlayer AddMatchPlayer(MatchPlayer matchPlayer)
+        public Match ToggleMatchPlayer(MatchPlayer matchPlayer)
         {
             using (var dbContext = new TtcDbContext())
             {
-                var verslagSpeler = Mapper.Map<MatchPlayer, VerslagSpeler>(matchPlayer);
-                //dbContext.VerslagenSpelers.Add(verslagSpeler);
+                var existingSpeler = dbContext.VerslagenSpelers
+                    .Include(x => x.Verslag)
+                    .FirstOrDefault(x => x.MatchId == matchPlayer.MatchId && x.PlayerId == matchPlayer.PlayerId.Value);
+
+                if (existingSpeler != null)
+                {
+                    dbContext.VerslagenSpelers.Remove(existingSpeler);
+                }
+                else
+                {
+                    var existingReport = dbContext.Verslagen.SingleOrDefault(x => x.KalenderId == matchPlayer.MatchId);
+                    if (existingReport == null)
+                    {
+                        dbContext.Verslagen.Add(new Verslag
+                        {
+                            Details = 1,
+                            KalenderId = matchPlayer.MatchId,
+                            SpelerId = matchPlayer.PlayerId.Value,
+                            UitslagThuis = 0,
+                            UitslagUit = 0
+                        });
+                    }
+
+                    var verslagSpeler = Mapper.Map<MatchPlayer, VerslagSpeler>(matchPlayer);
+                    dbContext.VerslagenSpelers.Add(verslagSpeler);
+                }
                 dbContext.SaveChanges();
             }
-            return matchPlayer;
+            var newMatch = GetMatch(matchPlayer.MatchId);
+            return newMatch;
+        }
+
+        private Match Map(Kalender kalender)
+        {
+            return Mapper.Map<Kalender, Match>(kalender);
+        }
+    }
+
+    internal static class CalendarExtensions
+    {
+        public static IQueryable<Kalender> WithIncludes(this DbSet<Kalender> kalender)
+        {
+            return kalender
+                .Include(x => x.ThuisClubPloeg)
+                .Include(x => x.Verslag)
+                .Include("Verslag.Individueel")
+                .Include("Verslag.Spelers");
         }
     }
 }

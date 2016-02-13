@@ -30,6 +30,7 @@ namespace Ttc.Model.Matches
         Won,
         Lost,
         Draw,
-        WalkOver
+        WalkOver,
+        BeingPlayed
     }
 }

@@ -21,7 +21,7 @@ namespace Ttc.Model.Matches
         public MatchScore Score { get; set; }
         public MatchOutcome ScoreType { get; set; }
         public string Description { get; set; }
-        public bool IsPlayed { get; set; }
+        public bool IsPlayed { get; set; } // TODO: not sure if we still need this prop?
         public ICollection<MatchPlayer> Players { get; set; }
         public ICollection<MatchGame> Games { get; set; }
         #endregion

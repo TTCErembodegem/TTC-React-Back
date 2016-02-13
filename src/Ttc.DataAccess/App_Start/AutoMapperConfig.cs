@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -99,11 +100,6 @@ namespace Ttc.DataAccess.App_Start
                 .ForMember(
                     dest => dest.TeamId,
                     opts => opts.MapFrom(src => src.ThuisClubPloeg.ReeksId))
-
-                .ForMember(
-                    dest => dest.TeamId,
-                    opts => opts.MapFrom(src => src.ThuisClubPloeg.ReeksId))
-
                 .ForMember(
                     dest => dest.Opponent,
                     opts => opts.MapFrom(src => new OpposingTeam
@@ -113,7 +109,10 @@ namespace Ttc.DataAccess.App_Start
                     }))
                 .ForMember(
                     dest => dest.IsPlayed,
-                    opts => opts.MapFrom(src => GetScoreType(src.Verslag) != MatchOutcome.NotYetPlayed && GetScoreType(src.Verslag) != MatchOutcome.WalkOver))
+                    opts => opts.MapFrom(src => 
+                        GetScoreType(src) != MatchOutcome.NotYetPlayed && 
+                        GetScoreType(src) != MatchOutcome.WalkOver && 
+                        GetScoreType(src) != MatchOutcome.BeingPlayed))
                 .ForMember(
                     dest => dest.Description,
                     opts => opts.MapFrom(src => src.Beschrijving))
@@ -122,7 +121,7 @@ namespace Ttc.DataAccess.App_Start
                     opts => opts.MapFrom(src => src.Verslag.SpelerId))
                 .ForMember(
                     dest => dest.ScoreType,
-                    opts => opts.MapFrom(src => GetScoreType(src.Verslag)))
+                    opts => opts.MapFrom(src => GetScoreType(src)))
                 .ForMember(
                     dest => dest.Score,
                     opts => opts.MapFrom(src => src.Verslag.WO == 0 || src.Verslag.UitslagThuis.HasValue ? new MatchScore(src.Verslag.UitslagThuis.Value, src.Verslag.UitslagUit.Value) : null))
@@ -132,15 +131,74 @@ namespace Ttc.DataAccess.App_Start
                 .ForMember(
                     dest => dest.Games,
                     opts => opts.MapFrom(src => src.Verslag.Individueel))
-                ;
+                
+                .AfterMap((kalender, match) =>
+                {
+                    SetMatchPlayerAliases(match);
+                    ChangeMeaningOfHomePlayer(match);
+                });
         }
 
-        private static MatchOutcome GetScoreType(Verslag verslag)
+        private static string GetFirstName(string fullName)
         {
-            if (verslag == null)
+            if (fullName.IndexOf(" ", StringComparison.InvariantCulture) == -1)
             {
+                return fullName;
+            }
+            return fullName.Substring(0, fullName.IndexOf(" ", StringComparison.InvariantCulture));
+        }
+
+        private static void SetMatchPlayerAliases(Match match)
+        {
+            foreach (var ply in match.Players)
+            {
+                ply.Alias = GetFirstName(ply.Name);
+            }
+
+            // Fix in case two people are called 'Dirk' etc
+            foreach (var ply in match.Players)
+            {
+                var otherPlayers = match.Players.Where(otherPly => ply.Position != otherPly.Position);
+                if (otherPlayers.Any(otherPly => GetFirstName(otherPly.Alias) == ply.Alias))
+                {
+                    if (ply.Name.IndexOf(" ", StringComparison.InvariantCulture) != -1)
+                    {
+                        ply.Alias += ply.Name.Substring(ply.Name.IndexOf(" ", StringComparison.InvariantCulture));
+                    }
+                }
+            }
+        }
+
+        private static bool IsOwnClubPlayer(bool isHomeMatch, bool isHomePlayer)
+        {
+            return (isHomeMatch && isHomePlayer) || (!isHomeMatch && !isHomePlayer);
+        }
+
+        /// <summary>
+        /// Change the meaning of 'home' from 'was the player playing in his own club'
+        /// to 'is the player a member of TTC Erembodegem'
+        /// </summary>
+        private static void ChangeMeaningOfHomePlayer(Match match)
+        {
+            // TODO: 'fixing' home might result in derby matches being displayed incorrectly (ex: Sporta A vs Erembodegem A)
+            foreach (var ply in match.Players)
+            {
+                ply.Home = IsOwnClubPlayer(match.IsHomeMatch, ply.Home);
+            }
+        }
+
+        private static MatchOutcome GetScoreType(Kalender kalendar)
+        {
+            var verslag = kalendar.Verslag;
+            if (verslag == null || kalendar.Datum > DateTime.Now)
+            {
+                if (Constants.HasMatchStarted(kalendar.Datum))
+                {
+                    return MatchOutcome.BeingPlayed;
+                }
                 return MatchOutcome.NotYetPlayed;
             }
+            
             if (verslag.WO == 1)
             {
                 return MatchOutcome.WalkOver;
