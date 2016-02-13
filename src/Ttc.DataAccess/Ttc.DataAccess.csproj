@@ -72,7 +72,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Entities\ClubContact.cs" />
     <Compile Include="Entities\ClubEntity.cs" />
@@ -85,7 +84,6 @@
     <Compile Include="Entities\Verslag.cs" />
     <Compile Include="Entities\VerslagIndividueel.cs" />
     <Compile Include="Entities\VerslagSpeler.cs" />
-    <Compile Include="GlobalBackendConfiguration.cs" />
     <Compile Include="Migrations\201601270124192_LegacyMysqlDb.cs" />
     <Compile Include="Migrations\201601270124192_LegacyMysqlDb.Designer.cs">
       <DependentUpon>201601270124192_LegacyMysqlDb.cs</DependentUpon>
@@ -114,12 +112,15 @@
     <Compile Include="Migrations\201602080124535_VerslagDetails.Designer.cs">
       <DependentUpon>201602080124535_VerslagDetails.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602130251018_TEsty.cs" />
+    <Compile Include="Migrations\201602130251018_TEsty.Designer.cs">
+      <DependentUpon>201602130251018_TEsty.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602130255267_NieuweVErslagSpelers.cs" />
+    <Compile Include="Migrations\201602130255267_NieuweVErslagSpelers.Designer.cs">
+      <DependentUpon>201602130255267_NieuweVErslagSpelers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Services\CalendarService.cs" />
-    <Compile Include="Services\ClubService.cs" />
-    <Compile Include="Services\ConfigService.cs" />
-    <Compile Include="Services\PlayerService.cs" />
-    <Compile Include="Services\TeamService.cs" />
     <Compile Include="TtcDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\KlassementValueConverter.cs" />
@@ -156,6 +157,15 @@
     <EmbeddedResource Include="Migrations\201602080124535_VerslagDetails.resx">
       <DependentUpon>201602080124535_VerslagDetails.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602130251018_TEsty.resx">
+      <DependentUpon>201602130251018_TEsty.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602130255267_NieuweVErslagSpelers.resx">
+      <DependentUpon>201602130255267_NieuweVErslagSpelers.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Start\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

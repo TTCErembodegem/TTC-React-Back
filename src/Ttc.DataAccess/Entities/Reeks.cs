@@ -18,7 +18,7 @@ namespace Ttc.DataAccess.Entities
         public string FrenoyTeamId { get; set; }
         public int FrenoyDivisionId { get; set; }
 
-        public virtual ICollection<ClubPloeg> Ploegen { get; set; }
+        //public virtual ICollection<ClubPloeg> Ploegen { get; set; }
 
         public override string ToString() => $"Id={Id}, Competitie={Competitie} {Jaar}, Reeks={ReeksNummer}{ReeksCode}, FrenoyLink={LinkId}";
     }

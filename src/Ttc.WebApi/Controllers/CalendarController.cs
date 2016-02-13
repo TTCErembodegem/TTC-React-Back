@@ -35,7 +35,8 @@ namespace Ttc.WebApi.Controllers
         [HttpPost]
         public MatchPlayer AddPlayer([FromBody]MatchPlayer player)
         {
-            return player;
+            var result = _service.AddMatchPlayer(player);
+            return result;
             //var matchId = selectPlayer.MatchId;
             //var playerId = selectPlayer.PlayerId;
             //var match = _service.GetMatch(matchId);

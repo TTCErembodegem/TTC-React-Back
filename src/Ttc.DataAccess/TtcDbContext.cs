@@ -40,44 +40,44 @@ namespace Ttc.DataAccess
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Types().Configure(c => c.ToTable(ToLowerCaseTableName(c.ClrType)));
 
-            modelBuilder.Entity<ClubLokaal>()
-                .HasRequired(c => c.Club)
-                .WithMany(l => l.Lokalen)
-                .HasForeignKey(x => x.ClubId);
+            //modelBuilder.Entity<ClubLokaal>()
+            //    .HasRequired(c => c.Club)
+            //    .WithMany(l => l.Lokalen)
+            //    .HasForeignKey(x => x.ClubId);
 
-            modelBuilder.Entity<ClubContact>()
-                .HasRequired(c => c.Club)
-                .WithMany(c => c.Contacten)
-                .HasForeignKey(x => x.ClubId);
+            //modelBuilder.Entity<ClubContact>()
+            //    .HasRequired(c => c.Club)
+            //    .WithMany(c => c.Contacten)
+            //    .HasForeignKey(x => x.ClubId);
 
-            modelBuilder.Entity<ClubPloeg>()
-                .HasRequired(c => c.Reeks)
-                .WithMany(c => c.Ploegen)
-                .HasForeignKey(x => x.ReeksId);
+            //modelBuilder.Entity<ClubPloeg>()
+            //    .HasRequired(c => c.Reeks)
+            //    .WithMany(c => c.Ploegen)
+            //    .HasForeignKey(x => x.ReeksId);
 
-            modelBuilder.Entity<Kalender>()
-                .HasRequired(c => c.ThuisClubPloeg)
-                .WithMany(c => c.Matchen)
-                .HasForeignKey(x => x.ThuisClubPloegId);
+            //modelBuilder.Entity<Kalender>()
+            //    .HasRequired(c => c.ThuisClubPloeg)
+            //    .WithMany(c => c.Matchen)
+            //    .HasForeignKey(x => x.ThuisClubPloegId);
 
-            modelBuilder.Entity<ClubPloegSpeler>()
-                .HasRequired(c => c.Ploeg)
-                .WithMany(c => c.Spelers)
-                .HasForeignKey(x => x.ClubPloegId);
+            //modelBuilder.Entity<ClubPloegSpeler>()
+            //    .HasRequired(c => c.Ploeg)
+            //    .WithMany(c => c.Spelers)
+            //    .HasForeignKey(x => x.ClubPloegId);
 
-            modelBuilder.Entity<Kalender>()
-                .HasOptional(x => x.Verslag)
-                .WithRequired(x => x.Kalender);
+            //modelBuilder.Entity<Kalender>()
+            //    .HasOptional(x => x.Verslag)
+            //    .WithRequired(x => x.Kalender);
 
-            modelBuilder.Entity<VerslagIndividueel>()
-                .HasRequired(c => c.Verslag)
-                .WithMany(c => c.Individueel)
-                .HasForeignKey(x => x.MatchId);
+            //modelBuilder.Entity<VerslagIndividueel>()
+            //    .HasRequired(c => c.Verslag)
+            //    .WithMany(c => c.Individueel)
+            //    .HasForeignKey(x => x.KalenderId);
 
-            modelBuilder.Entity<VerslagSpeler>()
-                .HasRequired(c => c.Verslag)
-                .WithMany(c => c.Spelers)
-                .HasForeignKey(x => x.MatchId);
+            //modelBuilder.Entity<VerslagSpeler>()
+            //    .HasRequired(c => c.Verslag)
+            //    .WithMany(c => c.Spelers)
+            //    .HasForeignKey(x => x.KalenderId);
         }
 
         public TtcDbContext() : base("ttc")
