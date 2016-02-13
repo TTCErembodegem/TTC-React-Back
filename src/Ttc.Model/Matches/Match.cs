@@ -28,14 +28,14 @@ namespace Ttc.Model.Matches
 
         public Match()
         {
-        }
-
-        public Match(int playerId)
-        {
             Players = new List<MatchPlayer>();
             Games = new List<MatchGame>();
             ScoreType = MatchOutcome.NotYetPlayed;
             Score = new MatchScore();
+        }
+
+        public Match(int playerId) : this()
+        {
             ReportPlayerId = playerId;
         }
 

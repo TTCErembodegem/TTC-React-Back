@@ -23,6 +23,7 @@ namespace Ttc.DataAccess.Services
                     .Include(x => x.Verslag)
                     .Include("Verslag.Individueel")
                     .Include("Verslag.Spelers")
+                    //.Where(x => x.Id == 1597)
                     .Where(x => x.Datum >= dateBegin)
                     .Where(x => x.Datum <= dateEnd)
                     .Where(x => x.ThuisClubId.HasValue)
