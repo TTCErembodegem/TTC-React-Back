@@ -16,10 +16,7 @@ namespace Ttc.DataAccess
         /// A match is considered started this time before the official start time
         /// </summary>
         private static readonly TimeSpan MatchStarts = new TimeSpan(0, 30, 0);
-        public static bool HasMatchStarted(DateTime date)
-        {
-            return date - DateTime.Now < MatchStarts;
-        }
+        public static bool HasMatchStarted(DateTime date) => date - DateTime.Now < MatchStarts;
 
         #region Competition
         public const string Sporta = "Sporta";

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using AutoMapper;
 using Ttc.DataAccess.Entities;
 using Ttc.Model.Matches;

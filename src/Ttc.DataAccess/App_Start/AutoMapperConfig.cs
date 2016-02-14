@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using AutoMapper;
-using SimpleInjector.Advanced.Internal;
 using Ttc.DataAccess.Entities;
 using Ttc.DataAccess.Utilities;
 using Ttc.Model;
