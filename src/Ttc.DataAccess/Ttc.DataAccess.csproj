@@ -150,6 +150,10 @@
     <Compile Include="Migrations\201602130428293_Relations7.Designer.cs">
       <DependentUpon>201602130428293_Relations7.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602141456030_VerslagSyncedWithFrenoy.cs" />
+    <Compile Include="Migrations\201602141456030_VerslagSyncedWithFrenoy.Designer.cs">
+      <DependentUpon>201602141456030_VerslagSyncedWithFrenoy.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\CalendarService.cs" />
     <Compile Include="Services\ClubService.cs" />
@@ -219,6 +223,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201602130428293_Relations7.resx">
       <DependentUpon>201602130428293_Relations7.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602141456030_VerslagSyncedWithFrenoy.resx">
+      <DependentUpon>201602141456030_VerslagSyncedWithFrenoy.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

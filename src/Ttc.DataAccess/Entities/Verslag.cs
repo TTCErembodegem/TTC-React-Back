@@ -22,8 +22,9 @@ namespace Ttc.DataAccess.Entities
         public int? UitslagThuis { get; set; }
         public int? UitslagUit { get; set; }
         public int WO { get; set; }
-        public int? Details { get; set; }
 
-        public override string ToString() => $"KalenderId={KalenderId}, Uitslag: {UitslagThuis}-{UitslagUit}, WO={WO}, Details={Details}";
+        public bool IsSyncedWithFrenoy { get; set; }
+
+        public override string ToString() => $"KalenderId={KalenderId}, Uitslag: {UitslagThuis}-{UitslagUit}, WO={WO}, Details={IsSyncedWithFrenoy}";
     }
 }
