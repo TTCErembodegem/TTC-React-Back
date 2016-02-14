@@ -1,7 +1,6 @@
 using System.Web.Http;
 using SimpleInjector;
 using SimpleInjector.Extensions.ExecutionContextScoping;
-using SimpleInjector.Integration.WebApi;
 using Ttc.DataAccess;
 using Ttc.DataAccess.Services;
 using Ttc.WebApi;

@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using AutoMapper.Internal;
-using Ttc.DataAccess.Entities;
 
 namespace Ttc.DataAccess.Utilities
 {
