@@ -15,6 +15,11 @@ namespace Frenoy.Api
         public string ReeksType { get; set; }
         public int Jaar { get; set; }
 
+        public override string ToString()
+        {
+            return $"FrenoyClub={FrenoyClub}, FrenoySeason={FrenoySeason}, Competitie={Competitie}, ReeksType={ReeksType}, Jaar={Jaar}";
+        }
+
         /// <summary>
         /// Keys = TeamCode
         /// Values = Players with first player = Captain

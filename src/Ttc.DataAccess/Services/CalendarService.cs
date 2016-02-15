@@ -4,7 +4,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using AutoMapper;
-using Ttc.DataAccess.Entities;
+using Frenoy.Api;
+using Ttc.DataEntities;
 using Ttc.Model.Matches;
 
 namespace Ttc.DataAccess.Services
@@ -15,8 +16,8 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
-                var dateBegin = DateTime.Now.AddDays(-5);
-                var dateEnd = DateTime.Now.AddDays(2);
+                var dateBegin = DateTime.Now.AddDays(-8);
+                var dateEnd = DateTime.Now.AddDays(8);
 
                 var calendar = dbContext.Kalender
                     .WithIncludes()
@@ -29,9 +30,10 @@ namespace Ttc.DataAccess.Services
 
                 foreach (var match in calendar)
                 {
-                    if (match.Datum > DateTime.Now && (match.Verslag == null || !match.Verslag.IsSyncedWithFrenoy))
+                    if (match.Datum < DateTime.Now && (match.Verslag == null || !match.Verslag.IsSyncedWithFrenoy))
                     {
-
+                        var vttl = new FrenoyApi(dbContext, FrenoySettings.VttlSettings);
+                        vttl.SyncMatch(match.ThuisClubPloeg.ReeksId.Value, match.ThuisClubPloeg.Code, match.Week.Value);
                     }
                 }
 

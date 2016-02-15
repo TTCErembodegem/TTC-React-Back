@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Linq;
 using AutoMapper;
-using Ttc.DataAccess.Entities;
 using Ttc.Model;
 
 namespace Ttc.DataAccess.Services

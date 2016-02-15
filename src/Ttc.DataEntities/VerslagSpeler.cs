@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Ttc.DataAccess.Entities
+namespace Ttc.DataEntities
 {
-    internal class VerslagSpeler
+    public class VerslagSpeler
     {
         [Key]
         public int Id { get; set; }

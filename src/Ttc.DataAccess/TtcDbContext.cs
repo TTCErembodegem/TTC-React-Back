@@ -7,7 +7,8 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Ttc.DataAccess.Entities;
+using Ttc.DataEntities;
+using Ttc.DataEntities.Core;
 using Ttc.Model;
 
 namespace Ttc.DataAccess
@@ -18,7 +19,7 @@ namespace Ttc.DataAccess
     /// (The entity classes have been excluded in the VS project)
     /// </remarks>
     [DbConfigurationType(typeof(MySql.Data.Entity.MySqlEFConfiguration))]
-    internal class TtcDbContext : DbContext
+    internal class TtcDbContext : DbContext, ITtcDbContext
     {
         public DbSet<Speler> Spelers { get; set; }
         public DbSet<ClubEntity> Clubs { get; set; }

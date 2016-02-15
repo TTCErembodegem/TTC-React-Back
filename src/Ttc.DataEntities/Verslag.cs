@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Ttc.Model;
 
-namespace Ttc.DataAccess.Entities
+namespace Ttc.DataEntities
 {
-    internal class Verslag
+    public class Verslag
     {
         [Key]
         public int KalenderId { get; set; }

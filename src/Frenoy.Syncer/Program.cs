@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Frenoy.Api;
+using Ttc.DataAccess;
 
 namespace Frenoy.Syncer
 {
@@ -11,14 +12,16 @@ namespace Frenoy.Syncer
 
         static void Main(string[] args)
         {
-            using (var vttl = new FrenoySync(FrenoySettings.VttlSettings))
+            using (var dbContext = new TtcDbContext())
             {
-                vttl.Sync();
+                var vttl = new FrenoyApi(dbContext, FrenoySettings.VttlSettings);
+                vttl.SyncAll();
             }
+            
 
             //using (var sporta = new FrenoySync(FrenoyOptions.SportaOptions, false))
             //{
-            //    sporta.Sync();
+            //    sporta.SyncAll();
             //}
 
             //Console.WriteLine("All done");

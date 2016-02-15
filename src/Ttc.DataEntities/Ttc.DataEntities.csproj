@@ -4,18 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D3FDABD3-8D5F-4A24-8AE9-7BAAED1D62C8}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{F437032C-8EDD-49DE-95F8-83E527E8367B}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Frenoy.Syncer</RootNamespace>
-    <AssemblyName>Frenoy.Syncer</AssemblyName>
+    <RootNamespace>Ttc.DataEntities</RootNamespace>
+    <AssemblyName>Ttc.DataEntities</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -42,19 +39,9 @@
       <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MySql.Data.6.9.8\lib\net45\MySql.Data.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MySql.Data.Entity.EF6, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MySql.Data.Entity.6.9.8\lib\net45\MySql.Data.Entity.EF6.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -63,30 +50,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="ClubContact.cs" />
+    <Compile Include="ClubEntity.cs" />
+    <Compile Include="ClubLokaal.cs" />
+    <Compile Include="ClubPloeg.cs" />
+    <Compile Include="ClubPloegSpeler.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Core\ITtcDbContext.cs" />
+    <Compile Include="Kalender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reeks.cs" />
+    <Compile Include="Speler.cs" />
+    <Compile Include="Verslag.cs" />
+    <Compile Include="VerslagIndividueel.cs" />
+    <Compile Include="VerslagSpeler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Frenoy.Api\Frenoy.Api.csproj">
-      <Project>{c0d10971-d4c3-4958-9e9a-a40c849dc01f}</Project>
-      <Name>Frenoy.Api</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ttc.DataAccess\Ttc.DataAccess.csproj">
-      <Project>{bdfc6f37-3b94-467b-beee-53ffba49918e}</Project>
-      <Name>Ttc.DataAccess</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ttc.DataEntities\Ttc.DataEntities.csproj">
-      <Project>{f437032c-8edd-49de-95f8-83e527e8367b}</Project>
-      <Name>Ttc.DataEntities</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Ttc.Model\Ttc.Model.csproj">
       <Project>{321dcbad-1302-400f-8532-74209420b126}</Project>
       <Name>Ttc.Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

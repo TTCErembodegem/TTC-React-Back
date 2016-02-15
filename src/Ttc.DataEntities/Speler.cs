@@ -1,12 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Ttc.DataAccess.Entities
+namespace Ttc.DataEntities
 {
     /// <summary>
     /// Mapped to db.
     /// </summary>
-    internal class Speler
+    public class Speler
     {
         [Key]
         public int Id { get; set; }

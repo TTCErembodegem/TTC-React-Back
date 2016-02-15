@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using System.Linq;
 using AutoMapper;
-using Ttc.DataAccess.Entities;
 using Ttc.Model;
 using System.Data.Entity;
+using Ttc.DataEntities;
 using Ttc.Model.Clubs;
 
 namespace Ttc.DataAccess.Services

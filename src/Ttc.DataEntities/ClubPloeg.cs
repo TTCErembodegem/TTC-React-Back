@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Ttc.Model.Clubs;
 
-namespace Ttc.DataAccess.Entities
+namespace Ttc.DataEntities
 {
-    internal class ClubPloeg
+    public class ClubPloeg
     {
         [Key]
         public int Id { get; set; }

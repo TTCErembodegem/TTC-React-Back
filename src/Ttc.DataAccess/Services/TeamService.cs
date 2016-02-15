@@ -4,10 +4,10 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
-using Ttc.DataAccess.Entities;
 using Ttc.Model;
 using System.Data.Entity;
 using Omu.ValueInjecter;
+using Ttc.DataEntities;
 using Ttc.Model.Teams;
 using Mapper = AutoMapper.Mapper;
 

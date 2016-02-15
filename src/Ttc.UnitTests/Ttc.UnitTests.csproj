@@ -106,6 +106,10 @@
       <Project>{bdfc6f37-3b94-467b-beee-53ffba49918e}</Project>
       <Name>Ttc.DataAccess</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Ttc.DataEntities\Ttc.DataEntities.csproj">
+      <Project>{f437032c-8edd-49de-95f8-83e527e8367b}</Project>
+      <Name>Ttc.DataEntities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ttc.Model\Ttc.Model.csproj">
       <Project>{321dcbad-1302-400f-8532-74209420b126}</Project>
       <Name>Ttc.Model</Name>

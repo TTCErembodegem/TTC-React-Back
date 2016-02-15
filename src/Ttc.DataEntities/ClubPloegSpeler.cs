@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Ttc.Model.Teams;
 
-namespace Ttc.DataAccess.Entities
+namespace Ttc.DataEntities
 {
-    internal class ClubPloegSpeler
+    public class ClubPloegSpeler
     {
         [Key]
         public int Id { get; set; }

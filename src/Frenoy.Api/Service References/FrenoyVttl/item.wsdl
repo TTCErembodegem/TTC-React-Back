@@ -50,6 +50,7 @@
             <xsd:element minOccurs="0" maxOccurs="1" name="YearDateFrom" type="xsd:dateTime" />
             <xsd:element minOccurs="0" maxOccurs="1" name="YearDateTo" type="xsd:dateTime" />
             <xsd:element minOccurs="0" maxOccurs="1" name="WithDetails" type="xsd:boolean" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="MatchId" type="xsd:string" />
           </xsd:all>
         </xsd:complexType>
       </xsd:element>
@@ -64,6 +65,8 @@
             <xsd:element minOccurs="0" maxOccurs="1" name="NameSearch" type="xsd:string" />
             <xsd:element minOccurs="0" maxOccurs="1" name="ExtendedInformation" type="xsd:boolean" />
             <xsd:element minOccurs="0" maxOccurs="1" name="RankingPointsInformation" type="xsd:boolean" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="WithStatistics" type="xsd:boolean" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="WithMatches" type="xsd:boolean" />
           </xsd:all>
         </xsd:complexType>
       </xsd:element>
@@ -100,6 +103,13 @@
           <xsd:all>
             <xsd:element minOccurs="0" maxOccurs="1" name="Credentials" type="tns:CredentialsType" />
             <xsd:element minOccurs="0" maxOccurs="1" name="Season" type="xsd:integer" />
+          </xsd:all>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetMatchSystems">
+        <xsd:complexType>
+          <xsd:all>
+            <xsd:element minOccurs="0" maxOccurs="1" name="Credentials" type="tns:CredentialsType" />
           </xsd:all>
         </xsd:complexType>
       </xsd:element>
@@ -192,6 +202,14 @@
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
+      <xsd:element name="GetMatchSystemsResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="MatchSystemCount" type="xsd:integer" />
+            <xsd:element minOccurs="1" maxOccurs="unbounded" name="MatchSystemEntries" type="tns:MatchSystemEntryType" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
       <xsd:complexType nillable="false" name="CredentialsType">
         <xsd:all>
           <xsd:element minOccurs="1" maxOccurs="1" name="Account" type="xsd:string" />
@@ -251,6 +269,7 @@
           <xsd:element minOccurs="0" maxOccurs="1" name="AwaySetCount" type="xsd:integer" />
           <xsd:element minOccurs="0" maxOccurs="1" name="IsHomeForfeited" type="xsd:boolean" />
           <xsd:element minOccurs="0" maxOccurs="1" name="IsAwayForfeited" type="xsd:boolean" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="Scores" type="xsd:string" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="TeamMatchPlayerEntryType">
@@ -276,13 +295,16 @@
           <xsd:element minOccurs="1" maxOccurs="1" name="DetailsCreated" type="xsd:boolean" />
           <xsd:element minOccurs="0" maxOccurs="1" name="StartTime" type="xsd:time" />
           <xsd:element minOccurs="0" maxOccurs="1" name="EndTime" type="xsd:time" />
-          <xsd:element minOccurs="0" maxOccurs="1" name="HomeCaptain" type="tns:MemberEntryType" />
-          <xsd:element minOccurs="0" maxOccurs="1" name="AwayCaptain" type="tns:MemberEntryType" />
-          <xsd:element minOccurs="0" maxOccurs="1" name="Referee" type="tns:MemberEntryType" />
-          <xsd:element minOccurs="0" maxOccurs="1" name="RoomResponsible" type="tns:MemberEntryType" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="HomeCaptain" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="AwayCaptain" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="Referee" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="HallCommissioner" type="xsd:integer" />
           <xsd:element minOccurs="0" maxOccurs="1" name="HomePlayers" type="tns:TeamMatchPlayerListType" />
           <xsd:element minOccurs="0" maxOccurs="1" name="AwayPlayers" type="tns:TeamMatchPlayerListType" />
           <xsd:element minOccurs="0" maxOccurs="unbounded" name="IndividualMatchResults" type="tns:IndividualMatchResultEntryType" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="MatchSystem" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="HomeScore" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="AwayScore" type="xsd:integer" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="TeamMatchEntryType">
@@ -301,6 +323,8 @@
           <xsd:element minOccurs="0" maxOccurs="1" name="MatchUniqueId" type="xsd:integer" />
           <xsd:element minOccurs="0" maxOccurs="1" name="NextWeekName" type="xsd:string" />
           <xsd:element minOccurs="0" maxOccurs="1" name="PreviousWeekName" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="IsHomeForfeited" type="xsd:boolean" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="IsAwayForfeited" type="xsd:boolean" />
           <xsd:element minOccurs="0" maxOccurs="1" name="MatchDetails" type="tns:TeamMatchDetailsEntryType" />
         </xsd:all>
       </xsd:complexType>
@@ -378,7 +402,7 @@
       <xsd:complexType name="RankingPointEntryType">
         <xsd:all>
           <xsd:element name="MethodName" type="xsd:string" />
-          <xsd:element name="Points" type="xsd:integer" />
+          <xsd:element name="Value" type="xsd:string" />
           <xsd:element name="LastModified" type="xsd:dateTime" />
         </xsd:all>
       </xsd:complexType>
@@ -403,6 +427,18 @@
           <xsd:element name="UniqueIndex" type="xsd:string" />
           <xsd:element name="Name" type="xsd:string" />
           <xsd:element name="ExternalIndex" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MatchSystemEntryType">
+        <xsd:sequence>
+          <xsd:element name="UniqueIndex" type="xsd:integer" />
+          <xsd:element name="Name" type="xsd:string" />
+          <xsd:element name="SingleMatchCount" type="xsd:integer" />
+          <xsd:element name="DoubleMatchCount" type="xsd:integer" />
+          <xsd:element name="SetCount" type="xsd:integer" />
+          <xsd:element name="PointCount" type="xsd:integer" />
+          <xsd:element name="ForcedDoubleTeams" type="xsd:boolean" />
+          <xsd:element name="SubstituteCount" type="xsd:integer" />
         </xsd:sequence>
       </xsd:complexType>
     </xsd:schema>
@@ -467,6 +503,12 @@
   <wsdl:message name="GetDivisions_Response">
     <wsdl:part name="body" element="tns:GetDivisionsResponse" />
   </wsdl:message>
+  <wsdl:message name="GetMatchSystems_Request">
+    <wsdl:part name="body" element="tns:GetMatchSystems" />
+  </wsdl:message>
+  <wsdl:message name="GetMatchSystems_Response">
+    <wsdl:part name="body" element="tns:GetMatchSystemsResponse" />
+  </wsdl:message>
   <wsdl:portType name="TabTAPI_PortType">
     <wsdl:operation name="Test">
       <wsdl:input message="tns:Test_Request" />
@@ -507,6 +549,10 @@
     <wsdl:operation name="GetTournaments">
       <wsdl:input message="tns:GetTournaments_Request" />
       <wsdl:output message="tns:GetTournaments_Response" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMatchSystems">
+      <wsdl:input message="tns:GetMatchSystems_Request" />
+      <wsdl:output message="tns:GetMatchSystems_Response" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="TabTAPI_Binding" type="tns:TabTAPI_PortType">
@@ -594,6 +640,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetTournaments">
       <soap:operation soapAction="GetTournaments" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMatchSystems">
+      <soap:operation soapAction="GetMatchSystems" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

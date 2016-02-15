@@ -1,9 +1,9 @@
 ﻿using System;
 using Ttc.Model.Players;
 
-namespace Ttc.DataAccess
+namespace Ttc.DataEntities
 {
-    internal static class Constants
+    public static class Constants
     {
         public const int OwnClubId = 1;
 

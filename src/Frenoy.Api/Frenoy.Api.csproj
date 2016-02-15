@@ -108,6 +108,12 @@
     <None Include="Service References\FrenoyVttl\Frenoy.Api.FrenoyVttl.GetMatchesResponse1.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\FrenoyVttl\Frenoy.Api.FrenoyVttl.GetMatchSystemsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoyVttl\Frenoy.Api.FrenoyVttl.GetMatchSystemsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\FrenoyVttl\Frenoy.Api.FrenoyVttl.GetMembersResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -138,11 +144,12 @@
     <None Include="Service References\FrenoyVttl\Frenoy.Api.FrenoyVttl.UploadResponse1.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\FrenoyVttl\item.wsdl" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ttc.DataAccess\Ttc.DataAccess.csproj">
-      <Project>{bdfc6f37-3b94-467b-beee-53ffba49918e}</Project>
-      <Name>Ttc.DataAccess</Name>
+    <ProjectReference Include="..\Ttc.DataEntities\Ttc.DataEntities.csproj">
+      <Project>{f437032c-8edd-49de-95f8-83e527e8367b}</Project>
+      <Name>Ttc.DataEntities</Name>
     </ProjectReference>
     <ProjectReference Include="..\Ttc.Model\Ttc.Model.csproj">
       <Project>{321dcbad-1302-400f-8532-74209420b126}</Project>
@@ -162,7 +169,6 @@
     <None Include="Service References\FrenoyVttl\configuration.svcinfo" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\FrenoyVttl\item.wsdl" />
     <None Include="Service References\FrenoyVttl\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
