@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using AutoMapper;
-using Ttc.DataAccess.Entities;
+using Frenoy.Api;
+using Ttc.DataEntities;
 using Ttc.Model.Matches;
 
 namespace Ttc.DataAccess.Services
@@ -14,19 +15,28 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
-                var dateBegin = DateTime.Now.AddDays(-16);
-                var dateEnd = DateTime.Now.AddDays(2);
+                var dateBegin = DateTime.Now.AddDays(-8);
+                var dateEnd = DateTime.Now.AddDays(8);
 
                 var calendar = dbContext.Kalender
                     .WithIncludes()
-                    //.Where(x => x.Id == 1500)
+                    //.Where(x => x.Id == 1635)
                     .Where(x => x.Datum >= dateBegin)
                     .Where(x => x.Datum <= dateEnd)
                     .Where(x => x.ThuisClubId.HasValue)
                     .OrderBy(x => x.Datum)
                     .ToList();
 
-                var result = Mapper.Map<IList<Kalender>, IList<Match>>(calendar);
+                foreach (var match in calendar)
+                {
+                    if (match.Datum < DateTime.Now && (match.Verslag == null || !match.Verslag.IsSyncedWithFrenoy))
+                    {
+                        var vttl = new FrenoyApi(dbContext, FrenoySettings.VttlSettings);
+                        vttl.SyncMatch(match.ThuisClubPloeg.ReeksId.Value, match.ThuisClubPloeg.Code, match.Week.Value);
+                    }
+                }
+
+                var result = Mapper.Map<IList<Kalender>, IList<Match>>(calendar);                
                 return result;
             }
         }
@@ -61,7 +71,7 @@ namespace Ttc.DataAccess.Services
                     {
                         dbContext.Verslagen.Add(new Verslag
                         {
-                            Details = 1,
+                            IsSyncedWithFrenoy = false,
                             KalenderId = matchPlayer.MatchId,
                             SpelerId = matchPlayer.PlayerId.Value,
                             UitslagThuis = 0,

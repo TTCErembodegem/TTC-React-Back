@@ -73,18 +73,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutoMapperConfig.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="Entities\ClubContact.cs" />
-    <Compile Include="Entities\ClubEntity.cs" />
-    <Compile Include="Entities\ClubLokaal.cs" />
-    <Compile Include="Entities\ClubPloeg.cs" />
-    <Compile Include="Entities\ClubPloegSpeler.cs" />
-    <Compile Include="Entities\Kalender.cs" />
-    <Compile Include="Entities\Reeks.cs" />
-    <Compile Include="Entities\Speler.cs" />
-    <Compile Include="Entities\Verslag.cs" />
-    <Compile Include="Entities\VerslagIndividueel.cs" />
-    <Compile Include="Entities\VerslagSpeler.cs" />
     <Compile Include="GlobalBackendConfiguration.cs" />
     <Compile Include="Migrations\201601270124192_LegacyMysqlDb.cs" />
     <Compile Include="Migrations\201601270124192_LegacyMysqlDb.Designer.cs">
@@ -150,6 +138,10 @@
     <Compile Include="Migrations\201602130428293_Relations7.Designer.cs">
       <DependentUpon>201602130428293_Relations7.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602141456030_VerslagSyncedWithFrenoy.cs" />
+    <Compile Include="Migrations\201602141456030_VerslagSyncedWithFrenoy.Designer.cs">
+      <DependentUpon>201602141456030_VerslagSyncedWithFrenoy.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\CalendarService.cs" />
     <Compile Include="Services\ClubService.cs" />
@@ -165,6 +157,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Frenoy.Api\Frenoy.Api.csproj">
+      <Project>{c0d10971-d4c3-4958-9e9a-a40c849dc01f}</Project>
+      <Name>Frenoy.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ttc.DataEntities\Ttc.DataEntities.csproj">
+      <Project>{f437032c-8edd-49de-95f8-83e527e8367b}</Project>
+      <Name>Ttc.DataEntities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ttc.Model\Ttc.Model.csproj">
       <Project>{321dcbad-1302-400f-8532-74209420b126}</Project>
       <Name>Ttc.Model</Name>
@@ -219,6 +219,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201602130428293_Relations7.resx">
       <DependentUpon>201602130428293_Relations7.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602141456030_VerslagSyncedWithFrenoy.resx">
+      <DependentUpon>201602141456030_VerslagSyncedWithFrenoy.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

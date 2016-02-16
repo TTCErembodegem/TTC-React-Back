@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity.Migrations;
 using NUnit.Framework;
 using Ttc.DataAccess;
-using Ttc.DataAccess.Entities;
+using Ttc.DataEntities;
 
 namespace Ttc.UnitTests
 {
