@@ -203,9 +203,9 @@ namespace Ttc.DataAccess.App_Start
         private static MatchOutcome GetScoreType(Kalender kalendar)
         {
             var verslag = kalendar.Verslag;
-            if (verslag == null || kalendar.Datum > DateTime.Now)
+            if (verslag == null || kalendar.Datum > DateTime.Now || (kalendar.Verslag.UitslagUit == 0 && kalendar.Verslag.UitslagThuis == 0))
             {
-                if (Constants.HasMatchStarted(kalendar.Datum))
+                if (Constants.HasMatchStarted(kalendar.Datum + kalendar.Uur))
                 {
                     return MatchOutcome.BeingPlayed;
                 }
@@ -220,7 +220,7 @@ namespace Ttc.DataAccess.App_Start
             {
                 return MatchOutcome.NotYetPlayed;
             }
-            if (verslag.UitslagThuis.Value == verslag.UitslagUit.Value)
+            if (verslag.UitslagThuis.Value == verslag.UitslagUit.Value && verslag.UitslagThuis.Value != 0)
             {
                 return MatchOutcome.Draw;
             }
