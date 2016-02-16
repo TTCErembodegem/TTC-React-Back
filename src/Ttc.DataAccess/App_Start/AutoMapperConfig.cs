@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using AutoMapper;
-using Ttc.DataAccess.Entities;
+using Ttc.DataEntities;
 using Ttc.DataAccess.Utilities;
 using Ttc.Model;
 using Ttc.Model.Clubs;

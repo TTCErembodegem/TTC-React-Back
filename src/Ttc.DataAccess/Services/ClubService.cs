@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using Ttc.DataAccess.Entities;
+using Ttc.DataEntities;
 using System.Data.Entity;
 using Ttc.Model.Clubs;
 

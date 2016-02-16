@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Ttc.DataAccess.Entities;
 using System.Data.Entity;
 using Omu.ValueInjecter;
 using Ttc.Model.Teams;
 using Mapper = AutoMapper.Mapper;
+using Ttc.DataEntities;
 
 namespace Ttc.DataAccess.Services
 {
