@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Ttc.Model.Clubs;
 
 namespace Ttc.DataEntities
 {

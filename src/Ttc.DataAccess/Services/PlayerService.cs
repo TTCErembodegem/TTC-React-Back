@@ -1,10 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using Ttc.DataEntities;
-using Ttc.Model;
+using Ttc.DataAccess.Entities;
 using Ttc.Model.Players;
 
 namespace Ttc.DataAccess.Services

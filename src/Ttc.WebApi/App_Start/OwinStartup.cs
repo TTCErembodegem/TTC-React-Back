@@ -2,7 +2,6 @@
 using Microsoft.Owin;
 using Newtonsoft.Json.Serialization;
 using Owin;
-using SimpleInjector;
 using SimpleInjector.Extensions.ExecutionContextScoping;
 using SimpleInjector.Integration.WebApi;
 using Ttc.DataAccess;

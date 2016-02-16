@@ -28,9 +28,6 @@ namespace Ttc.DataEntities
         public string Ranking { get; set; }
         public int UniqueIndex { get; set; }
 
-        public override string ToString()
-        {
-            return $"MatchId={MatchId}, NAme={Name}, Won={Won}, Home={Home}, Position={Position}";
-        }
+        public override string ToString() => $"MatchId={MatchId}, NAme={Name}, Won={Won}, Home={Home}, Position={Position}";
     }
 }
