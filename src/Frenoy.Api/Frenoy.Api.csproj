@@ -55,6 +55,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
@@ -67,8 +68,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FrenoyApi.cs" />
+    <Compile Include="FrenoyClubApi.cs" />
     <Compile Include="FrenoySettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\FrenoySporta\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Service References\FrenoyVttl\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -78,6 +85,73 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.GetClubsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.GetClubsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.GetClubTeamsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.GetClubTeamsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.GetDivisionRankingResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.GetDivisionRankingResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.GetDivisionsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.GetDivisionsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.GetMatchesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.GetMatchesResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.GetMatchSystemsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.GetMatchSystemsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.GetMembersResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.GetMembersResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.GetSeasonsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.GetSeasonsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.GetTournamentsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.GetTournamentsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.TestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.TestResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.UploadResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.UploadResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\item.wsdl" />
     <None Include="Service References\FrenoyVttl\Frenoy.Api.FrenoyVttl.GetClubsResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -160,6 +234,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <WCFMetadataStorage Include="Service References\FrenoySporta\" />
     <WCFMetadataStorage Include="Service References\FrenoyVttl\" />
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +245,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\FrenoyVttl\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\FrenoySporta\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\FrenoySporta\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\FrenoySporta\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

@@ -7,6 +7,7 @@ using AutoMapper;
 using Frenoy.Api;
 using Ttc.DataEntities;
 using Ttc.Model.Matches;
+using Ttc.Model.Players;
 
 namespace Ttc.DataAccess.Services
 {
@@ -16,24 +17,45 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
-                var dateBegin = DateTime.Now.AddDays(-8);
-                var dateEnd = DateTime.Now.AddDays(8);
+                var dateBegin = DateTime.Now.AddDays(-20);
+                var dateEnd = DateTime.Now.AddDays(20);
 
                 var calendar = dbContext.Kalender
                     .WithIncludes()
-                    //.Where(x => x.Id == 1635)
+                    //.Where(x => x.Id == 1552)
                     .Where(x => x.Datum >= dateBegin)
                     .Where(x => x.Datum <= dateEnd)
                     .Where(x => x.ThuisClubId.HasValue)
                     .OrderBy(x => x.Datum)
                     .ToList();
 
-                foreach (var match in calendar)
+                //var heenmatchen = new List<Kalender>();
+                //foreach (var kalender in calendar)
+                //{
+                //    if ((kalender.Verslag == null || !kalender.Verslag.IsSyncedWithFrenoy) && kalender.Datum.Month > 0 && kalender.Datum.Month < 9)
+                //    {
+                //        var prevKalender = dbContext.Kalender
+                //            .WithIncludes()
+                //            .Where(x => x.ThuisClubPloegId.Value == kalender.ThuisClubPloegId.Value)
+                //            .Where(x => x.UitClubPloegId.Value == kalender.UitClubPloegId.Value)
+                //            .Single(x => x.Datum < kalender.Datum);
+
+                //        heenmatchen.Add(prevKalender);
+                //    }
+                //}
+                //calendar.AddRange(heenmatchen);
+
+
+                foreach (var kalender in calendar)
                 {
-                    if (match.Datum < DateTime.Now && (match.Verslag == null || !match.Verslag.IsSyncedWithFrenoy))
+                    if (kalender.Datum < DateTime.Now && (kalender.Verslag == null || !kalender.Verslag.IsSyncedWithFrenoy))
                     {
-                        var vttl = new FrenoyApi(dbContext, FrenoySettings.VttlSettings);
-                        vttl.SyncMatch(match.ThuisClubPloeg.ReeksId.Value, match.ThuisClubPloeg.Code, match.Week.Value);
+                        var reeks = dbContext.Reeksen.Single(x => x.Id == kalender.ThuisClubPloeg.ReeksId.Value);
+                        var frenoySync = new FrenoyApi(dbContext, Constants.NormalizeCompetition(reeks.Competitie));
+                        if (Constants.NormalizeCompetition(reeks.Competitie) == Competition.Vttl)
+                        {
+                            frenoySync.SyncMatch(reeks, kalender.ThuisClubPloeg.Code, kalender.Week.Value);
+                        }
                     }
                 }
 

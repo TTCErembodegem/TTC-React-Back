@@ -1,12 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
+using System.ServiceModel;
+using System.ServiceModel.Configuration;
 using System.Text.RegularExpressions;
 using Frenoy.Api;
 using Frenoy.Api.FrenoyVttl;
 using Ttc.DataEntities;
 using Ttc.DataEntities.Core;
 using Ttc.Model.Matches;
+using Ttc.Model.Players;
 using Ttc.Model.Teams;
 using Match = Ttc.Model.Matches.Match;
 
@@ -17,6 +24,8 @@ namespace Frenoy.Api
         #region Fields
         const string FrenoyVttlWsdlUrl = "http://api.vttl.be/0.7/?wsdl";
         const string FrenoySportaWsdlUrl = "http://tafeltennis.sporcrea.be/api/?wsdl";
+        const string FrenoyVttlEndpoint = "http://api.vttl.be/0.7/index.php?s=vttl";
+        const string FrenoySportaEndpoint = "http://tafeltennis.sporcrea.be/api/index.php?s=sporcrea";
 
         private readonly ITtcDbContext _db;
         private readonly FrenoySettings _settings;
@@ -28,40 +37,102 @@ namespace Frenoy.Api
         #endregion
 
         #region Constructor
-        public FrenoyApi(ITtcDbContext ttcDbContext, FrenoySettings settings, bool isVttl = true)
+        public FrenoyApi(ITtcDbContext ttcDbContext, Competition comp)
         {
             _db = ttcDbContext;
-
-            #region Switch between VTTL and Sporta here
-            _settings = settings;
-            //CheckPlayers();
+            bool isVttl = comp == Competition.Vttl;
+            _settings = isVttl ? FrenoySettings.VttlSettings : FrenoySettings.SportaSettings;
 
             _isVttl = isVttl;
-            //string wsdl;
             if (isVttl)
             {
-                _thuisClubId = _db.Clubs.Single(x => x.CodeVttl == settings.FrenoyClub).Id;
-                //wsdl = FrenoyVttlWsdlUrl;
+                _thuisClubId = _db.Clubs.Single(x => x.CodeVttl == _settings.FrenoyClub).Id;
+                _frenoy = new FrenoyVttl.TabTAPI_PortTypeClient();
             }
             else
             {
                 // Sporta
-                _thuisClubId = _db.Clubs.Single(x => x.CodeSporta == settings.FrenoyClub).Id;
-                //wsdl = FrenoySportaWsdlUrl;
+                _thuisClubId = _db.Clubs.Single(x => x.CodeSporta == _settings.FrenoyClub).Id;
+
+                var binding = new BasicHttpBinding("TabTAPI_Binding");
+                binding.Security.Mode = BasicHttpSecurityMode.None;
+                var endpoint = new EndpointAddress(FrenoySportaEndpoint);
+                _frenoy = new TabTAPI_PortTypeClient(binding, endpoint);
             }
-
-            // Aparently the signatures for VTTL and Sporta are not identical
-            // Problem is probably stuff like: xmlns="http://api.frenoy.net/TabTAPI" in the body
-            //var binding = new BasicHttpBinding();
-            //binding.Security.Mode = BasicHttpSecurityMode.None;
-            //var endpoint = new EndpointAddress(wsdl);
-            //_frenoy = new TabTAPI_PortTypeClient(binding, endpoint);
-            #endregion
-
-            // Right click the Service Reference and update with different Url...
-            _frenoy = new FrenoyVttl.TabTAPI_PortTypeClient();
         }
         #endregion
+
+        public void SyncClubLokalen()
+        {
+            // TODO: put this in separate class
+            // --> these methods need to be applied to vttl and sporta together
+            // TODO: need to check with Dirk/Jelle if frenoy club locations are actually better than current data...
+
+            Debug.Assert(false, "legacy db data might be better?");
+
+            Func<ClubEntity, string> getClubCode;
+            IEnumerable<ClubEntity> clubs;
+            if (_isVttl)
+            {
+                getClubCode = dbClub => dbClub.CodeVttl;
+                clubs = _db.Clubs.Include(x => x.Lokalen).Where(club => !string.IsNullOrEmpty(club.CodeVttl)).ToArray();
+            }
+            else
+            {
+                getClubCode = dbClub => dbClub.CodeSporta;
+                clubs = _db.Clubs.Include(x => x.Lokalen).Where(club => !string.IsNullOrEmpty(club.CodeSporta)).ToArray();
+            }
+            SyncClubLokalen(clubs, getClubCode);
+        }
+
+        private void SyncClubLokalen(IEnumerable<ClubEntity> clubs, Func<ClubEntity, string> getClubCode)
+        {
+            foreach (var dbClub in clubs)
+            {
+                var oldLokalen = _db.ClubLokalen.Where(x => x.ClubId == dbClub.Id).ToArray();
+
+                var frenoyClubs = _frenoy.GetClubs(new GetClubs
+                {
+                    Club = getClubCode(dbClub)
+                });
+
+                var frenoyClub = frenoyClubs.ClubEntries.FirstOrDefault();
+                if (frenoyClub == null)
+                {
+                    Debug.Print("Got some wrong CodeSporta/Vttl in legacy db: " + dbClub.Naam);
+                }
+                else if (frenoyClub.VenueEntries == null)
+                {
+                    Debug.Print("Missing frenoy data?: " + dbClub.Naam);
+                }
+                else if (frenoyClub.VenueEntries.Length < dbClub.Lokalen.Count)
+                {
+                    Debug.Print("we got better data...: " + dbClub.Naam);
+                }
+                else
+                {
+                    _db.ClubLokalen.RemoveRange(oldLokalen);
+
+                    foreach (var frenoyLokaal in frenoyClub.VenueEntries)
+                    {
+                        //Debug.Assert(string.IsNullOrWhiteSpace(frenoyLokaal.Comment), "comments opslaan in db?");
+                        Debug.Assert(frenoyLokaal.ClubVenue == "1");
+                        var lokaal = new ClubLokaal
+                        {
+                            Lokaal = frenoyLokaal.Name,
+                            Adres = frenoyLokaal.Street,
+                            ClubId = dbClub.Id,
+                            Gemeente = frenoyLokaal.Town.Substring(frenoyLokaal.Town.IndexOf(" ") + 1),
+                            Telefoon = frenoyLokaal.Phone,
+                            Postcode = int.Parse(frenoyLokaal.Town.Substring(0, frenoyLokaal.Town.IndexOf(" "))),
+                            Hoofd = frenoyLokaal.ClubVenue == "1" ? 1 : 0
+                        };
+                        _db.ClubLokalen.Add(lokaal);
+                    }
+                }
+            }
+            _db.SaveChanges();
+        }
 
         #region Public API
         public void SyncAll()
@@ -130,7 +201,7 @@ namespace Frenoy.Api
             }
         }
 
-        public void SyncMatch(int reeksId, string ploegCode, int weekName)
+        public void SyncMatch(Reeks reeks, string ploegCode, int weekName)
         {
             GetMatchesResponse matches = _frenoy.GetMatches(new GetMatchesRequest
             {
@@ -141,7 +212,7 @@ namespace Frenoy.Api
                 WithDetails = true,
                 WeekName = weekName.ToString()
             });
-            SyncMatches(reeksId, ploegCode, matches);
+            SyncMatches(reeks.Id, ploegCode, matches);
         }
 
         private void SyncMatches(int reeksId, string ploegCode, GetMatchesResponse matches)
@@ -177,7 +248,7 @@ namespace Frenoy.Api
                         _db.Verslagen.Add(verslag);
                     }
 
-                    if (!verslag.IsSyncedWithFrenoy)
+                    if (true || !verslag.IsSyncedWithFrenoy)
                     {
                         if (!isForfeit)
                         {
@@ -200,15 +271,45 @@ namespace Frenoy.Api
                             int id = 0;
                             foreach (var frenoyIndividual in frenoyMatch.MatchDetails.IndividualMatchResults)
                             {
-                                var matchResult = new VerslagIndividueel
+                                VerslagIndividueel matchResult;
+                                int homeUniqueIndex, awayUniqueIndex;
+                                if (!int.TryParse(frenoyIndividual.HomePlayerUniqueIndex, out homeUniqueIndex)
+                                    || !int.TryParse(frenoyIndividual.AwayPlayerUniqueIndex, out awayUniqueIndex))
                                 {
-                                    Id = id--,
-                                    MatchId = verslag.KalenderId,
-                                    MatchNumber = int.Parse(frenoyIndividual.Position),
-                                    HomePlayerUniqueIndex = int.Parse(frenoyIndividual.HomePlayerUniqueIndex),
-                                    OutPlayerUniqueIndex = int.Parse(frenoyIndividual.AwayPlayerUniqueIndex),
-                                    WalkOver = WalkOver.None
-                                };
+                                    // Sporta doubles match:
+                                    matchResult = new VerslagIndividueel
+                                    {
+                                        Id = id--,
+                                        MatchId = verslag.KalenderId,
+                                        MatchNumber = int.Parse(frenoyIndividual.Position),
+                                        WalkOver = WalkOver.None
+                                    };
+
+                                    // Frenoy result:
+                                    //[6] => stdClass Object
+                                    //    (
+                                    //[Position] => 7
+                                    //[HomePlayerMatchIndex] => 4
+                                    //[HomePlayerUniqueIndex] => 
+                                    //[AwayPlayerMatchIndex] => 4
+                                    //[AwayPlayerUniqueIndex] => 7530
+                                    //[HomeSetCount] => 3
+                                    //[AwaySetCount] => 0
+                                }
+                                else
+                                {
+                                    matchResult = new VerslagIndividueel
+                                    {
+                                        Id = id--,
+                                        MatchId = verslag.KalenderId,
+                                        MatchNumber = int.Parse(frenoyIndividual.Position),
+                                        HomePlayerUniqueIndex = homeUniqueIndex,
+                                        OutPlayerUniqueIndex = awayUniqueIndex,
+                                        WalkOver = WalkOver.None
+                                    };
+                                }
+
+                                
                                 if (frenoyIndividual.IsHomeForfeited || frenoyIndividual.IsAwayForfeited)
                                 {
                                     matchResult.WalkOver = frenoyIndividual.IsHomeForfeited ? WalkOver.Home : WalkOver.Out;
@@ -235,12 +336,6 @@ namespace Frenoy.Api
 
         private void AddVerslagPlayers(TeamMatchPlayerEntryType[] players, Verslag verslag, bool thuisSpeler)
         {
-            if (!_isVttl)
-            {
-                // TODO: Sporta API does not (yet?) return MatchDetails
-                return;
-            }
-
             foreach (var frenoyVerslagSpeler in players)
             {
                 VerslagSpeler verslagSpeler = new VerslagSpeler
@@ -260,9 +355,18 @@ namespace Frenoy.Api
                 {
                     Debug.Assert(frenoyVerslagSpeler.IsForfeited, "Either a VictoryCount or IsForfeited");
                 }
-                var dbPlayer = _db.Spelers.SingleOrDefault(x => x.ComputerNummerVttl.HasValue && x.ComputerNummerVttl.Value.ToString() == frenoyVerslagSpeler.UniqueIndex);
+                Speler dbPlayer;
+                if (_isVttl)
+                {
+                    dbPlayer = _db.Spelers.SingleOrDefault(x => x.ComputerNummerVttl.HasValue && x.ComputerNummerVttl.Value.ToString() == frenoyVerslagSpeler.UniqueIndex);
+                }
+                else
+                {
+                    dbPlayer = _db.Spelers.SingleOrDefault(x => x.LidNummerSporta.HasValue && x.LidNummerSporta.Value.ToString() == frenoyVerslagSpeler.UniqueIndex);
+                }
                 if (dbPlayer != null)
                 {
+                    // TODO: if derby dan is wss makkelijkst om hier playerId niet op te halen (om het verschil te weten tussen thuis/uit in de frontend)
                     verslagSpeler.PlayerId = dbPlayer.Id;
                     if (!string.IsNullOrWhiteSpace(dbPlayer.NaamKort))
                     {

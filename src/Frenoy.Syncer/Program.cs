@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Frenoy.Api;
 using Ttc.DataAccess;
+using Ttc.Model.Players;
 
 namespace Frenoy.Syncer
 {
@@ -14,15 +15,13 @@ namespace Frenoy.Syncer
         {
             using (var dbContext = new TtcDbContext())
             {
-                var vttl = new FrenoyApi(dbContext, FrenoySettings.VttlSettings);
-                vttl.SyncAll();
-            }
-            
+                //var vttl = new FrenoyApi(dbContext, true);
+                //vttl.SyncAll();
 
-            //using (var sporta = new FrenoySync(FrenoyOptions.SportaOptions, false))
-            //{
-            //    sporta.SyncAll();
-            //}
+                var sporta = new FrenoyApi(dbContext, Competition.Sporta);
+                //sporta.SyncClubLokalen();
+                sporta.SyncAll();
+            }
 
             //Console.WriteLine("All done");
             //Console.ReadLine();

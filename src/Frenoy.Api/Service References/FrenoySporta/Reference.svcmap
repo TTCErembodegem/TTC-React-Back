@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="25203fea-9efb-4306-87aa-70fcb851ba40" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="4e670631-8180-435e-b08c-df3fc91642a3" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -19,10 +19,10 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://api.vttl.be/0.7/?wsdl" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://tafeltennis.sporcrea.be/api/?wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="item.wsdl" MetadataType="Wsdl" ID="74291100-b1af-4467-83d3-2cd7caffc792" SourceId="1" SourceUrl="http://api.vttl.be/0.7/?wsdl" />
+    <MetadataFile FileName="item.wsdl" MetadataType="Wsdl" ID="18c0a45e-bb22-4284-a6ea-f2e91aae2eed" SourceId="1" SourceUrl="http://tafeltennis.sporcrea.be/api/?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
