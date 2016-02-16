@@ -5,8 +5,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using AutoMapper;
 using Frenoy.Api;
-using Ttc.DataEntities;
 using Ttc.Model.Matches;
+using Ttc.DataEntities;
 using Ttc.Model.Players;
 
 namespace Ttc.DataAccess.Services
@@ -22,10 +22,10 @@ namespace Ttc.DataAccess.Services
 
                 var calendar = dbContext.Kalender
                     .WithIncludes()
-                    //.Where(x => x.Id == 1552)
-                    .Where(x => x.Datum >= dateBegin)
-                    .Where(x => x.Datum <= dateEnd)
-                    .Where(x => x.ThuisClubId.HasValue)
+                    .Where(x => x.Id == 1552)
+                    //.Where(x => x.Datum >= dateBegin)
+                    //.Where(x => x.Datum <= dateEnd)
+                    //.Where(x => x.ThuisClubId.HasValue)
                     .OrderBy(x => x.Datum)
                     .ToList();
 

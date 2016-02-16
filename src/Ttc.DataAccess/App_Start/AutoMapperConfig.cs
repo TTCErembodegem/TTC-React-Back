@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using AutoMapper;
-using SimpleInjector.Advanced.Internal;
-using Ttc.DataAccess.Utilities;
 using Ttc.DataEntities;
+using Ttc.DataAccess.Utilities;
 using Ttc.Model;
 using Ttc.Model.Clubs;
 using Ttc.Model.Matches;
@@ -84,6 +83,7 @@ namespace Ttc.DataAccess.App_Start
                 ;
         
             Mapper.CreateMap<VerslagIndividueel, MatchGame>()
+                .ForMember(d => d.Outcome, o => o.MapFrom(src => src.WalkOver == WalkOver.None ? MatchOutcome.NotYetPlayed : MatchOutcome.WalkOver))
                 .ReverseMap()
                 ;
         }
@@ -136,7 +136,20 @@ namespace Ttc.DataAccess.App_Start
                 {
                     SetMatchPlayerAliases(match);
                     ChangeMeaningOfHomePlayer(match);
+                    SetIndividualMatchesOutcome(match);
                 });
+        }
+
+        private static void SetIndividualMatchesOutcome(Match match)
+        {
+            foreach (var game in match.Games.Where(g => g.Outcome != MatchOutcome.WalkOver))
+            {
+                game.Outcome = game.HomePlayerSets > game.OutPlayerSets ? MatchOutcome.Won : MatchOutcome.Lost;
+                if (!match.IsHomeMatch)
+                {
+                    game.Outcome = game.Outcome == MatchOutcome.Won ? MatchOutcome.Lost : MatchOutcome.Won;
+                }
+            }
         }
 
         private static string GetFirstName(string fullName)

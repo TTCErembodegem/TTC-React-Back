@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
+﻿using System.Collections.Generic;
 using Ttc.DataAccess.Services;
-using Ttc.Model;
 using Ttc.Model.Teams;
 using Ttc.WebApi.Utilities;
 

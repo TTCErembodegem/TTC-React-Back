@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using Ttc.Model;
 using System.Data.Entity;
 using Omu.ValueInjecter;
-using Ttc.DataEntities;
 using Ttc.Model.Teams;
 using Mapper = AutoMapper.Mapper;
+using Ttc.DataEntities;
 
 namespace Ttc.DataAccess.Services
 {

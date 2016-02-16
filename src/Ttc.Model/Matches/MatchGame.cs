@@ -9,8 +9,8 @@
         public int OutPlayerUniqueIndex { get; set; }
         public int HomePlayerSets { get; set; }
         public int OutPlayerSets { get; set; }
-        public WalkOver WalkOver { get; set; }
+        public MatchOutcome Outcome { get; set; }
 
-        public override string ToString() => $"{MatchNumber}, Home: {HomePlayerUniqueIndex}={HomePlayerSets}, Out: {OutPlayerUniqueIndex}={OutPlayerSets}, WO={WalkOver}";
+        public override string ToString() => $"{MatchNumber}, Home: {HomePlayerUniqueIndex}={HomePlayerSets}, Out: {OutPlayerUniqueIndex}={OutPlayerSets}, Outcome={Outcome}";
     }
 }
