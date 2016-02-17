@@ -93,7 +93,7 @@ namespace Ttc.DataAccess.App_Start
             Mapper.CreateMap<Kalender, Match>()
                 .ForMember(
                     dest => dest.Date,
-                    opts => opts.MapFrom(src => src.Datum + src.Uur))
+                    opts => opts.MapFrom(src => src.Datum))
                 .ForMember(
                     dest => dest.IsHomeMatch,
                     opts => opts.MapFrom(src => src.Thuis.HasValue && src.Thuis == 1))
@@ -205,7 +205,7 @@ namespace Ttc.DataAccess.App_Start
             var verslag = kalendar.Verslag;
             if (verslag == null || kalendar.Datum > DateTime.Now || (kalendar.Verslag.UitslagUit == 0 && kalendar.Verslag.UitslagThuis == 0))
             {
-                if (Constants.HasMatchStarted(kalendar.Datum + kalendar.Uur))
+                if (Constants.HasMatchStarted(kalendar.Datum))
                 {
                     return MatchOutcome.BeingPlayed;
                 }

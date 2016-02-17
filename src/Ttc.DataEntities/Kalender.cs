@@ -9,7 +9,6 @@ namespace Ttc.DataEntities
         [Key]
         public int Id { get; set; }
         public DateTime Datum { get; set; }
-        public TimeSpan Uur { get; set; }
 
         public int? Thuis { get; set; }
         public int? Week { get; set; }
@@ -47,7 +46,7 @@ namespace Ttc.DataEntities
 
         public override string ToString()
         {
-            var str = $"Id={Id}, Date={Datum.ToString("d")} {Uur.ToString(@"hh\:mm")}";
+            var str = $"Id={Id}, Date={Datum.ToString("d")} {Datum.ToString(@"hh\:mm")}";
             if (!Thuis.HasValue)
             {
                 return $"{str}, {Beschrijving} / {GeleideTraining}";

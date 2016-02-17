@@ -423,8 +423,7 @@ namespace Frenoy.Api
             var kalender = new Kalender
             {
                 FrenoyMatchId = frenoyMatch.MatchId,
-                Datum = frenoyMatch.Date,
-                Uur = new TimeSpan(frenoyMatch.Time.Hour, 0, 0),
+                Datum = frenoyMatch.Date + new TimeSpan(frenoyMatch.Time.Hour, frenoyMatch.Time.Minute, 0),
                 ThuisClubId = GetClubId(frenoyMatch.HomeClub),
                 ThuisPloeg = ExtractTeamCodeFromFrenoyName(frenoyMatch.HomeTeam),
                 UitClubId = GetClubId(frenoyMatch.AwayClub),
