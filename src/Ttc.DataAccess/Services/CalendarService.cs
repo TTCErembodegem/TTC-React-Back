@@ -22,28 +22,31 @@ namespace Ttc.DataAccess.Services
 
                 var calendar = dbContext.Kalender
                     .WithIncludes()
-                    .Where(x => x.Id == 1552)
+                    .Where(x => x.Id == 1554)
                     //.Where(x => x.Datum >= dateBegin)
                     //.Where(x => x.Datum <= dateEnd)
                     //.Where(x => x.ThuisClubId.HasValue)
                     .OrderBy(x => x.Datum)
                     .ToList();
 
-                //var heenmatchen = new List<Kalender>();
-                //foreach (var kalender in calendar)
-                //{
-                //    if ((kalender.Verslag == null || !kalender.Verslag.IsSyncedWithFrenoy) && kalender.Datum.Month > 0 && kalender.Datum.Month < 9)
-                //    {
-                //        var prevKalender = dbContext.Kalender
-                //            .WithIncludes()
-                //            .Where(x => x.ThuisClubPloegId.Value == kalender.ThuisClubPloegId.Value)
-                //            .Where(x => x.UitClubPloegId.Value == kalender.UitClubPloegId.Value)
-                //            .Single(x => x.Datum < kalender.Datum);
+                // TODO: kalender gaat toch niet de hoofdpagina worden
+                // hoofdpagina = jouw volgende matchen. jouw team. en jouw speler details
+                // Zeker deze data met extra AJAX call...
+                var heenmatchen = new List<Kalender>();
+                foreach (var kalender in calendar)
+                {
+                    if ((kalender.Verslag == null || !kalender.Verslag.IsSyncedWithFrenoy) && kalender.Datum.Month > 0 && kalender.Datum.Month < 9)
+                    {
+                        var prevKalender = dbContext.Kalender
+                            .WithIncludes()
+                            .Where(x => x.ThuisClubPloegId.Value == kalender.ThuisClubPloegId.Value)
+                            .Where(x => x.UitClubPloegId.Value == kalender.UitClubPloegId.Value)
+                            .Single(x => x.Datum < kalender.Datum);
 
-                //        heenmatchen.Add(prevKalender);
-                //    }
-                //}
-                //calendar.AddRange(heenmatchen);
+                        heenmatchen.Add(prevKalender);
+                    }
+                }
+                calendar.AddRange(heenmatchen);
 
 
                 foreach (var kalender in calendar)

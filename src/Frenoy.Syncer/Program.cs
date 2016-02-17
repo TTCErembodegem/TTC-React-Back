@@ -15,8 +15,8 @@ namespace Frenoy.Syncer
         {
             using (var dbContext = new TtcDbContext())
             {
-                //var vttl = new FrenoyApi(dbContext, true);
-                //vttl.SyncAll();
+                var vttl = new FrenoyApi(dbContext, Competition.Vttl);
+                vttl.SyncAll();
 
                 var sporta = new FrenoyApi(dbContext, Competition.Sporta);
                 //sporta.SyncClubLokalen();

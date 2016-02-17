@@ -150,6 +150,13 @@ namespace Frenoy.Api
                 // Create new division=reeks for each team in the club
                 // Check if it already exists: Two teams could play in the same division
                 Reeks reeks = _db.Reeksen.SingleOrDefault(x => x.FrenoyDivisionId.ToString() == frenoyTeam.DivisionId);
+
+                // TODO: we zaten hier: FIXES for 2 teams in same reeks
+                // --> Merge tabellen Reeks en ClubPloeg...
+                // --> Reeksen.SingleOrDefault(... && x.TeamCode == frenoyTeam.????
+                // --> Hier dan 2 reeksen toevoegen...
+                // --> Daarna de Derbys maar 1x toevoegen aan de matchenlijst
+
                 if (reeks == null)
                 {
                     reeks = CreateReeks(frenoyTeam);
@@ -248,7 +255,7 @@ namespace Frenoy.Api
                         _db.Verslagen.Add(verslag);
                     }
 
-                    if (true || !verslag.IsSyncedWithFrenoy)
+                    if (true || !verslag.IsSyncedWithFrenoy) // TODO: remove true || after final sync
                     {
                         if (!isForfeit)
                         {
@@ -261,8 +268,8 @@ namespace Frenoy.Api
                             var oldVerslagSpelers = _db.VerslagenSpelers.Where(x => x.MatchId == verslag.KalenderId).ToArray();
                             _db.VerslagenSpelers.RemoveRange(oldVerslagSpelers);
 
-                            AddVerslagPlayers(frenoyMatch.MatchDetails.HomePlayers.Players, verslag, true);
-                            AddVerslagPlayers(frenoyMatch.MatchDetails.AwayPlayers.Players, verslag, false);
+                            AddVerslagPlayers(frenoyMatch.MatchDetails.HomePlayers.Players, verslag, true, kalender.Thuis.Value == 1);
+                            AddVerslagPlayers(frenoyMatch.MatchDetails.AwayPlayers.Players, verslag, false, kalender.Thuis.Value == 0);
 
                             // Matchen
                             var oldVerslagenIndividueel = _db.VerslagenIndividueel.Where(x => x.MatchId == verslag.KalenderId).ToArray();
@@ -284,20 +291,10 @@ namespace Frenoy.Api
                                         MatchNumber = int.Parse(frenoyIndividual.Position),
                                         WalkOver = WalkOver.None
                                     };
-
-                                    // Frenoy result:
-                                    //[6] => stdClass Object
-                                    //    (
-                                    //[Position] => 7
-                                    //[HomePlayerMatchIndex] => 4
-                                    //[HomePlayerUniqueIndex] => 
-                                    //[AwayPlayerMatchIndex] => 4
-                                    //[AwayPlayerUniqueIndex] => 7530
-                                    //[HomeSetCount] => 3
-                                    //[AwaySetCount] => 0
                                 }
                                 else
                                 {
+                                    // Sporta/Vttl singles match
                                     matchResult = new VerslagIndividueel
                                     {
                                         Id = id--,
@@ -308,7 +305,6 @@ namespace Frenoy.Api
                                         WalkOver = WalkOver.None
                                     };
                                 }
-
                                 
                                 if (frenoyIndividual.IsHomeForfeited || frenoyIndividual.IsAwayForfeited)
                                 {
@@ -334,7 +330,7 @@ namespace Frenoy.Api
             }
         }
 
-        private void AddVerslagPlayers(TeamMatchPlayerEntryType[] players, Verslag verslag, bool thuisSpeler)
+        private void AddVerslagPlayers(TeamMatchPlayerEntryType[] players, Verslag verslag, bool thuisSpeler, bool isHomeMatch)
         {
             foreach (var frenoyVerslagSpeler in players)
             {
@@ -355,18 +351,20 @@ namespace Frenoy.Api
                 {
                     Debug.Assert(frenoyVerslagSpeler.IsForfeited, "Either a VictoryCount or IsForfeited");
                 }
-                Speler dbPlayer;
-                if (_isVttl)
+                Speler dbPlayer = null;
+                if ((isHomeMatch && thuisSpeler) || (!isHomeMatch && !thuisSpeler))
                 {
-                    dbPlayer = _db.Spelers.SingleOrDefault(x => x.ComputerNummerVttl.HasValue && x.ComputerNummerVttl.Value.ToString() == frenoyVerslagSpeler.UniqueIndex);
-                }
-                else
-                {
-                    dbPlayer = _db.Spelers.SingleOrDefault(x => x.LidNummerSporta.HasValue && x.LidNummerSporta.Value.ToString() == frenoyVerslagSpeler.UniqueIndex);
+                    if (_isVttl)
+                    {
+                        dbPlayer = _db.Spelers.SingleOrDefault(x => x.ComputerNummerVttl.HasValue && x.ComputerNummerVttl.Value.ToString() == frenoyVerslagSpeler.UniqueIndex);
+                    }
+                    else
+                    {
+                        dbPlayer = _db.Spelers.SingleOrDefault(x => x.LidNummerSporta.HasValue && x.LidNummerSporta.Value.ToString() == frenoyVerslagSpeler.UniqueIndex);
+                    }
                 }
                 if (dbPlayer != null)
                 {
-                    // TODO: if derby dan is wss makkelijkst om hier playerId niet op te halen (om het verschil te weten tussen thuis/uit in de frontend)
                     verslagSpeler.PlayerId = dbPlayer.Id;
                     if (!string.IsNullOrWhiteSpace(dbPlayer.NaamKort))
                     {
