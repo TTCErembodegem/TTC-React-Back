@@ -8,6 +8,7 @@ using Frenoy.Api;
 using Ttc.Model.Matches;
 using Ttc.DataEntities;
 using Ttc.Model.Players;
+using Ttc.Model.Teams;
 
 namespace Ttc.DataAccess.Services
 {
@@ -118,17 +119,54 @@ namespace Ttc.DataAccess.Services
         {
             return Mapper.Map<Kalender, Match>(kalender);
         }
+
+        public IEnumerable<Match> GetLastOpponentMatches(OpposingTeam opponent)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var calendar = dbContext.Kalender
+                    .WithIncludes()
+                    .Where(kal => kal.UitClubId == opponent.ClubId && kal.UitPloeg == opponent.TeamCode)
+                    // TODO: krijgen nu de laatste uitslagen tegen erembodegem
+                    // maar moeten de laatste matchen van die ploeg hebben
+                    // mss match met HomeClubId <> 1 beginnen opslaan?
+                    //.Where(kal => kal.UitClubId == opponent.ClubId && kal.UitPloeg == opponent.TeamCode)
+                    // TODO: base klasse: automatisch ophalen door frenoy if nog geen uitslagen 
+                    // en dbContext met de simpleinjecter en automapper
+                    // frenoy sync in dit geval: die ploeg toevoegen in Reeks en alle matchen syncen...
+                    .Where(kal => kal.Datum < DateTime.Now)
+                    .Where(kal => kal.Verslag != null /*&& kal.Verslag.IsSyncedWithFrenoy*/)
+                    .OrderByDescending(kal => kal.Datum)
+                    .Take(5)
+                    .ToList();
+
+                var result = Mapper.Map<IList<Kalender>, IList<Match>>(calendar);
+                return result;
+            }
+        }
     }
+
+    //internal enum KalenderFilter
+    //{
+    //    OwnMatches,
+    //    AllMatches
+    //}
 
     internal static class CalendarExtensions
     {
-        public static IQueryable<Kalender> WithIncludes(this DbSet<Kalender> kalender)
+        public static IQueryable<Kalender> WithIncludes(this DbSet<Kalender> kalender/*, KalenderFilter filter*/)
         {
-            return kalender
+            var result = kalender
                 .Include(x => x.ThuisClubPloeg)
                 .Include(x => x.Verslag)
                 .Include("Verslag.Individueel")
                 .Include("Verslag.Spelers");
+
+            //if (filter == KalenderFilter.OwnMatches)
+            //{
+            //    return result.Where(kal => kal.ThuisClubId == Constants.OwnClubId);
+            //}
+            return result;
         }
     }
 }

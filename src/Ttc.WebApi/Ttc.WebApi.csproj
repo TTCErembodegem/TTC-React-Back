@@ -151,7 +151,7 @@
     <Compile Include="App_Start\IoCInitializer.cs" />
     <Compile Include="App_Start\OwinStartup.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\CalendarController.cs" />
+    <Compile Include="Controllers\MatchesController.cs" />
     <Compile Include="Controllers\ClubsController.cs" />
     <Compile Include="Controllers\ConfigController.cs" />
     <Compile Include="Controllers\TeamsController.cs" />

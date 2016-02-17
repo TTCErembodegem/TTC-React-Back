@@ -17,6 +17,12 @@ namespace Ttc.WebApi
                 routeTemplate: "api/{controller}/{Id}",
                 defaults: new { Id = RouteParameter.Optional }
             );
+
+            config.Routes.MapHttpRoute(
+                name: "ActionApi",
+                routeTemplate: "api/{controller}/{action}",
+                defaults: new { }
+           );
         }
     }
 }
