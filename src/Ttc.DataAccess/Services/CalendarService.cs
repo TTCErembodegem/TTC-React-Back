@@ -23,10 +23,10 @@ namespace Ttc.DataAccess.Services
 
                 var calendar = dbContext.Kalender
                     .WithIncludes()
-                    .Where(x => x.Id == 1554)
-                    //.Where(x => x.Datum >= dateBegin)
-                    //.Where(x => x.Datum <= dateEnd)
-                    //.Where(x => x.ThuisClubId.HasValue)
+                    //.Where(x => x.Id == 1554)
+                    .Where(x => x.Datum >= dateBegin)
+                    .Where(x => x.Datum <= dateEnd)
+                    .Where(x => x.ThuisClubId.HasValue)
                     .OrderBy(x => x.Datum)
                     .ToList();
 
@@ -42,9 +42,10 @@ namespace Ttc.DataAccess.Services
                             .WithIncludes()
                             .Where(x => x.ThuisClubPloegId.Value == kalender.ThuisClubPloegId.Value)
                             .Where(x => x.UitClubPloegId.Value == kalender.UitClubPloegId.Value)
-                            .Single(x => x.Datum < kalender.Datum);
+                            .SingleOrDefault(x => x.Datum < kalender.Datum);
 
-                        heenmatchen.Add(prevKalender);
+                        if (prevKalender != null)
+                            heenmatchen.Add(prevKalender);
                     }
                 }
                 calendar.AddRange(heenmatchen);
@@ -56,10 +57,7 @@ namespace Ttc.DataAccess.Services
                     {
                         var reeks = dbContext.Reeksen.Single(x => x.Id == kalender.ThuisClubPloeg.ReeksId.Value);
                         var frenoySync = new FrenoyApi(dbContext, Constants.NormalizeCompetition(reeks.Competitie));
-                        if (Constants.NormalizeCompetition(reeks.Competitie) == Competition.Vttl)
-                        {
-                            frenoySync.SyncMatch(reeks, kalender.ThuisClubPloeg.Code, kalender.Week.Value);
-                        }
+                        frenoySync.SyncMatch(reeks, kalender.ThuisClubPloeg.Code, kalender.Week.Value);
                     }
                 }
 
