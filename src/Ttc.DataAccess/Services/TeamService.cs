@@ -14,12 +14,12 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
-                var activeClubs = dbContext.Reeksen
-                    .Include(x => x.Spelers)
-                    .Where(x => x.Jaar == Constants.CurrentSeason)
+                var activeClubs = dbContext.Teams
+                    .Include(x => x.Players)
+                    .Where(x => x.Year == Constants.CurrentSeason)
                     .ToList();
 
-                var result = Mapper.Map<IList<Reeks>, IList<Team>>(activeClubs);
+                var result = Mapper.Map<IList<TeamEntity>, IList<Team>>(activeClubs);
                 // TODO: Spelers kunnen nu makkelijk opgehaald worden
                 // TODO: hebben geen GetMultipleTeamsInDivisions nodig... Frenoy sync doet het direct goed!
                 var otherTeamDivisions = GetMultipleTeamsInDivisions(result);

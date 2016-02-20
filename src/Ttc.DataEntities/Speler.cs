@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ttc.DataEntities
 {
-    /// <summary>
-    /// Mapped to db.
-    /// </summary>
-    public class Speler
+    [Table("speler")]
+    public class PlayerEntity
     {
         [Key]
         public int Id { get; set; }

@@ -9,16 +9,18 @@ namespace Ttc.DataEntities.Core
 {
     public interface ITtcDbContext
     {
-        DbSet<Speler> Spelers { get; set; }
+        DbSet<PlayerEntity> Players { get; set; }
         DbSet<ClubEntity> Clubs { get; set; }
         DbSet<ClubLokaal> ClubLokalen { get; set; }
         DbSet<ClubContact> ClubContacten { get; set; }
-        DbSet<Reeks> Reeksen { get; set; }
-        DbSet<ClubPloeg> Opponents { get; set; }
-        DbSet<ClubPloegSpeler> ClubPloegSpelers { get; set; }
-        DbSet<MatchEntity> Kalender { get; set; }
-        DbSet<MatchPlayerEntity> VerslagenSpelers { get; set; }
-        DbSet<MatchGameEntity> VerslagenIndividueel { get; set; }
+
+        DbSet<TeamEntity> Teams { get; set; }
+        DbSet<TeamOpponentEntity> TeamOpponents { get; set; }
+        DbSet<TeamPlayerEntity> TeamPlayers { get; set; }
+
+        DbSet<MatchEntity> Matches { get; set; }
+        DbSet<MatchPlayerEntity> MatchPlayers { get; set; }
+        DbSet<MatchGameEntity> MatchGames { get; set; }
 
         int SaveChanges(); // TODO: remove this dependency
     }

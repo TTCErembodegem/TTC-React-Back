@@ -38,7 +38,7 @@ namespace Ttc.UnitTests
         //}
 
         [Test]
-        public void ReeksMapping()
+        public void TeamMapping()
         {
             using (var dbContext = new TtcDbContext())
             {
@@ -74,7 +74,7 @@ namespace Ttc.UnitTests
         }
 
         [Test]
-        public void TeamMapping()
+        public void TeamMapping2()
         {
             using (var dbContext = new TtcDbContext())
             {
@@ -108,8 +108,8 @@ namespace Ttc.UnitTests
             using (var dbContext = new TtcDbContext())
             {
                 AutoMapperConfig.Configure(new KlassementValueConverter());
-                Speler speler = dbContext.Spelers.First();
-                Player player = Mapper.Map<Speler, Player>(speler);
+                PlayerEntity speler = dbContext.Players.First();
+                Player player = Mapper.Map<PlayerEntity, Player>(speler);
                 Assert.That(player.Vttl, Is.Not.Null);
             }
         }

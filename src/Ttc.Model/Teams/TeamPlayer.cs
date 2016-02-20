@@ -3,7 +3,7 @@
 namespace Ttc.Model.Teams
 {
     /// <summary>
-    /// A TTC Erembodegem <see cref="Player"/> in a <see cref="Team"/> (aka Reeks)
+    /// A TTC Erembodegem <see cref="Player"/> in a <see cref="Team"/>
     /// </summary>
     public class TeamPlayer
     {

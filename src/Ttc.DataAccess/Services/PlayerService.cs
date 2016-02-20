@@ -14,12 +14,12 @@ namespace Ttc.DataAccess.Services
             {
                 // TODO: if the user is not logged in, do not return sensitive data like email, phone, address
 
-                var activeOwnClubPlayers = dbContext.Spelers
+                var activeOwnClubPlayers = dbContext.Players
                     .ToArray()
                     .Where(x => !x.IsGestopt && x.IsFromOwnClub())
                     .ToList();
 
-                var result = Mapper.Map<IList<Speler>, IList<Player>>(activeOwnClubPlayers);
+                var result = Mapper.Map<IList<PlayerEntity>, IList<Player>>(activeOwnClubPlayers);
                 return result;
             }
         }
@@ -28,7 +28,7 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
-                return Mapper.Map<Speler, Player>(dbContext.Spelers.SingleOrDefault(x => x.Id == playerId));
+                return Mapper.Map<PlayerEntity, Player>(dbContext.Players.SingleOrDefault(x => x.Id == playerId));
             }
         }
     }

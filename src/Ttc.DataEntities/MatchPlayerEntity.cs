@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ttc.DataEntities
 {
+    [Table("matchplayer")]
     public class MatchPlayerEntity
     {
         [Key]
@@ -13,7 +14,7 @@ namespace Ttc.DataEntities
         public int MatchId { get; set; }
 
         [ForeignKey("PlayerId")]
-        public Speler Speler { get; set; }
+        public PlayerEntity Player { get; set; }
         public int PlayerId { get; set; }
 
         /// <summary>

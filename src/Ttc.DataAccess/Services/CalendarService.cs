@@ -21,7 +21,7 @@ namespace Ttc.DataAccess.Services
                 var dateBegin = DateTime.Now.AddDays(-20);
                 var dateEnd = DateTime.Now.AddDays(20);
 
-                var calendar = dbContext.Kalender
+                var calendar = dbContext.Matches
                     .WithIncludes()
                     //.Where(x => x.Id == 1554)
                     .Where(x => x.Date >= dateBegin)
@@ -50,15 +50,15 @@ namespace Ttc.DataAccess.Services
                 //calendar.AddRange(heenmatchen);
 
 
-                //foreach (var kalender in calendar)
-                //{
-                //    if (kalender.Date < DateTime.Now && !kalender.IsSyncedWithFrenoy)
-                //    {
-                //        var reeks = dbContext.Reeksen.Single(x => x.Id == kalender.HomeTeamId || x.Id == kalender.AwayTeamId);
-                //        var frenoySync = new FrenoyApi(dbContext, Constants.NormalizeCompetition(reeks.Competitie));
-                //        frenoySync.SyncMatch(reeks, kalender.Team.TeamCode, kalender.Week); // TODO: 1 parameter = frenoyMatchId
-                //    }
-                //}
+                foreach (var kalender in calendar)
+                {
+                    if (kalender.Date < DateTime.Now && !kalender.IsSyncedWithFrenoy)
+                    {
+                        var team = dbContext.Teams.Single(x => x.Id == kalender.HomeTeamId || x.Id == kalender.AwayTeamId);
+                        var frenoySync = new FrenoyApi(dbContext, Constants.NormalizeCompetition(team.Competition));
+                        //frenoySync.SyncMatch(reeks, kalender.Team.TeamCode, kalender.Week); // TODO: 1 parameter = frenoyMatchId
+                    }
+                }
 
                 var result = Mapper.Map<IList<MatchEntity>, IList<Match>>(calendar);                
                 return result;
@@ -69,7 +69,7 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
-                var calendar = dbContext.Kalender
+                var calendar = dbContext.Matches
                     .WithIncludes()
                     .SingleOrDefault(x => x.Id == matchId);
                 return Map(calendar);
@@ -80,18 +80,18 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
-                var existingSpeler = dbContext.VerslagenSpelers
+                var existingSpeler = dbContext.MatchPlayers
                     .Include(x => x.Match)
                     .FirstOrDefault(x => x.MatchId == matchPlayer.MatchId && x.PlayerId == matchPlayer.PlayerId.Value);
 
                 if (existingSpeler != null)
                 {
-                    dbContext.VerslagenSpelers.Remove(existingSpeler);
+                    dbContext.MatchPlayers.Remove(existingSpeler);
                 }
                 else
                 {
                     var verslagSpeler = Mapper.Map<MatchPlayer, MatchPlayerEntity>(matchPlayer);
-                    dbContext.VerslagenSpelers.Add(verslagSpeler);
+                    dbContext.MatchPlayers.Add(verslagSpeler);
                 }
                 dbContext.SaveChanges();
             }
@@ -108,7 +108,7 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
-                var calendar = dbContext.Kalender
+                var calendar = dbContext.Matches
                     .WithIncludes()
                     .Where(kal => kal.AwayClubId == opponent.ClubId && kal.AwayPloegCode == opponent.TeamCode)
                     // TODO: krijgen nu de laatste uitslagen tegen erembodegem

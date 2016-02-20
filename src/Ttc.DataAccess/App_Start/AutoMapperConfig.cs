@@ -27,13 +27,13 @@ namespace Ttc.DataAccess.App_Start
         #region Teams
         private static void TeamMapping()
         {
-            Mapper.CreateMap<Reeks, Team>()
+            Mapper.CreateMap<TeamEntity, Team>()
                 .ForMember(
                     dest => dest.Competition,
-                    opts => opts.MapFrom(src => Constants.NormalizeCompetition(src.Competitie)))
+                    opts => opts.MapFrom(src => Constants.NormalizeCompetition(src.Competition)))
                 .ForMember(
                     dest => dest.Year,
-                    opts => opts.MapFrom(src => src.Jaar.Value))
+                    opts => opts.MapFrom(src => src.Year))
                 .ForMember(
                     dest => dest.DivisionName,
                     opts => opts.MapFrom(src => src.ReeksNummer + src.ReeksCode))
@@ -59,20 +59,14 @@ namespace Ttc.DataAccess.App_Start
 
         /// <summary>
         /// Map all teams including TTC Erembodegem.
-        /// We'll fix this later because multiple TTC Erembodegems could be playing in same Reeks
+        /// We'll fix this later because multiple TTC Erembodegems could be playing in same team
         /// </summary>
-        private static ICollection<OpposingTeam> MapAllTeams(Reeks src)
+        private static ICollection<OpposingTeam> MapAllTeams(TeamEntity src)
         => src.Opponents.Select(ploeg => new OpposingTeam
         {
-            ClubId = ploeg.ClubId.Value,
-            TeamCode = ploeg.Code
+            ClubId = ploeg.ClubId,
+            TeamCode = ploeg.TeamCode
         }).ToArray();
-
-        ///// <summary>
-        ///// Incorrect when multiple own club teams in Reeks
-        ///// </summary>
-        //private static string FindOwnTeamCode(Reeks src) => src.Ploegen.First(x => x.ClubId == Constants.OwnClubId).Code;
-
         #endregion
 
         #region Matches
@@ -98,7 +92,7 @@ namespace Ttc.DataAccess.App_Start
                     dest => dest.Opponent,
                     opts => opts.MapFrom(src => new OpposingTeam
                     {
-                        ClubId = src.AwayClubId.Value,
+                        ClubId = src.AwayClubId,
                         TeamCode = src.AwayPloegCode
                     }))
                 .ForMember(
@@ -299,7 +293,7 @@ namespace Ttc.DataAccess.App_Start
         #region Players
         private static void PlayerMapping(KlassementValueConverter klassementToValueConverter)
         {
-            Mapper.CreateMap<Speler, Player>()
+            Mapper.CreateMap<PlayerEntity, Player>()
                 .ForMember(
                     dest => dest.Name,
                     opts => opts.MapFrom(src => src.Naam))

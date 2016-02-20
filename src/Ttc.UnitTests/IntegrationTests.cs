@@ -34,7 +34,7 @@ namespace Ttc.UnitTests
         {
             using (var dbContext = new TtcDbContext())
             {
-                foreach (Speler speler in dbContext.Spelers)
+                foreach (PlayerEntity speler in dbContext.Players)
                 {
                     if (speler.ClubIdVttl.HasValue)
                     {
@@ -65,7 +65,7 @@ namespace Ttc.UnitTests
         {
             using (var dbContext = new TtcDbContext())
             {
-                foreach (var player in dbContext.Spelers)
+                foreach (var player in dbContext.Players)
                 {
                     if (player.Email != null)
                         player.Email = player.Email.Trim();

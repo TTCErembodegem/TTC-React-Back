@@ -4,6 +4,7 @@ using Ttc.Model.Matches;
 
 namespace Ttc.DataEntities
 {
+    [Table("matchgame")]
     public class MatchGameEntity
     {
         [Key]

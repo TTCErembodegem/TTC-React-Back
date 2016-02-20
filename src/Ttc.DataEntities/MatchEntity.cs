@@ -17,14 +17,14 @@ namespace Ttc.DataEntities
 
         public int? HomeTeamId { get; set; }
         [ForeignKey("HomeTeamId")]
-        public Reeks HomeTeam { get; set; }
+        public TeamEntity HomeTeam { get; set; }
         public int HomeClubId { get; set; }
         public string HomeTeamCode { get; set; }
 
         public int? AwayTeamId { get; set; }
         [ForeignKey("AwayTeamId")]
-        public Reeks AwayTeam { get; set; }
-        public int? AwayClubId { get; set; }
+        public TeamEntity AwayTeam { get; set; }
+        public int AwayClubId { get; set; }
         public string AwayPloegCode { get; set; }
 
         public int ReportPlayerId { get; set; }
