@@ -14,7 +14,7 @@ namespace Ttc.DataEntities.Core
         DbSet<ClubLokaal> ClubLokalen { get; set; }
         DbSet<ClubContact> ClubContacten { get; set; }
         DbSet<Reeks> Reeksen { get; set; }
-        DbSet<ClubPloeg> ClubPloegen { get; set; }
+        DbSet<ClubPloeg> Opponents { get; set; }
         DbSet<ClubPloegSpeler> ClubPloegSpelers { get; set; }
         DbSet<Kalender> Kalender { get; set; }
         DbSet<Verslag> Verslagen { get; set; }

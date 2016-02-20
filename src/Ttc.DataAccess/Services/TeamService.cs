@@ -15,11 +15,13 @@ namespace Ttc.DataAccess.Services
             using (var dbContext = new TtcDbContext())
             {
                 var activeClubs = dbContext.Reeksen
-                    .Include(x => x.Ploegen)
+                    .Include(x => x.Spelers)
                     .Where(x => x.Jaar == Constants.CurrentSeason)
                     .ToList();
 
                 var result = Mapper.Map<IList<Reeks>, IList<Team>>(activeClubs);
+                // TODO: Spelers kunnen nu makkelijk opgehaald worden
+                // TODO: hebben geen GetMultipleTeamsInDivisions nodig... Frenoy sync doet het direct goed!
                 var otherTeamDivisions = GetMultipleTeamsInDivisions(result);
 
                 // filter own team from opponents
@@ -31,18 +33,18 @@ namespace Ttc.DataAccess.Services
                 result = result.Concat(otherTeamDivisions).ToArray();
 
                 // add erembodegem players to team
-                foreach (var division in result)
-                {
-                    var clubTeam = dbContext.ClubPloegen
-                        .Include(x => x.Spelers)
-                        .First(x => x.ReeksId == division.Id && x.ClubId == Constants.OwnClubId && x.Code == division.TeamCode);
+                //foreach (var division in result)
+                //{
+                //    var clubTeam = dbContext.ClubPloegen
+                //        .Include(x => x.Spelers)
+                //        .First(x => x.ReeksId == division.Id && x.ClubId == Constants.OwnClubId && x.Code == division.TeamCode);
 
-                    division.Players = clubTeam.Spelers.Select(x => new TeamPlayer
-                    {
-                        PlayerId = x.SpelerId.Value,
-                        Type = (TeamPlayerType)x.Kapitein
-                    }).ToArray();
-                }
+                //    division.Players = division.Spelers.Select(x => new TeamPlayer
+                //    {
+                //        PlayerId = x.SpelerId.Value,
+                //        Type = (TeamPlayerType)x.Kapitein
+                //    }).ToArray();
+                //}
 
                 return result;
             }
@@ -71,12 +73,13 @@ namespace Ttc.DataAccess.Services
             return otherTeamDivisions;
         }
 
-        public Team GetTeam(int teamId)
-        {
-            using (var dbContext = new TtcDbContext())
-            {
-                return Mapper.Map<Reeks, Team>(dbContext.Reeksen.SingleOrDefault(x => x.Id == teamId));
-            }
-        }
+        // GetTeam heeft dezelfde includes etc nodig als GetForCurrentYear
+        //public Team GetTeam(int teamId)
+        //{
+        //    using (var dbContext = new TtcDbContext())
+        //    {
+        //        return Mapper.Map<Reeks, Team>(dbContext.Reeksen.SingleOrDefault(x => x.Id == teamId));
+        //    }
+        //}
     }
 }

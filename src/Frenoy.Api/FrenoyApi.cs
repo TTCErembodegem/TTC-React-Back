@@ -171,28 +171,28 @@ namespace Frenoy.Api
                     foreach (var frenoyTeamsInDivision in frenoyDivision.RankingEntries)
                     {
                         var clubPloeg = CreateClubPloeg(reeks, frenoyTeamsInDivision);
-                        _db.ClubPloegen.Add(clubPloeg);
+                        _db.Opponents.Add(clubPloeg);
                     }
                     CommitChanges();
                 }
 
                 // Add Erembodegem players to the home team
-                var ploeg = _db.ClubPloegen.Single(x => x.ClubId == _thuisClubId && x.ReeksId == reeks.Id && x.Code == frenoyTeam.Team);
-                if (MapTeamPlayers)
-                {
-                    var players = _settings.Players[ploeg.Code];
-                    foreach (var playerName in players)
-                    {
-                        var clubPloegSpeler = new ClubPloegSpeler
-                        {
-                            Kapitein = playerName == players.First() ? TeamPlayerType.Captain : TeamPlayerType.Standard,
-                            SpelerId = GetSpelerId(playerName),
-                            ClubPloegId = ploeg.Id
-                        };
-                        _db.ClubPloegSpelers.Add(clubPloegSpeler);
-                    }
-                    CommitChanges();
-                }
+                //var ploeg = _db.Opponents.Single(x => x.ClubId == _thuisClubId && x.ReeksId == reeks.Id && x.Code == frenoyTeam.Team);
+                //if (MapTeamPlayers)
+                //{
+                //    var players = _settings.Players[ploeg.Code];
+                //    foreach (var playerName in players)
+                //    {
+                //        var clubPloegSpeler = new ClubPloegSpeler
+                //        {
+                //            Kapitein = playerName == players.First() ? TeamPlayerType.Captain : TeamPlayerType.Standard,
+                //            SpelerId = GetSpelerId(playerName),
+                //            ReeksId = ploeg.Id
+                //        };
+                //        _db.ClubPloegSpelers.Add(clubPloegSpeler);
+                //    }
+                //    CommitChanges();
+                //}
 
                 // Create the matches=kalender table in the new  division=reeks
                 GetMatchesResponse matches = _frenoy.GetMatches(new GetMatchesRequest
@@ -200,11 +200,11 @@ namespace Frenoy.Api
                     Club = _settings.FrenoyClub,
                     Season = _settings.FrenoySeason,
                     DivisionId = reeks.FrenoyDivisionId.ToString(),
-                    Team = ploeg.Code,
+                    Team = reeks.TeamCode,
                     WithDetailsSpecified = true,
                     WithDetails = true,
                 });
-                SyncMatches(reeks.Id, ploeg.Code, matches);
+                SyncMatches(reeks.Id, reeks.TeamCode, matches);
             }
         }
 
@@ -428,10 +428,11 @@ namespace Frenoy.Api
                 ThuisPloeg = ExtractTeamCodeFromFrenoyName(frenoyMatch.HomeTeam),
                 UitClubId = GetClubId(frenoyMatch.AwayClub),
                 UitPloeg = ExtractTeamCodeFromFrenoyName(frenoyMatch.AwayTeam),
-                Week = int.Parse(frenoyMatch.WeekName)
+                Week = int.Parse(frenoyMatch.WeekName),
+                ReeksId = reeksId
             };
 
-            kalender.ThuisClubPloegId = GetClubPloegId(reeksId, kalender.ThuisClubId.Value, kalender.ThuisPloeg);
+            //kalender.ThuisClubPloegId = GetClubPloegId(reeksId, kalender.ThuisClubId.Value, kalender.ThuisPloeg);
             kalender.UitClubPloegId = GetClubPloegId(reeksId, kalender.UitClubId.Value, kalender.UitPloeg);
 
             // In the db the ThuisClubId is always Erembodegem
@@ -440,22 +441,22 @@ namespace Frenoy.Api
             {
                 var thuisClubId = kalender.ThuisClubId;
                 var thuisPloeg = kalender.ThuisPloeg;
-                var thuisClubPloegId = kalender.ThuisClubPloegId;
+                //var thuisClubPloegId = kalender.ThuisClubPloegId;
 
                 kalender.ThuisClubId = kalender.UitClubId;
                 kalender.ThuisPloeg = kalender.UitPloeg;
-                kalender.ThuisClubPloegId = kalender.UitClubPloegId;
+                //kalender.ThuisClubPloegId = kalender.UitClubPloegId;
 
                 kalender.UitClubId = thuisClubId;
                 kalender.UitPloeg = thuisPloeg;
-                kalender.UitClubPloegId = thuisClubPloegId;
+                //kalender.UitClubPloegId = thuisClubPloegId;
             }
             return kalender;
         }
 
         private int GetClubPloegId(int reeksId, int clubId, string ploeg)
         {
-            var cb = _db.ClubPloegen.Single(x => x.ReeksId == reeksId && x.ClubId == clubId && x.Code == ploeg);
+            var cb = _db.Opponents.Single(x => x.ReeksId == reeksId && x.ClubId == clubId && x.Code == ploeg);
             return cb.Id;
         }
 

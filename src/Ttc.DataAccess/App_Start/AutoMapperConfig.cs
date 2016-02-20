@@ -50,7 +50,7 @@ namespace Ttc.DataAccess.App_Start
                     }))
                 .ForMember(
                     dest => dest.TeamCode,
-                    opts => opts.MapFrom(src => FindOwnTeamCode(src)))
+                    opts => opts.MapFrom(src => src.TeamCode))
                 .ForMember(
                     dest => dest.Opponents,
                     opts => opts.MapFrom(src => MapAllTeams(src)))
@@ -62,16 +62,16 @@ namespace Ttc.DataAccess.App_Start
         /// We'll fix this later because multiple TTC Erembodegems could be playing in same Reeks
         /// </summary>
         private static ICollection<OpposingTeam> MapAllTeams(Reeks src)
-        =>  src.Ploegen.Select(ploeg => new OpposingTeam
-            {
-                ClubId = ploeg.ClubId.Value,
-                TeamCode = ploeg.Code
-            }).ToArray();
+        => src.Opponents.Select(ploeg => new OpposingTeam
+        {
+            ClubId = ploeg.ClubId.Value,
+            TeamCode = ploeg.Code
+        }).ToArray();
 
-        /// <summary>
-        /// Incorrect when multiple own club teams in Reeks
-        /// </summary>
-        private static string FindOwnTeamCode(Reeks src) => src.Ploegen.First(x => x.ClubId == Constants.OwnClubId).Code;
+        ///// <summary>
+        ///// Incorrect when multiple own club teams in Reeks
+        ///// </summary>
+        //private static string FindOwnTeamCode(Reeks src) => src.Ploegen.First(x => x.ClubId == Constants.OwnClubId).Code;
 
         #endregion
 
@@ -99,7 +99,7 @@ namespace Ttc.DataAccess.App_Start
                     opts => opts.MapFrom(src => src.Thuis.HasValue && src.Thuis == 1))
                 .ForMember(
                     dest => dest.TeamId,
-                    opts => opts.MapFrom(src => src.ThuisClubPloeg.ReeksId))
+                    opts => opts.MapFrom(src => src.ReeksId))
                 .ForMember(
                     dest => dest.Opponent,
                     opts => opts.MapFrom(src => new OpposingTeam

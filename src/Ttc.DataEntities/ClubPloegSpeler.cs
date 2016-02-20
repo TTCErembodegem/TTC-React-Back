@@ -14,10 +14,10 @@ namespace Ttc.DataEntities
         public Speler Speler { get; set; }
         public int? SpelerId { get; set; }
 
-        [ForeignKey("ClubPloegId")]
-        public ClubPloeg Ploeg { get; set; }
-        public int? ClubPloegId { get; set; }
+        [ForeignKey("ReeksId")]
+        public Reeks Reeks { get; set; }
+        public int ReeksId { get; set; }
 
-        public override string ToString() => $"Id={Id}, ClubPloegId={ClubPloegId}, SpelerId={SpelerId}, Kapitein={Kapitein}";
+        public override string ToString() => $"Id={Id}, Reeks={ReeksId}, SpelerId={SpelerId}, Kapitein={Kapitein}";
     }
 }
