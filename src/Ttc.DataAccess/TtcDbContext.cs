@@ -27,6 +27,9 @@ namespace Ttc.DataAccess
         public DbSet<VerslagSpeler> VerslagenSpelers { get; set; }
         public DbSet<VerslagIndividueel> VerslagenIndividueel { get; set; }
 
+        public DbSet<Backup.BackupReport> BackupReports { get; set; }
+        public DbSet<Backup.BackupTeamPlayer> BackupTeamPlayers { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();

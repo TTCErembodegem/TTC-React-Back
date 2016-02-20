@@ -93,6 +93,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="BackupLegacyDatabase.cs" />
     <Compile Include="IntegrationTests.cs" />
     <Compile Include="PlaygroundTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -102,6 +103,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Frenoy.Api\Frenoy.Api.csproj">
+      <Project>{C0D10971-D4C3-4958-9E9A-A40C849DC01F}</Project>
+      <Name>Frenoy.Api</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ttc.DataAccess\Ttc.DataAccess.csproj">
       <Project>{bdfc6f37-3b94-467b-beee-53ffba49918e}</Project>
       <Name>Ttc.DataAccess</Name>

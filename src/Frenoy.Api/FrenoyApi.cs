@@ -558,5 +558,21 @@ namespace Frenoy.Api
             _db.SaveChanges();
         }
         #endregion
+
+        public string GetFrenoyMatchId(int frenoyDivisionId, int week, string frenoyClubId)
+        {
+            var match = _frenoy.GetMatches(new GetMatchesRequest
+            {   
+                WeekName = week.ToString(),
+                DivisionId = frenoyDivisionId.ToString(),
+                Club = frenoyClubId
+            });
+
+            if (match.MatchCount == "0")
+            {
+                return null;
+            }
+            return match.TeamMatchesEntries.First().MatchId;
+        }
     }
 }
