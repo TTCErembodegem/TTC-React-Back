@@ -8,8 +8,6 @@ namespace Ttc.DataAccess
 {
     /// <remarks>
     /// Not(yet?) mapped: DbSet Parameter
-    /// Entities used by the legacy website only:
-    /// (The entity classes have been excluded in the VS project)
     /// </remarks>
     [DbConfigurationType(typeof(MySql.Data.Entity.MySqlEFConfiguration))]
     internal class TtcDbContext : DbContext, ITtcDbContext
