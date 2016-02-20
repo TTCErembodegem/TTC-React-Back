@@ -33,31 +33,31 @@ namespace Ttc.DataAccess.Services
                 // TODO: kalender gaat toch niet de hoofdpagina worden
                 // hoofdpagina = jouw volgende matchen. jouw team. en jouw speler details
                 // Zeker deze data met extra AJAX call...
-                var heenmatchen = new List<Kalender>();
-                foreach (var kalender in calendar)
-                {
-                    if ((kalender.Verslag == null || !kalender.Verslag.IsSyncedWithFrenoy) && kalender.Datum.Month > 0 && kalender.Datum.Month < 9)
-                    {
-                        var prevKalender = dbContext.Kalender
-                            .WithIncludes()
-                            .Where(x => x.ThuisClubPloegId.Value == kalender.ThuisClubPloegId.Value)
-                            .Where(x => x.UitClubPloegId.Value == kalender.UitClubPloegId.Value)
-                            .SingleOrDefault(x => x.Datum < kalender.Datum);
+                //var heenmatchen = new List<Kalender>();
+                //foreach (var kalender in calendar)
+                //{
+                //    if ((kalender.Verslag == null || !kalender.Verslag.IsSyncedWithFrenoy) && kalender.Datum.Month > 0 && kalender.Datum.Month < 9)
+                //    {
+                //        var prevKalender = dbContext.Kalender
+                //            .WithIncludes()
+                //            .Where(x => x.ThuisPloeg == kalender.ThuisPloeg)
+                //            .Where(x => x.UitClubPloegId.Value == kalender.UitClubPloegId.Value)
+                //            .SingleOrDefault(x => x.Datum < kalender.Datum);
 
-                        if (prevKalender != null)
-                            heenmatchen.Add(prevKalender);
-                    }
-                }
-                calendar.AddRange(heenmatchen);
+                //        if (prevKalender != null)
+                //            heenmatchen.Add(prevKalender);
+                //    }
+                //}
+                //calendar.AddRange(heenmatchen);
 
 
                 foreach (var kalender in calendar)
                 {
                     if (kalender.Datum < DateTime.Now && (kalender.Verslag == null || !kalender.Verslag.IsSyncedWithFrenoy))
                     {
-                        var reeks = dbContext.Reeksen.Single(x => x.Id == kalender.ThuisClubPloeg.ReeksId.Value);
+                        var reeks = dbContext.Reeksen.Single(x => x.Id == kalender.ReeksId.Value);
                         var frenoySync = new FrenoyApi(dbContext, Constants.NormalizeCompetition(reeks.Competitie));
-                        frenoySync.SyncMatch(reeks, kalender.ThuisClubPloeg.Code, kalender.Week.Value);
+                        frenoySync.SyncMatch(reeks, kalender.Reeks.TeamCode, kalender.Week.Value);
                     }
                 }
 
@@ -152,19 +152,13 @@ namespace Ttc.DataAccess.Services
 
     internal static class CalendarExtensions
     {
-        public static IQueryable<Kalender> WithIncludes(this DbSet<Kalender> kalender/*, KalenderFilter filter*/)
+        public static IQueryable<Kalender> WithIncludes(this DbSet<Kalender> kalender)
         {
-            var result = kalender
-                .Include(x => x.ThuisClubPloeg)
+            return kalender
+                .Include(x => x.Reeks)
                 .Include(x => x.Verslag)
                 .Include("Verslag.Individueel")
                 .Include("Verslag.Spelers");
-
-            //if (filter == KalenderFilter.OwnMatches)
-            //{
-            //    return result.Where(kal => kal.ThuisClubId == Constants.OwnClubId);
-            //}
-            return result;
         }
     }
 }

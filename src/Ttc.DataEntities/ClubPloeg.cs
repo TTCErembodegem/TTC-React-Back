@@ -12,7 +12,7 @@ namespace Ttc.DataEntities
         [ForeignKey("ReeksId")]
         public Reeks Reeks { get; set; }
         public int? ReeksId { get; set; }
-        
+
         [ForeignKey("ClubId")]
         public ClubEntity Club { get; set; }
         public int? ClubId { get; set; }

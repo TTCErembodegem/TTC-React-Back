@@ -18,7 +18,7 @@ namespace Ttc.DataAccess
         public DbSet<ClubContact> ClubContacten { get; set; }
 
         public DbSet<Reeks> Reeksen { get; set; }
-        public DbSet<ClubPloeg> ClubPloegen { get; set; }
+        public DbSet<ClubPloeg> Opponents { get; set; }
         public DbSet<ClubPloegSpeler> ClubPloegSpelers { get; set; }
         public DbSet<Kalender> Kalender { get; set; }
         public DbSet<Verslag> Verslagen { get; set; }
@@ -43,20 +43,15 @@ namespace Ttc.DataAccess
                 .WithMany(c => c.Contacten)
                 .HasForeignKey(x => x.ClubId);
 
-            modelBuilder.Entity<ClubPloeg>()
+            modelBuilder.Entity<Kalender>()
                 .HasRequired(c => c.Reeks)
-                .WithMany(c => c.Ploegen)
+                .WithMany(c => c.Matchen)
                 .HasForeignKey(x => x.ReeksId);
 
-            modelBuilder.Entity<Kalender>()
-                .HasRequired(c => c.ThuisClubPloeg)
-                .WithMany(c => c.Matchen)
-                .HasForeignKey(x => x.ThuisClubPloegId);
-
             modelBuilder.Entity<ClubPloegSpeler>()
-                .HasRequired(c => c.Ploeg)
+                .HasRequired(c => c.Reeks)
                 .WithMany(c => c.Spelers)
-                .HasForeignKey(x => x.ClubPloegId);
+                .HasForeignKey(x => x.ReeksId);
 
             modelBuilder.Entity<Kalender>()
                 .HasOptional(x => x.Verslag)

@@ -18,7 +18,14 @@ namespace Ttc.DataEntities
         public string FrenoyTeamId { get; set; }
         public int FrenoyDivisionId { get; set; }
 
-        public virtual ICollection<ClubPloeg> Ploegen { get; set; }
+        public ICollection<Kalender> Matchen { get; set; }
+        public ICollection<ClubPloegSpeler> Spelers { get; set; }
+        public ICollection<ClubPloeg> Opponents { get; set; }
+
+        /// <summary>
+        /// TTC Erembodegem TeamCode (A, B, C, ...)
+        /// </summary>
+        public string TeamCode { get; set; }
 
         public override string ToString() => $"Id={Id}, Competitie={Competitie} {Jaar}, Reeks={ReeksNummer}{ReeksCode}, FrenoyLink={LinkId}";
     }

@@ -15,7 +15,8 @@ using Ttc.Model.Players;
 namespace Ttc.UnitTests
 {
     /// <summary>
-    /// Tag this version!
+    /// Git Tag:
+    /// git co PRD-Backup-Script
     /// 
     /// Update-Database -TargetMigration:xxx
     /// 
@@ -24,80 +25,80 @@ namespace Ttc.UnitTests
     [TestFixture]
     public class BackupLegacyDatabase
     { 
-        [Test]
-        public void BackupMatchReports()
-        {
-            int reportLostCount = 0;
-            using (var dbContent = new TtcDbContext())
-            {
-                var matchesWithReport = dbContent.Kalender
-                    .Include(x => x.Verslag)
-                    .Where(x => x.Verslag != null && x.Verslag.Beschrijving != null && x.Verslag.Beschrijving != "")
-                    .Where(x => x.ThuisClubId.HasValue)
-                    .ToArray();
+        //[Test]
+        //public void BackupMatchReports()
+        //{
+        //    int reportLostCount = 0;
+        //    using (var dbContent = new TtcDbContext())
+        //    {
+        //        var matchesWithReport = dbContent.Kalender
+        //            .Include(x => x.Verslag)
+        //            .Where(x => x.Verslag != null && x.Verslag.Beschrijving != null && x.Verslag.Beschrijving != "")
+        //            .Where(x => x.ThuisClubId.HasValue)
+        //            .ToArray();
 
-                foreach (var verslag in matchesWithReport)
-                {
-                    string frenoyMatchId = verslag.FrenoyMatchId;
-                    if (string.IsNullOrWhiteSpace(frenoyMatchId))
-                    {
-                        var ploeg = dbContent.ClubPloegen
-                            .Include(x => x.Reeks)
-                            .FirstOrDefault(x => x.Id == verslag.ThuisClubPloegId.Value);
+        //        foreach (var verslag in matchesWithReport)
+        //        {
+        //            string frenoyMatchId = verslag.FrenoyMatchId;
+        //            if (string.IsNullOrWhiteSpace(frenoyMatchId))
+        //            {
+        //                var ploeg = dbContent.ClubPloegen
+        //                    .Include(x => x.Reeks)
+        //                    .FirstOrDefault(x => x.Id == verslag.ThuisClubPloegId.Value);
 
-                        if (ploeg == null)
-                        {
-                            // Derbys that are not correctly in the db anymore...
-                            reportLostCount++;
-                            continue;
-                        }
+        //                if (ploeg == null)
+        //                {
+        //                    // Derbys that are not correctly in the db anymore...
+        //                    reportLostCount++;
+        //                    continue;
+        //                }
 
-                        var comp = Constants.NormalizeCompetition(ploeg.Reeks.Competitie);
-                        var frenoySync = new FrenoyApi(dbContent, comp);
-                        var frenoyDivisionId = int.Parse(ploeg.Reeks.LinkId.Substring(0, ploeg.Reeks.LinkId.IndexOf("_")));
-                        frenoyMatchId = frenoySync.GetFrenoyMatchId(frenoyDivisionId, verslag.Week.Value, comp == Competition.Vttl ? "OVL134" : "4055");
-                        if (frenoyMatchId == null)
-                        {
-                            // WalkOvers?
-                            reportLostCount++;
-                            continue;
-                        }
-                    }
+        //                var comp = Constants.NormalizeCompetition(ploeg.Reeks.Competitie);
+        //                var frenoySync = new FrenoyApi(dbContent, comp);
+        //                var frenoyDivisionId = int.Parse(ploeg.Reeks.LinkId.Substring(0, ploeg.Reeks.LinkId.IndexOf("_")));
+        //                frenoyMatchId = frenoySync.GetFrenoyMatchId(frenoyDivisionId, verslag.Week.Value, comp == Competition.Vttl ? "OVL134" : "4055");
+        //                if (frenoyMatchId == null)
+        //                {
+        //                    // WalkOvers?
+        //                    reportLostCount++;
+        //                    continue;
+        //                }
+        //            }
 
-                    var backupRepo = new BackupReport(frenoyMatchId, verslag.Verslag.Beschrijving, verslag.Verslag.SpelerId);
-                    dbContent.BackupReports.Add(backupRepo);
-                }
-                dbContent.SaveChanges();
-                Assert.That(reportLostCount, Is.LessThan(7));
-            }
-        }
+        //            var backupRepo = new BackupReport(frenoyMatchId, verslag.Verslag.Beschrijving, verslag.Verslag.SpelerId);
+        //            dbContent.BackupReports.Add(backupRepo);
+        //        }
+        //        dbContent.SaveChanges();
+        //        Assert.That(reportLostCount, Is.LessThan(7));
+        //    }
+        //}
 
-        [Test]
-        public void BackupTeamPlayers()
-        {
-            using (var dbContent = new TtcDbContext())
-            {
-                var teamPlayers = dbContent.ClubPloegen
-                    .Include(x => x.Reeks)
-                    .Include(x => x.Spelers)
-                    .Where(x => x.ClubId == Constants.OwnClubId);
+        //[Test]
+        //public void BackupTeamPlayers()
+        //{
+        //    using (var dbContent = new TtcDbContext())
+        //    {
+        //        var teamPlayers = dbContent.ClubPloegen
+        //            .Include(x => x.Reeks)
+        //            .Include(x => x.Spelers)
+        //            .Where(x => x.ClubId == Constants.OwnClubId);
 
-                foreach (ClubPloeg ploeg in teamPlayers)
-                {
-                    foreach (var player in ploeg.Spelers)
-                    {
-                        var backupPlayer = new BackupTeamPlayer
-                        {
-                            DivisionLinkId = ploeg.Reeks.LinkId,
-                            TeamCode = ploeg.Code,
-                            PlayerId = player.SpelerId.Value
-                        };
-                        dbContent.BackupTeamPlayers.Add(backupPlayer);
-                    }
-                }
+        //        foreach (ClubPloeg ploeg in teamPlayers)
+        //        {
+        //            foreach (var player in ploeg.Spelers)
+        //            {
+        //                var backupPlayer = new BackupTeamPlayer
+        //                {
+        //                    DivisionLinkId = ploeg.Reeks.LinkId,
+        //                    TeamCode = ploeg.Code,
+        //                    PlayerId = player.SpelerId.Value
+        //                };
+        //                dbContent.BackupTeamPlayers.Add(backupPlayer);
+        //            }
+        //        }
                 
-                dbContent.SaveChanges();
-            }
-        }
+        //        dbContent.SaveChanges();
+        //    }
+        //}
     }
 }

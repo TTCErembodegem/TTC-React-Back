@@ -25,16 +25,16 @@ namespace Ttc.DataEntities
         /// <summary>
         /// Team A, B, C, ...
         /// </summary>
-        public string ThuisPloeg { get; set; }
+        public string ThuisPloeg { get; set; } // TODO: dit zit dan ook in reeks
 
         /// <summary>
         /// De inhoud van ThuisClubPloegId is ClubId en PloegCode
         /// dat ook in Kalender zit. Deze extra layer is dus niet
         /// nodig voor de Kalender op zich
         /// </summary>
-        public int? ThuisClubPloegId { get; set; }
-        [ForeignKey("ThuisClubPloegId")]
-        public ClubPloeg ThuisClubPloeg { get; set; }
+        public int? ReeksId { get; set; }
+        [ForeignKey("ReeksId")]
+        public Reeks Reeks { get; set; }
 
         public int? UitClubId { get; set; }
         public string UitPloeg { get; set; }
