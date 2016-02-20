@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ttc.DataEntities
 {
-    public class VerslagSpeler
+    public class MatchPlayerEntity
     {
         [Key]
         public int Id { get; set; }
 
         [ForeignKey("MatchId")]
-        public Verslag Verslag { get; set; }
+        public MatchEntity Match { get; set; }
         public int MatchId { get; set; }
 
         [ForeignKey("PlayerId")]

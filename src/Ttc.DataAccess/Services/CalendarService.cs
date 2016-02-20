@@ -24,10 +24,9 @@ namespace Ttc.DataAccess.Services
                 var calendar = dbContext.Kalender
                     .WithIncludes()
                     //.Where(x => x.Id == 1554)
-                    .Where(x => x.Datum >= dateBegin)
-                    .Where(x => x.Datum <= dateEnd)
-                    .Where(x => x.ThuisClubId.HasValue)
-                    .OrderBy(x => x.Datum)
+                    .Where(x => x.Date >= dateBegin)
+                    .Where(x => x.Date <= dateEnd)
+                    .OrderBy(x => x.Date)
                     .ToList();
 
                 // TODO: kalender gaat toch niet de hoofdpagina worden
@@ -51,17 +50,17 @@ namespace Ttc.DataAccess.Services
                 //calendar.AddRange(heenmatchen);
 
 
-                foreach (var kalender in calendar)
-                {
-                    if (kalender.Datum < DateTime.Now && (kalender.Verslag == null || !kalender.Verslag.IsSyncedWithFrenoy))
-                    {
-                        var reeks = dbContext.Reeksen.Single(x => x.Id == kalender.ReeksId.Value);
-                        var frenoySync = new FrenoyApi(dbContext, Constants.NormalizeCompetition(reeks.Competitie));
-                        frenoySync.SyncMatch(reeks, kalender.Reeks.TeamCode, kalender.Week.Value);
-                    }
-                }
+                //foreach (var kalender in calendar)
+                //{
+                //    if (kalender.Date < DateTime.Now && !kalender.IsSyncedWithFrenoy)
+                //    {
+                //        var reeks = dbContext.Reeksen.Single(x => x.Id == kalender.HomeTeamId || x.Id == kalender.AwayTeamId);
+                //        var frenoySync = new FrenoyApi(dbContext, Constants.NormalizeCompetition(reeks.Competitie));
+                //        frenoySync.SyncMatch(reeks, kalender.Team.TeamCode, kalender.Week); // TODO: 1 parameter = frenoyMatchId
+                //    }
+                //}
 
-                var result = Mapper.Map<IList<Kalender>, IList<Match>>(calendar);                
+                var result = Mapper.Map<IList<MatchEntity>, IList<Match>>(calendar);                
                 return result;
             }
         }
@@ -82,7 +81,7 @@ namespace Ttc.DataAccess.Services
             using (var dbContext = new TtcDbContext())
             {
                 var existingSpeler = dbContext.VerslagenSpelers
-                    .Include(x => x.Verslag)
+                    .Include(x => x.Match)
                     .FirstOrDefault(x => x.MatchId == matchPlayer.MatchId && x.PlayerId == matchPlayer.PlayerId.Value);
 
                 if (existingSpeler != null)
@@ -91,20 +90,7 @@ namespace Ttc.DataAccess.Services
                 }
                 else
                 {
-                    var existingReport = dbContext.Verslagen.SingleOrDefault(x => x.KalenderId == matchPlayer.MatchId);
-                    if (existingReport == null)
-                    {
-                        dbContext.Verslagen.Add(new Verslag
-                        {
-                            IsSyncedWithFrenoy = false,
-                            KalenderId = matchPlayer.MatchId,
-                            SpelerId = matchPlayer.PlayerId.Value,
-                            UitslagThuis = 0,
-                            UitslagUit = 0
-                        });
-                    }
-
-                    var verslagSpeler = Mapper.Map<MatchPlayer, VerslagSpeler>(matchPlayer);
+                    var verslagSpeler = Mapper.Map<MatchPlayer, MatchPlayerEntity>(matchPlayer);
                     dbContext.VerslagenSpelers.Add(verslagSpeler);
                 }
                 dbContext.SaveChanges();
@@ -113,9 +99,9 @@ namespace Ttc.DataAccess.Services
             return newMatch;
         }
 
-        private Match Map(Kalender kalender)
+        private Match Map(MatchEntity matchEntity)
         {
-            return Mapper.Map<Kalender, Match>(kalender);
+            return Mapper.Map<MatchEntity, Match>(matchEntity);
         }
 
         public IEnumerable<Match> GetLastOpponentMatches(OpposingTeam opponent)
@@ -124,7 +110,7 @@ namespace Ttc.DataAccess.Services
             {
                 var calendar = dbContext.Kalender
                     .WithIncludes()
-                    .Where(kal => kal.UitClubId == opponent.ClubId && kal.UitPloeg == opponent.TeamCode)
+                    .Where(kal => kal.AwayClubId == opponent.ClubId && kal.AwayPloegCode == opponent.TeamCode)
                     // TODO: krijgen nu de laatste uitslagen tegen erembodegem
                     // maar moeten de laatste matchen van die ploeg hebben
                     // mss match met HomeClubId <> 1 beginnen opslaan?
@@ -132,13 +118,12 @@ namespace Ttc.DataAccess.Services
                     // TODO: base klasse: automatisch ophalen door frenoy if nog geen uitslagen 
                     // en dbContext met de simpleinjecter en automapper
                     // frenoy sync in dit geval: die ploeg toevoegen in Reeks en alle matchen syncen...
-                    .Where(kal => kal.Datum < DateTime.Now)
-                    .Where(kal => kal.Verslag != null /*&& kal.Verslag.IsSyncedWithFrenoy*/)
-                    .OrderByDescending(kal => kal.Datum)
+                    .Where(kal => kal.Date < DateTime.Now)
+                    .OrderByDescending(kal => kal.Date)
                     .Take(5)
                     .ToList();
 
-                var result = Mapper.Map<IList<Kalender>, IList<Match>>(calendar);
+                var result = Mapper.Map<IList<MatchEntity>, IList<Match>>(calendar);
                 return result;
             }
         }
@@ -152,13 +137,13 @@ namespace Ttc.DataAccess.Services
 
     internal static class CalendarExtensions
     {
-        public static IQueryable<Kalender> WithIncludes(this DbSet<Kalender> kalender)
+        public static IQueryable<MatchEntity> WithIncludes(this DbSet<MatchEntity> kalender)
         {
             return kalender
-                .Include(x => x.Reeks)
-                .Include(x => x.Verslag)
-                .Include("Verslag.Individueel")
-                .Include("Verslag.Spelers");
+                .Include(x => x.HomeTeam)
+                .Include(x => x.AwayTeam)
+                .Include(x => x.Games)
+                .Include(x => x.Players);
         }
     }
 }

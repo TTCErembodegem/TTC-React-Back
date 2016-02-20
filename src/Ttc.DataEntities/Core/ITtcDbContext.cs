@@ -16,10 +16,9 @@ namespace Ttc.DataEntities.Core
         DbSet<Reeks> Reeksen { get; set; }
         DbSet<ClubPloeg> Opponents { get; set; }
         DbSet<ClubPloegSpeler> ClubPloegSpelers { get; set; }
-        DbSet<Kalender> Kalender { get; set; }
-        DbSet<Verslag> Verslagen { get; set; }
-        DbSet<VerslagSpeler> VerslagenSpelers { get; set; }
-        DbSet<VerslagIndividueel> VerslagenIndividueel { get; set; }
+        DbSet<MatchEntity> Kalender { get; set; }
+        DbSet<MatchPlayerEntity> VerslagenSpelers { get; set; }
+        DbSet<MatchGameEntity> VerslagenIndividueel { get; set; }
 
         int SaveChanges(); // TODO: remove this dependency
     }

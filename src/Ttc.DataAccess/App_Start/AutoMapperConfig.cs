@@ -78,11 +78,11 @@ namespace Ttc.DataAccess.App_Start
         #region Matches
         private static void ReportMapping()
         {
-            Mapper.CreateMap<VerslagSpeler, MatchPlayer>()
+            Mapper.CreateMap<MatchPlayerEntity, MatchPlayer>()
                 .ReverseMap()
                 ;
         
-            Mapper.CreateMap<VerslagIndividueel, MatchGame>()
+            Mapper.CreateMap<MatchGameEntity, MatchGame>()
                 .ForMember(d => d.Outcome, o => o.MapFrom(src => src.WalkOver == WalkOver.None ? MatchOutcome.NotYetPlayed : MatchOutcome.WalkOver))
                 .ReverseMap()
                 ;
@@ -90,22 +90,16 @@ namespace Ttc.DataAccess.App_Start
 
         private static void CalendarMapping()
         {
-            Mapper.CreateMap<Kalender, Match>()
-                .ForMember(
-                    dest => dest.Date,
-                    opts => opts.MapFrom(src => src.Datum))
-                .ForMember(
-                    dest => dest.IsHomeMatch,
-                    opts => opts.MapFrom(src => src.Thuis.HasValue && src.Thuis == 1))
+            Mapper.CreateMap<MatchEntity, Match>()
                 .ForMember(
                     dest => dest.TeamId,
-                    opts => opts.MapFrom(src => src.ReeksId))
+                    opts => opts.MapFrom(src => src.HomeTeamId.HasValue ? src.HomeTeamId : src.AwayTeamId))
                 .ForMember(
                     dest => dest.Opponent,
                     opts => opts.MapFrom(src => new OpposingTeam
                     {
-                        ClubId = src.UitClubId.Value,
-                        TeamCode = src.UitPloeg
+                        ClubId = src.AwayClubId.Value,
+                        TeamCode = src.AwayPloegCode
                     }))
                 .ForMember(
                     dest => dest.IsPlayed,
@@ -115,22 +109,19 @@ namespace Ttc.DataAccess.App_Start
                         GetScoreType(src) != MatchOutcome.BeingPlayed))
                 .ForMember(
                     dest => dest.Description,
-                    opts => opts.MapFrom(src => src.Beschrijving))
-                .ForMember(
-                    dest => dest.ReportPlayerId,
-                    opts => opts.MapFrom(src => src.Verslag.SpelerId))
+                    opts => opts.MapFrom(src => src.Description))
                 .ForMember(
                     dest => dest.ScoreType,
                     opts => opts.MapFrom(src => GetScoreType(src)))
                 .ForMember(
                     dest => dest.Score,
-                    opts => opts.MapFrom(src => src.Verslag.WO == 0 || src.Verslag.UitslagThuis.HasValue ? new MatchScore(src.Verslag.UitslagThuis.Value, src.Verslag.UitslagUit.Value) : null))
+                    opts => opts.MapFrom(src => !src.WalkOver || src.HomeScore.HasValue ? new MatchScore(src.HomeScore.Value, src.AwayScore.Value) : null))
                 .ForMember(
                     dest => dest.Players,
-                    opts => opts.MapFrom(src => src.Verslag.Spelers))
+                    opts => opts.MapFrom(src => src.Players))
                 .ForMember(
                     dest => dest.Games,
-                    opts => opts.MapFrom(src => src.Verslag.Individueel))
+                    opts => opts.MapFrom(src => src.Games))
                 
                 .AfterMap((kalender, match) =>
                 {
@@ -200,38 +191,37 @@ namespace Ttc.DataAccess.App_Start
             }
         }
 
-        private static MatchOutcome GetScoreType(Kalender kalendar)
+        private static MatchOutcome GetScoreType(MatchEntity kalendar)
         {
-            var verslag = kalendar.Verslag;
-            if (verslag == null || kalendar.Datum > DateTime.Now || (kalendar.Verslag.UitslagUit == 0 && kalendar.Verslag.UitslagThuis == 0))
+            if (kalendar.Date > DateTime.Now || (kalendar.AwayScore == 0 && kalendar.HomeScore == 0))
             {
-                if (Constants.HasMatchStarted(kalendar.Datum))
+                if (Constants.HasMatchStarted(kalendar.Date))
                 {
                     return MatchOutcome.BeingPlayed;
                 }
                 return MatchOutcome.NotYetPlayed;
             }
             
-            if (verslag.WO == 1)
+            if (kalendar.WalkOver)
             {
                 return MatchOutcome.WalkOver;
             }
-            if (!verslag.UitslagThuis.HasValue || !verslag.UitslagUit.HasValue)
+            if (!kalendar.HomeScore.HasValue || !kalendar.AwayScore.HasValue)
             {
                 return MatchOutcome.NotYetPlayed;
             }
-            if (verslag.UitslagThuis.Value == verslag.UitslagUit.Value && verslag.UitslagThuis.Value != 0)
+            if (kalendar.HomeScore.Value == kalendar.AwayScore.Value && kalendar.HomeScore.Value != 0)
             {
                 return MatchOutcome.Draw;
             }
 
-            if (verslag.Kalender.Thuis.Value == 1)
+            if (kalendar.IsHomeMatch)
             {
-                return verslag.UitslagThuis.Value < verslag.UitslagUit.Value ? MatchOutcome.Lost : MatchOutcome.Won;
+                return kalendar.HomeScore.Value < kalendar.AwayScore.Value ? MatchOutcome.Lost : MatchOutcome.Won;
             }
             else
             {
-                return verslag.UitslagThuis.Value < verslag.UitslagUit.Value ? MatchOutcome.Won: MatchOutcome.Lost;
+                return kalendar.HomeScore.Value < kalendar.AwayScore.Value ? MatchOutcome.Won: MatchOutcome.Lost;
             }
         }
         #endregion

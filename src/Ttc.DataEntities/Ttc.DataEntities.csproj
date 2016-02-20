@@ -57,13 +57,13 @@
     <Compile Include="ClubPloegSpeler.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Core\ITtcDbContext.cs" />
-    <Compile Include="Kalender.cs" />
+    <Compile Include="MatchEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reeks.cs" />
     <Compile Include="Speler.cs" />
     <Compile Include="Verslag.cs" />
-    <Compile Include="VerslagIndividueel.cs" />
-    <Compile Include="VerslagSpeler.cs" />
+    <Compile Include="MatchGameEntity.cs" />
+    <Compile Include="MatchPlayerEntity.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Ttc.Model\Ttc.Model.csproj">

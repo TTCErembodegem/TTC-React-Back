@@ -17,7 +17,7 @@ namespace Ttc.DataEntities
         public ClubEntity Club { get; set; }
         public int? ClubId { get; set; }
 
-        public ICollection<Kalender> Matchen { get; set; }
+        public ICollection<MatchEntity> Matchen { get; set; }
         public ICollection<ClubPloegSpeler> Spelers { get; set; }
 
         /// <summary>

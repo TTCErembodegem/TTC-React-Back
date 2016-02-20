@@ -18,7 +18,7 @@ namespace Ttc.DataEntities
         public string FrenoyTeamId { get; set; }
         public int FrenoyDivisionId { get; set; }
 
-        public ICollection<Kalender> Matchen { get; set; }
+        public ICollection<MatchEntity> Matchen { get; set; }
         public ICollection<ClubPloegSpeler> Spelers { get; set; }
         public ICollection<ClubPloeg> Opponents { get; set; }
 

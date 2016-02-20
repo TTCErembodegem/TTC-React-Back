@@ -20,7 +20,7 @@ namespace Frenoy.Syncer
 
                 var sporta = new FrenoyApi(dbContext, Competition.Sporta);
                 //sporta.SyncClubLokalen();
-                sporta.SyncAll();
+                //sporta.SyncAll();
             }
 
             //Console.WriteLine("All done");

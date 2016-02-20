@@ -230,7 +230,7 @@ namespace Frenoy.Api
                 Debug.Assert(frenoyMatch.TimeSpecified);
 
                 // Kalender entries
-                var kalender = _db.Kalender.SingleOrDefault(x => x.FrenoyMatchId == frenoyMatch.MatchId);
+                MatchEntity kalender = _db.Kalender.SingleOrDefault(x => x.FrenoyMatchId == frenoyMatch.MatchId);
                 if (kalender == null)
                 {
                     kalender = CreateKalenderMatch(reeksId, frenoyMatch, ploegCode);
@@ -241,53 +241,39 @@ namespace Frenoy.Api
                 if (frenoyMatch.MatchDetails != null && frenoyMatch.MatchDetails.DetailsCreated)
                 {
                     bool isForfeit = frenoyMatch.Score == null || frenoyMatch.Score.ToLowerInvariant().Contains("ff") || frenoyMatch.Score.ToLowerInvariant().Contains("af");
-
-                    var verslag = _db.Verslagen.SingleOrDefault(x => x.KalenderId == kalender.Id);
-                    if (verslag == null)
-                    {
-                        verslag = new Verslag
-                        {
-                            Kalender = kalender,
-                            KalenderId = kalender.Id,
-                            IsSyncedWithFrenoy = false,
-                            SpelerId = Constants.SuperPlayerId,
-                        };
-                        _db.Verslagen.Add(verslag);
-                    }
-
-                    if (true || !verslag.IsSyncedWithFrenoy) // TODO: remove true || after final sync
+                    if (true || !kalender.IsSyncedWithFrenoy) // TODO: remove true || after final sync
                     {
                         if (!isForfeit)
                         {
                             // Uitslag
-                            verslag.UitslagThuis = int.Parse(frenoyMatch.Score.Substring(0, frenoyMatch.Score.IndexOf("-")));
-                            verslag.UitslagUit = int.Parse(frenoyMatch.Score.Substring(frenoyMatch.Score.IndexOf("-") + 1));
-                            verslag.WO = 0;
+                            kalender.HomeScore = int.Parse(frenoyMatch.Score.Substring(0, frenoyMatch.Score.IndexOf("-")));
+                            kalender.AwayScore = int.Parse(frenoyMatch.Score.Substring(frenoyMatch.Score.IndexOf("-") + 1));
+                            kalender.WalkOver = false;
 
                             // Spelers
-                            var oldVerslagSpelers = _db.VerslagenSpelers.Where(x => x.MatchId == verslag.KalenderId).ToArray();
+                            var oldVerslagSpelers = _db.VerslagenSpelers.Where(x => x.MatchId == kalender.Id).ToArray();
                             _db.VerslagenSpelers.RemoveRange(oldVerslagSpelers);
 
-                            AddVerslagPlayers(frenoyMatch.MatchDetails.HomePlayers.Players, verslag, true, kalender.Thuis.Value == 1);
-                            AddVerslagPlayers(frenoyMatch.MatchDetails.AwayPlayers.Players, verslag, false, kalender.Thuis.Value == 0);
+                            AddVerslagPlayers(frenoyMatch.MatchDetails.HomePlayers.Players, kalender, true, kalender.IsHomeMatch);
+                            AddVerslagPlayers(frenoyMatch.MatchDetails.AwayPlayers.Players, kalender, false, !kalender.IsHomeMatch);
 
                             // Matchen
-                            var oldVerslagenIndividueel = _db.VerslagenIndividueel.Where(x => x.MatchId == verslag.KalenderId).ToArray();
+                            var oldVerslagenIndividueel = _db.VerslagenIndividueel.Where(x => x.MatchId == kalender.Id).ToArray();
                             _db.VerslagenIndividueel.RemoveRange(oldVerslagenIndividueel);
 
                             int id = 0;
                             foreach (var frenoyIndividual in frenoyMatch.MatchDetails.IndividualMatchResults)
                             {
-                                VerslagIndividueel matchResult;
+                                MatchGameEntity matchResult;
                                 int homeUniqueIndex, awayUniqueIndex;
                                 if (!int.TryParse(frenoyIndividual.HomePlayerUniqueIndex, out homeUniqueIndex)
                                     || !int.TryParse(frenoyIndividual.AwayPlayerUniqueIndex, out awayUniqueIndex))
                                 {
                                     // Sporta doubles match:
-                                    matchResult = new VerslagIndividueel
+                                    matchResult = new MatchGameEntity
                                     {
                                         Id = id--,
-                                        MatchId = verslag.KalenderId,
+                                        MatchId = kalender.Id,
                                         MatchNumber = int.Parse(frenoyIndividual.Position),
                                         WalkOver = WalkOver.None
                                     };
@@ -295,13 +281,13 @@ namespace Frenoy.Api
                                 else
                                 {
                                     // Sporta/Vttl singles match
-                                    matchResult = new VerslagIndividueel
+                                    matchResult = new MatchGameEntity
                                     {
                                         Id = id--,
-                                        MatchId = verslag.KalenderId,
+                                        MatchId = kalender.Id,
                                         MatchNumber = int.Parse(frenoyIndividual.Position),
                                         HomePlayerUniqueIndex = homeUniqueIndex,
-                                        OutPlayerUniqueIndex = awayUniqueIndex,
+                                        AwayPlayerUniqueIndex = awayUniqueIndex,
                                         WalkOver = WalkOver.None
                                     };
                                 }
@@ -313,30 +299,30 @@ namespace Frenoy.Api
                                 else
                                 {
                                     matchResult.HomePlayerSets = int.Parse(frenoyIndividual.HomeSetCount);
-                                    matchResult.OutPlayerSets = int.Parse(frenoyIndividual.AwaySetCount);
+                                    matchResult.AwayPlayerSets = int.Parse(frenoyIndividual.AwaySetCount);
                                 }
                                 _db.VerslagenIndividueel.Add(matchResult);
                             }
                         }
                         else
                         {
-                            verslag.WO = 1;
+                            kalender.WalkOver = true;
                         }
 
-                        verslag.IsSyncedWithFrenoy = true;
+                        kalender.IsSyncedWithFrenoy = true;
                     }
                 }
                 CommitChanges();
             }
         }
 
-        private void AddVerslagPlayers(TeamMatchPlayerEntryType[] players, Verslag verslag, bool thuisSpeler, bool isHomeMatch)
+        private void AddVerslagPlayers(TeamMatchPlayerEntryType[] players, MatchEntity verslag, bool thuisSpeler, bool isHomeMatch)
         {
             foreach (var frenoyVerslagSpeler in players)
             {
-                VerslagSpeler verslagSpeler = new VerslagSpeler
+                MatchPlayerEntity matchPlayerEntity = new MatchPlayerEntity
                 {
-                    MatchId = verslag.KalenderId,
+                    MatchId = verslag.Id,
                     Ranking = frenoyVerslagSpeler.Ranking,
                     Home = thuisSpeler,
                     Name = GetSpelerNaam(frenoyVerslagSpeler),
@@ -345,7 +331,7 @@ namespace Frenoy.Api
                 };
                 if (frenoyVerslagSpeler.VictoryCount != null)
                 {
-                    verslagSpeler.Won = int.Parse(frenoyVerslagSpeler.VictoryCount);
+                    matchPlayerEntity.Won = int.Parse(frenoyVerslagSpeler.VictoryCount);
                 }
                 else
                 {
@@ -365,14 +351,14 @@ namespace Frenoy.Api
                 }
                 if (dbPlayer != null)
                 {
-                    verslagSpeler.PlayerId = dbPlayer.Id;
+                    matchPlayerEntity.PlayerId = dbPlayer.Id;
                     if (!string.IsNullOrWhiteSpace(dbPlayer.NaamKort))
                     {
-                        verslagSpeler.Name = dbPlayer.NaamKort;
+                        matchPlayerEntity.Name = dbPlayer.NaamKort;
                     }
                 }
 
-                _db.VerslagenSpelers.Add(verslagSpeler);
+                _db.VerslagenSpelers.Add(matchPlayerEntity);
             }
         }
 
@@ -418,39 +404,47 @@ namespace Frenoy.Api
             return reeks;
         }
 
-        private Kalender CreateKalenderMatch(int reeksId, TeamMatchEntryType frenoyMatch, string thuisPloegCode)
+        private MatchEntity CreateKalenderMatch(int reeksId, TeamMatchEntryType frenoyMatch, string thuisPloegCode)
         {
-            var kalender = new Kalender
+            var kalender = new MatchEntity
             {
                 FrenoyMatchId = frenoyMatch.MatchId,
-                Datum = frenoyMatch.Date + new TimeSpan(frenoyMatch.Time.Hour, frenoyMatch.Time.Minute, 0),
-                ThuisClubId = GetClubId(frenoyMatch.HomeClub),
-                ThuisPloeg = ExtractTeamCodeFromFrenoyName(frenoyMatch.HomeTeam),
-                UitClubId = GetClubId(frenoyMatch.AwayClub),
-                UitPloeg = ExtractTeamCodeFromFrenoyName(frenoyMatch.AwayTeam),
+                Date = frenoyMatch.Date + new TimeSpan(frenoyMatch.Time.Hour, frenoyMatch.Time.Minute, 0),
+                HomeClubId = GetClubId(frenoyMatch.HomeClub),
+                HomeTeamCode = ExtractTeamCodeFromFrenoyName(frenoyMatch.HomeTeam),
+                AwayClubId = GetClubId(frenoyMatch.AwayClub),
+                AwayPloegCode = ExtractTeamCodeFromFrenoyName(frenoyMatch.AwayTeam),
                 Week = int.Parse(frenoyMatch.WeekName),
-                ReeksId = reeksId
             };
 
+            if (kalender.HomeClubId == Constants.OwnClubId)
+            {
+                kalender.HomeTeamId = reeksId;
+            }
+            else if (kalender.AwayClubId == Constants.OwnClubId)
+            {
+                kalender.AwayTeamId = reeksId;
+            }
+
             //kalender.ThuisClubPloegId = GetClubPloegId(reeksId, kalender.ThuisClubId.Value, kalender.ThuisPloeg);
-            kalender.UitClubPloegId = GetClubPloegId(reeksId, kalender.UitClubId.Value, kalender.UitPloeg);
+            //kalender.UitClubPloegId = GetClubPloegId(reeksId, kalender.UitClubId.Value, kalender.UitPloegCode);
 
             // In the db the ThuisClubId is always Erembodegem
-            kalender.Thuis = kalender.ThuisClubId == _thuisClubId && kalender.ThuisPloeg == thuisPloegCode ? 1 : 0;
-            if (kalender.Thuis == 0)
-            {
-                var thuisClubId = kalender.ThuisClubId;
-                var thuisPloeg = kalender.ThuisPloeg;
-                //var thuisClubPloegId = kalender.ThuisClubPloegId;
+            //kalender.IsHomeMatch = kalender.ThuisClubId == _thuisClubId && kalender.ThuisPloeg == thuisPloegCode ? 1 : 0;
+            //if (!kalender.IsHomeMatch)
+            //{
+            //    var thuisClubId = kalender.ThuisClubId;
+            //    var thuisPloeg = kalender.ThuisPloeg;
+            //    //var thuisClubPloegId = kalender.ThuisClubPloegId;
 
-                kalender.ThuisClubId = kalender.UitClubId;
-                kalender.ThuisPloeg = kalender.UitPloeg;
-                //kalender.ThuisClubPloegId = kalender.UitClubPloegId;
+            //    kalender.ThuisClubId = kalender.UitClubId;
+            //    kalender.ThuisPloeg = kalender.UitPloegCode;
+            //    //kalender.ThuisClubPloegId = kalender.UitClubPloegId;
 
-                kalender.UitClubId = thuisClubId;
-                kalender.UitPloeg = thuisPloeg;
-                //kalender.UitClubPloegId = thuisClubPloegId;
-            }
+            //    kalender.UitClubId = thuisClubId;
+            //    kalender.UitPloegCode = thuisPloeg;
+            //    //kalender.UitClubPloegId = thuisClubPloegId;
+            //}
             return kalender;
         }
 

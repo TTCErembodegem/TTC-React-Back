@@ -20,10 +20,9 @@ namespace Ttc.DataAccess
         public DbSet<Reeks> Reeksen { get; set; }
         public DbSet<ClubPloeg> Opponents { get; set; }
         public DbSet<ClubPloegSpeler> ClubPloegSpelers { get; set; }
-        public DbSet<Kalender> Kalender { get; set; }
-        public DbSet<Verslag> Verslagen { get; set; }
-        public DbSet<VerslagSpeler> VerslagenSpelers { get; set; }
-        public DbSet<VerslagIndividueel> VerslagenIndividueel { get; set; }
+        public DbSet<MatchEntity> Kalender { get; set; }
+        public DbSet<MatchPlayerEntity> VerslagenSpelers { get; set; }
+        public DbSet<MatchGameEntity> VerslagenIndividueel { get; set; }
 
         public DbSet<Backup.BackupReport> BackupReports { get; set; }
         public DbSet<Backup.BackupTeamPlayer> BackupTeamPlayers { get; set; }
@@ -43,28 +42,28 @@ namespace Ttc.DataAccess
                 .WithMany(c => c.Contacten)
                 .HasForeignKey(x => x.ClubId);
 
-            modelBuilder.Entity<Kalender>()
-                .HasRequired(c => c.Reeks)
-                .WithMany(c => c.Matchen)
-                .HasForeignKey(x => x.ReeksId);
+            //modelBuilder.Entity<MatchEntity>()
+            //    .HasRequired(c => c.Reeks)
+            //    .WithMany(c => c.Matchen)
+            //    .HasForeignKey(x => x.ReeksId);
 
-            modelBuilder.Entity<ClubPloegSpeler>()
-                .HasRequired(c => c.Reeks)
-                .WithMany(c => c.Spelers)
-                .HasForeignKey(x => x.ReeksId);
+            //modelBuilder.Entity<ClubPloegSpeler>()
+            //    .HasRequired(c => c.Reeks)
+            //    .WithMany(c => c.Spelers)
+            //    .HasForeignKey(x => x.ReeksId);
 
-            modelBuilder.Entity<Kalender>()
-                .HasOptional(x => x.Verslag)
-                .WithRequired(x => x.Kalender);
+            //modelBuilder.Entity<MatchEntity>()
+            //    .HasOptional(x => x.Verslag)
+            //    .WithRequired(x => x.MatchEntity);
 
-            modelBuilder.Entity<VerslagIndividueel>()
-                .HasRequired(c => c.Verslag)
-                .WithMany(c => c.Individueel)
+            modelBuilder.Entity<MatchGameEntity>()
+                .HasRequired(c => c.Match)
+                .WithMany(c => c.Games)
                 .HasForeignKey(x => x.MatchId);
 
-            modelBuilder.Entity<VerslagSpeler>()
-                .HasRequired(c => c.Verslag)
-                .WithMany(c => c.Spelers)
+            modelBuilder.Entity<MatchPlayerEntity>()
+                .HasRequired(c => c.Match)
+                .WithMany(c => c.Players)
                 .HasForeignKey(x => x.MatchId);
         }
 

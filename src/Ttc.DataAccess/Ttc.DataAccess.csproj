@@ -152,6 +152,10 @@
     <Compile Include="Migrations\201602201835378_BackupLegacyDatabase.Designer.cs">
       <DependentUpon>201602201835378_BackupLegacyDatabase.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602202003341_ReeksDerbyFix.cs" />
+    <Compile Include="Migrations\201602202003341_ReeksDerbyFix.Designer.cs">
+      <DependentUpon>201602202003341_ReeksDerbyFix.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\CalendarService.cs" />
     <Compile Include="Services\ClubService.cs" />
@@ -238,6 +242,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201602201835378_BackupLegacyDatabase.resx">
       <DependentUpon>201602201835378_BackupLegacyDatabase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602202003341_ReeksDerbyFix.resx">
+      <DependentUpon>201602202003341_ReeksDerbyFix.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
