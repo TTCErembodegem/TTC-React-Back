@@ -41,7 +41,7 @@ namespace Ttc.Model.Matches
         public MatchScore Score { get; set; }
         public MatchOutcome ScoreType { get; set; }
         public string Description { get; set; }
-        public bool IsPlayed { get; set; } // TODO: not sure if we still need this prop?
+        public bool IsPlayed { get; set; }
         public ICollection<MatchPlayer> Players { get; set; } // TODO: do not return this if the match has not yet started and the user is not logged in
         public ICollection<MatchGame> Games { get; set; }
         #endregion

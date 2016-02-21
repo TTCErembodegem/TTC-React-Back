@@ -34,6 +34,9 @@ namespace Ttc.DataAccess.App_Start
 
             Mapper.CreateMap<TeamEntity, Team>()
                 .ForMember(
+                    dest => dest.ClubId,
+                    opts => opts.MapFrom(src => Constants.OwnClubId))
+                .ForMember(
                     dest => dest.Competition,
                     opts => opts.MapFrom(src => Constants.NormalizeCompetition(src.Competition)))
                 .ForMember(
@@ -104,7 +107,6 @@ namespace Ttc.DataAccess.App_Start
                     dest => dest.IsPlayed,
                     opts => opts.MapFrom(src => 
                         GetScoreType(src) != MatchOutcome.NotYetPlayed && 
-                        GetScoreType(src) != MatchOutcome.WalkOver && 
                         GetScoreType(src) != MatchOutcome.BeingPlayed))
                 .ForMember(
                     dest => dest.ScoreType,

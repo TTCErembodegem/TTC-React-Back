@@ -14,7 +14,10 @@ namespace Ttc.Model.Teams
         /// TTC Erembodegem Team code (A, B, C, ...)
         /// </summary>
         public string TeamCode { get; set; }
+        public int ClubId { get; set; }
         public ICollection<TeamPlayer> Players { get; set; }
+
+        // TODO: Opponents can be replaced with the Ranking
         public ICollection<OpposingTeam> Opponents { get; set; }
 
         /// <summary>
@@ -33,6 +36,8 @@ namespace Ttc.Model.Teams
         /// Links to Frenoy website and API details of TTC Erembodegem Team
         /// </summary>
         public FrenoyTeamLinks Frenoy { get; set; }
+
+        public ICollection<DivisionRanking> Ranking { get; set; }
 
         public override string ToString() => $"{Competition} {Year} {TeamCode}: {DivisionName}";
     }

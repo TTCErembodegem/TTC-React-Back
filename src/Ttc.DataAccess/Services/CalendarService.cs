@@ -26,7 +26,7 @@ namespace Ttc.DataAccess.Services
 
                 var calendar = dbContext.Matches
                     .WithIncludes()
-                    //.Where(x => x.Id == 468)
+                    //.Where(x => x.Id == 520)
                     //.Where(x => x.Id == 467) // Sporta A vs Kruibeke B
                     //.Where(x => x.Id == 563) // Derby: Sporta A vs B
                     //.Where(x => x.Id == 484) // St-Pauwels B vs Sporta B
@@ -73,7 +73,7 @@ namespace Ttc.DataAccess.Services
                     {
                         var team = dbContext.Teams.Single(x => x.Id == kalender.HomeTeamId || x.Id == kalender.AwayTeamId);
                         var frenoySync = new FrenoyApi(dbContext, Constants.NormalizeCompetition(team.Competition));
-                        //frenoySync.SyncMatch(reeks, kalender.Team.TeamCode, kalender.Week); // TODO: 1 parameter = frenoyMatchId
+                        frenoySync.SyncMatch(team.Id, kalender.FrenoyMatchId);
                     }
                 }
 
