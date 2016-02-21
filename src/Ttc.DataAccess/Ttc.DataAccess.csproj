@@ -169,9 +169,10 @@
       <DependentUpon>201602202351366_PlayerId.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Services\CalendarService.cs" />
+    <Compile Include="Services\ServiceExtensions.cs" />
     <Compile Include="Services\ClubService.cs" />
     <Compile Include="Services\ConfigService.cs" />
+    <Compile Include="Services\MatchService.cs" />
     <Compile Include="Services\PlayerService.cs" />
     <Compile Include="Services\TeamService.cs" />
     <Compile Include="TtcDbContext.cs" />

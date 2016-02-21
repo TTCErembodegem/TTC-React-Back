@@ -85,7 +85,7 @@ namespace Ttc.UnitTests
 
                 AutoMapperConfig.Configure(new KlassementValueConverter());
 
-                var serv = new CalendarService();
+                var serv = new MatchService();
                 var result = serv.GetRelevantMatches();
                 var pastMatch = result.First();
                 //var pastMatch = serv.GetMatch(1597);

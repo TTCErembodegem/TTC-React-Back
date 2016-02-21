@@ -1,18 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using AutoMapper;
 using Frenoy.Api;
-using Ttc.Model.Matches;
 using Ttc.DataEntities;
-using Ttc.Model.Players;
+using Ttc.Model.Matches;
 using Ttc.Model.Teams;
 
 namespace Ttc.DataAccess.Services
 {
-    public class CalendarService
+    public class MatchService
     {
         public IEnumerable<Match> GetRelevantMatches()
         {
@@ -26,7 +24,7 @@ namespace Ttc.DataAccess.Services
 
                 var calendar = dbContext.Matches
                     .WithIncludes()
-                    //.Where(x => x.Id == 520)
+                    .Where(x => x.Id == 468)
                     //.Where(x => x.Id == 467) // Sporta A vs Kruibeke B
                     //.Where(x => x.Id == 563) // Derby: Sporta A vs B
                     //.Where(x => x.Id == 484) // St-Pauwels B vs Sporta B
@@ -121,46 +119,26 @@ namespace Ttc.DataAccess.Services
             return Mapper.Map<MatchEntity, Match>(matchEntity);
         }
 
-        public IEnumerable<Match> GetLastOpponentMatches(OpposingTeam opponent)
+        public IEnumerable<OtherMatch> GetLastOpponentMatches(int teamId, OpposingTeam opponent)
         {
             using (var dbContext = new TtcDbContext())
             {
+                var team = dbContext.Teams.Single(x => x.Id == teamId);
+
+                var frenoy = new FrenoyApi(dbContext, Constants.NormalizeCompetition(team.Competition));
+                frenoy.SyncMatches(team, opponent);
+
                 var calendar = dbContext.Matches
                     .WithIncludes()
-                    .Where(kal => kal.AwayClubId == opponent.ClubId && kal.AwayPloegCode == opponent.TeamCode)
-                    // TODO: krijgen nu de laatste uitslagen tegen erembodegem
-                    // maar moeten de laatste matchen van die ploeg hebben
-                    // mss match met HomeClubId <> 1 beginnen opslaan?
-                    //.Where(kal => kal.UitClubId == opponent.ClubId && kal.UitPloeg == opponent.TeamCode)
-                    // TODO: base klasse: automatisch ophalen door frenoy if nog geen uitslagen 
-                    // en dbContext met de simpleinjecter en automapper
-                    // frenoy sync in dit geval: die ploeg toevoegen in Reeks en alle matchen syncen...
+                    .Where(kal => (kal.AwayClubId == opponent.ClubId && kal.AwayPloegCode == opponent.TeamCode) || (kal.HomeClubId == opponent.ClubId && kal.HomeTeamCode == opponent.TeamCode))
                     .Where(kal => kal.Date < DateTime.Now)
                     .OrderByDescending(kal => kal.Date)
                     .Take(5)
                     .ToList();
 
-                var result = Mapper.Map<IList<MatchEntity>, IList<Match>>(calendar);
+                var result = Mapper.Map<IList<MatchEntity>, IList<OtherMatch>>(calendar);
                 return result;
             }
-        }
-    }
-
-    //internal enum KalenderFilter
-    //{
-    //    OwnMatches,
-    //    AllMatches
-    //}
-
-    internal static class CalendarExtensions
-    {
-        public static IQueryable<MatchEntity> WithIncludes(this DbSet<MatchEntity> kalender)
-        {
-            return kalender
-                .Include(x => x.HomeTeam)
-                .Include(x => x.AwayTeam)
-                .Include(x => x.Games)
-                .Include(x => x.Players);
         }
     }
 }

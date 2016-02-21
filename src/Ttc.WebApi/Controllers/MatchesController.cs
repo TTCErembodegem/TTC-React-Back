@@ -11,10 +11,10 @@ namespace Ttc.WebApi.Controllers
     public class MatchesController : BaseController
     {
         #region Constructor
-        private readonly CalendarService _service;
+        private readonly MatchService _service;
         private readonly TeamService _teamService;
 
-        public MatchesController(CalendarService service, TeamService teamService)
+        public MatchesController(MatchService service, TeamService teamService)
         {
             _service = service;
             _teamService = teamService;
@@ -33,14 +33,14 @@ namespace Ttc.WebApi.Controllers
 
         [HttpGet]
         [Route("GetLastOpponentMatches")]
-        public IEnumerable<Match> GetLastOpponentMatches(string teamCode, int clubId)
+        public IEnumerable<OtherMatch> GetLastOpponentMatches(int teamId, int clubId, string teamCode)
         {
             var opponent = new OpposingTeam
             {
                 ClubId = clubId,
                 TeamCode = teamCode
             };
-            return _service.GetLastOpponentMatches(opponent);
+            return _service.GetLastOpponentMatches(teamId, opponent);
         }
     }
 }

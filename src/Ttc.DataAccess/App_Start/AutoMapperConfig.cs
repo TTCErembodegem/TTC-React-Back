@@ -59,10 +59,6 @@ namespace Ttc.DataAccess.App_Start
                 ;
         }
 
-        /// <summary>
-        /// Map all teams including TTC Erembodegem.
-        /// We'll fix this later because multiple TTC Erembodegems could be playing in same team
-        /// </summary>
         private static ICollection<OpposingTeam> MapAllTeams(TeamEntity src)
         => src.Opponents.Select(ploeg => new OpposingTeam
         {
@@ -92,6 +88,40 @@ namespace Ttc.DataAccess.App_Start
 
         private static void CalendarMapping()
         {
+            Mapper.CreateMap<MatchEntity, OtherMatch>()
+                .ForMember(
+                    dest => dest.Home,
+                    opts => opts.MapFrom(src => new OpposingTeam
+                    {
+                        ClubId = src.HomeClubId,
+                        TeamCode = src.HomeTeamCode
+                    }))
+                .ForMember(
+                    dest => dest.Away,
+                    opts => opts.MapFrom(src => new OpposingTeam
+                    {
+                        ClubId = src.AwayClubId,
+                        TeamCode = src.AwayPloegCode
+                    }))
+                .ForMember(
+                    dest => dest.IsPlayed,
+                    opts => opts.MapFrom(src =>
+                        GetScoreType(src) != MatchOutcome.NotYetPlayed &&
+                        GetScoreType(src) != MatchOutcome.BeingPlayed))
+                .ForMember(
+                    dest => dest.ScoreType,
+                    opts => opts.MapFrom(src => GetScoreType(src)))
+                .ForMember(
+                    dest => dest.Score,
+                    opts => opts.MapFrom(src => !src.WalkOver && src.HomeScore.HasValue ? new MatchScore(src.HomeScore.Value, src.AwayScore.Value) : null))
+
+                .AfterMap((kalender, match) =>
+                {
+                    //SetMatchPlayerAliases(match);
+                    //ChangeMeaningOfHomePlayer(match);
+                    //SetIndividualMatchesOutcome(match);
+                });
+
             Mapper.CreateMap<MatchEntity, Match>()
                 .ForMember(
                     dest => dest.TeamId,
@@ -114,12 +144,6 @@ namespace Ttc.DataAccess.App_Start
                 .ForMember(
                     dest => dest.Score,
                     opts => opts.MapFrom(src => !src.WalkOver && src.HomeScore.HasValue ? new MatchScore(src.HomeScore.Value, src.AwayScore.Value) : null))
-                .ForMember(
-                    dest => dest.Players,
-                    opts => opts.MapFrom(src => src.Players))
-                .ForMember(
-                    dest => dest.Games,
-                    opts => opts.MapFrom(src => src.Games))
 
                 .AfterMap((kalender, match) =>
                 {

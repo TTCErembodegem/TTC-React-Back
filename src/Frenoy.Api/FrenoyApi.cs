@@ -60,6 +60,7 @@ namespace Frenoy.Api
         }
         #endregion
 
+        #region ClubLokalen
         public void SyncClubLokalen()
         {
             // TODO: put this in separate class
@@ -131,18 +132,21 @@ namespace Frenoy.Api
             }
             _db.SaveChanges();
         }
+        #endregion
 
         #region Public API
-        public void SyncAll()
+        public void SyncTeamsAndMatches()
         {
-            // TODO: map all other results of the teams in the division aswell...            
-
             var frenoyTeams = _frenoy.GetClubTeams(new GetClubTeamsRequest
             {
                 Club = _settings.FrenoyClub,
                 Season = _settings.FrenoySeason
             });
+            SyncTeamsAndMatches(frenoyTeams);
+        }
 
+        private void SyncTeamsAndMatches(GetClubTeamsResponse frenoyTeams)
+        {
             foreach (var frenoyTeam in frenoyTeams.TeamEntries)
             {
                 // Create new division for each team in the club
@@ -213,7 +217,20 @@ namespace Frenoy.Api
             SyncMatches(teamId, matches);
         }
 
-        private void SyncMatches(int reeksId, GetMatchesResponse matches)
+        public void SyncMatches(TeamEntity team, OpposingTeam opponent)
+        {
+            GetMatchesResponse matches = _frenoy.GetMatches(new GetMatchesRequest
+            {
+                Club = GetFrenoyClubdId(opponent.ClubId),
+                Season = _settings.FrenoySeason,
+                Team = opponent.TeamCode,
+                WithDetailsSpecified = true,
+                WithDetails = true,
+            });
+            SyncMatches(team.Id, matches);
+        }
+
+        public void SyncMatches(int reeksId, GetMatchesResponse matches)
         {
             foreach (TeamMatchEntryType frenoyMatch in matches.TeamMatchesEntries.Where(x => x.HomeTeam.Trim() != "Vrij" && x.AwayTeam.Trim() != "Vrij"))
             {
@@ -459,6 +476,18 @@ namespace Frenoy.Api
                 club = CreateClub(frenoyClubCode);
             }
             return club.Id;
+        }
+
+        private string GetFrenoyClubdId(int clubId)
+        {
+            if (_isVttl)
+            {
+                return _db.Clubs.Single(x => x.Id == clubId).CodeVttl;
+            }
+            else
+            {
+                return _db.Clubs.Single(x => x.Id == clubId).CodeSporta;
+            }
         }
 
         private ClubEntity CreateClub(string frenoyClubCode)

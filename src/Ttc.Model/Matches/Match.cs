@@ -9,6 +9,7 @@ namespace Ttc.Model.Matches
     /// </summary>
     public class OtherMatch
     {
+        public int Id { get; set; }
         public DateTime Date { get; set; }
         public string FrenoyMatchId { get; set; }
         public int Week { get; set; }
@@ -18,7 +19,7 @@ namespace Ttc.Model.Matches
 
         public MatchScore Score { get; set; }
         public MatchOutcome ScoreType { get; set; }
-        //public bool IsPlayed { get; set; }
+        public bool IsPlayed { get; set; }
         public ICollection<MatchPlayer> Players { get; set; }
         public ICollection<MatchGame> Games { get; set; }
     }
