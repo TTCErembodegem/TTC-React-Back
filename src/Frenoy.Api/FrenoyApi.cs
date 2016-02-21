@@ -32,8 +32,6 @@ namespace Frenoy.Api
         private readonly TabTAPI_PortTypeClient _frenoy;
         private readonly int _thuisClubId;
         private readonly bool _isVttl;
-
-        private bool MapTeamPlayers = false;
         #endregion
 
         #region Constructor

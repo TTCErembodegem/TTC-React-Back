@@ -25,7 +25,7 @@ namespace Ttc.DataEntities
         [ForeignKey("AwayTeamId")]
         public TeamEntity AwayTeam { get; set; }
         public int AwayClubId { get; set; }
-        public string AwayPloegCode { get; set; }
+        public string AwayPloegCode { get; set; } // TODO: rename to AwayTeamCode
 
         public int ReportPlayerId { get; set; }
         public ICollection<MatchGameEntity> Games { get; set; }

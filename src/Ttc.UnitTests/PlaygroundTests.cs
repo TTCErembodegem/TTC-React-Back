@@ -16,6 +16,7 @@ using Ttc.Model;
 using Ttc.Model.Clubs;
 using Ttc.Model.Matches;
 using Ttc.Model.Players;
+using Ttc.Model.Teams;
 
 namespace Ttc.UnitTests
 {
@@ -37,7 +38,24 @@ namespace Ttc.UnitTests
         {
             using (var dbContext = new TtcDbContext())
             {
-                // TODO: FillTeamPlayers
+                foreach (KeyValuePair<string, string[]> dict in FrenoySettings.SportaSettings.Players)
+                {
+                    TeamEntity team = dbContext.Teams
+                        .Where(x => x.Year == FrenoySettings.SportaSettings.Jaar)
+                        .Single(x => x.Competition == Competition.Sporta.ToString() && x.TeamCode == dict.Key);
+
+                    foreach (string player in dict.Value)
+                    {
+                        var newPlayer = new TeamPlayerEntity
+                        {
+                            TeamId = team.Id,
+                            PlayerType = TeamPlayerType.Standard,
+                            PlayerId = dbContext.Players.Single(x => x.NaamKort == player).Id
+                        };
+                        dbContext.TeamPlayers.Add(newPlayer);
+                    }
+                }
+                dbContext.SaveChanges();
             }
         }
 

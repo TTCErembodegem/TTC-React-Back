@@ -56,7 +56,7 @@ namespace Frenoy.Api
                 ["A"] = new[] { "Dirk DS.", "Kharmis", "Jorn", "Sami", "Wouter" },
                 ["B"] = new[] { "Bart", "Patrick", "Geert", "Dirk B", "Jelle" },
                 ["C"] = new[] { "Dries", "Maarten", "Luc", "Jan", "Veerle" },
-                ["D"] = new[] { "Leo", "Guy", "Patrick", "Tuur", "Peter V" },
+                ["D"] = new[] { "Leo", "Guy", "Patrick DS", "Tuur", "Peter V" },
                 ["E"] = new[] { "Dirk K.", "Etienne", "Peter N", "Marnix", "Thierry", "Martin" },
                 ["F"] = new[] { "Tim", "Rudi", "Daniel", "Tim", "Etienne C.", "Myriam", "Wim", "Martin" }
             }

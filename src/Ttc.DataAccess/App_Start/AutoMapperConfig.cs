@@ -27,6 +27,11 @@ namespace Ttc.DataAccess.App_Start
         #region Teams
         private static void TeamMapping()
         {
+            Mapper.CreateMap<TeamPlayerEntity, TeamPlayer>()
+                .ForMember(
+                    dest => dest.Type,
+                    opts => opts.MapFrom(src => src.PlayerType));
+
             Mapper.CreateMap<TeamEntity, Team>()
                 .ForMember(
                     dest => dest.Competition,
@@ -42,6 +47,9 @@ namespace Ttc.DataAccess.App_Start
                         LinkId = src.LinkId,
                         TeamId = src.FrenoyTeamId
                     }))
+                .ForMember(
+                    dest => dest.Players,
+                    opts => opts.MapFrom(src => src.Players))
                 .ForMember(
                     dest => dest.Opponents,
                     opts => opts.MapFrom(src => MapAllTeams(src)))

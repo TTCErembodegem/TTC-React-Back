@@ -16,6 +16,9 @@ namespace Ttc.DataAccess.Services
     {
         public IEnumerable<Match> GetRelevantMatches()
         {
+            // TODO: kalender gaat toch niet de hoofdpagina worden
+            // hoofdpagina = jouw volgende matchen. jouw team. en jouw speler details
+
             using (var dbContext = new TtcDbContext())
             {
                 var dateBegin = DateTime.Now.AddDays(-20);
@@ -23,6 +26,7 @@ namespace Ttc.DataAccess.Services
 
                 var calendar = dbContext.Matches
                     .WithIncludes()
+                    //.Where(x => x.Id == 468)
                     //.Where(x => x.Id == 467) // Sporta A vs Kruibeke B
                     //.Where(x => x.Id == 563) // Derby: Sporta A vs B
                     //.Where(x => x.Id == 484) // St-Pauwels B vs Sporta B
@@ -31,25 +35,36 @@ namespace Ttc.DataAccess.Services
                     .OrderBy(x => x.Date)
                     .ToList();
 
-                // TODO: kalender gaat toch niet de hoofdpagina worden
-                // hoofdpagina = jouw volgende matchen. jouw team. en jouw speler details
-                // Zeker deze data met extra AJAX call...
-                //var heenmatchen = new List<Kalender>();
-                //foreach (var kalender in calendar)
-                //{
-                //    if ((kalender.Verslag == null || !kalender.Verslag.IsSyncedWithFrenoy) && kalender.Datum.Month > 0 && kalender.Datum.Month < 9)
-                //    {
-                //        var prevKalender = dbContext.Kalender
-                //            .WithIncludes()
-                //            .Where(x => x.ThuisPloeg == kalender.ThuisPloeg)
-                //            .Where(x => x.UitClubPloegId.Value == kalender.UitClubPloegId.Value)
-                //            .SingleOrDefault(x => x.Datum < kalender.Datum);
+                var heenmatchen = new List<MatchEntity>();
+                foreach (var kalender in calendar)
+                {
+                    if (kalender.IsHomeMatch.HasValue && !kalender.IsSyncedWithFrenoy && kalender.Date.Month < 9)
+                    {
+                        MatchEntity prevKalender;
+                        if (kalender.IsHomeMatch.Value)
+                        {
+                            prevKalender = dbContext.Matches
+                                .WithIncludes()
+                                .Where(x => x.HomeTeamCode == kalender.AwayPloegCode)
+                                .Where(x => x.HomeClubId == kalender.AwayClubId)
+                                .Where(x => x.AwayTeamId == kalender.HomeTeamId)
+                                .SingleOrDefault(x => x.Date < kalender.Date);
+                        }
+                        else
+                        {
+                            prevKalender = dbContext.Matches
+                                .WithIncludes()
+                                .Where(x => x.AwayPloegCode == kalender.HomeTeamCode)
+                                .Where(x => x.AwayClubId == kalender.HomeClubId)
+                                .Where(x => x.HomeTeamId == kalender.AwayTeamId)
+                                .SingleOrDefault(x => x.Date < kalender.Date);
+                        }
 
-                //        if (prevKalender != null)
-                //            heenmatchen.Add(prevKalender);
-                //    }
-                //}
-                //calendar.AddRange(heenmatchen);
+                        if (prevKalender != null)
+                            heenmatchen.Add(prevKalender);
+                    }
+                }
+                calendar.AddRange(heenmatchen);
 
 
                 foreach (var kalender in calendar)
