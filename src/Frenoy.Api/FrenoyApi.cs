@@ -226,6 +226,7 @@ namespace Frenoy.Api
                 Team = opponent.TeamCode,
                 WithDetailsSpecified = true,
                 WithDetails = true,
+                DivisionId = team.FrenoyDivisionId.ToString()
             });
             SyncMatches(team.Id, matches);
         }
@@ -424,7 +425,13 @@ namespace Frenoy.Api
                 Week = int.Parse(frenoyMatch.WeekName),
             };
 
-            //TODO: we zaten hier
+            //int weekName;
+            //if (int.TryParse(frenoyMatch.WeekName, out weekName))
+            //{
+            //    kalender.Week = weekName;
+            //}
+
+            //TODO: we zaten hier for the derby problem
             // delete match id 563
             // do not pass reeksId here but find out what the Team is based on HomeClubId and HomeTeamCode
 
