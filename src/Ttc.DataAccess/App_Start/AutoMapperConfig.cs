@@ -32,14 +32,8 @@ namespace Ttc.DataAccess.App_Start
                     dest => dest.Competition,
                     opts => opts.MapFrom(src => Constants.NormalizeCompetition(src.Competition)))
                 .ForMember(
-                    dest => dest.Year,
-                    opts => opts.MapFrom(src => src.Year))
-                .ForMember(
                     dest => dest.DivisionName,
                     opts => opts.MapFrom(src => src.ReeksNummer + src.ReeksCode))
-                .ForMember(
-                    dest => dest.Id,
-                    opts => opts.MapFrom(src => src.Id))
                 .ForMember(
                     dest => dest.Frenoy,
                     opts => opts.MapFrom(src => new FrenoyTeamLinks
@@ -48,9 +42,6 @@ namespace Ttc.DataAccess.App_Start
                         LinkId = src.LinkId,
                         TeamId = src.FrenoyTeamId
                     }))
-                .ForMember(
-                    dest => dest.TeamCode,
-                    opts => opts.MapFrom(src => src.TeamCode))
                 .ForMember(
                     dest => dest.Opponents,
                     opts => opts.MapFrom(src => MapAllTeams(src)))
@@ -92,8 +83,8 @@ namespace Ttc.DataAccess.App_Start
                     dest => dest.Opponent,
                     opts => opts.MapFrom(src => new OpposingTeam
                     {
-                        ClubId = src.AwayClubId,
-                        TeamCode = src.AwayPloegCode
+                        ClubId = src.HomeTeamId.HasValue ? src.AwayClubId : src.HomeClubId,
+                        TeamCode = src.HomeTeamId.HasValue ? src.AwayPloegCode : src.HomeTeamCode
                     }))
                 .ForMember(
                     dest => dest.IsPlayed,
@@ -102,21 +93,18 @@ namespace Ttc.DataAccess.App_Start
                         GetScoreType(src) != MatchOutcome.WalkOver && 
                         GetScoreType(src) != MatchOutcome.BeingPlayed))
                 .ForMember(
-                    dest => dest.Description,
-                    opts => opts.MapFrom(src => src.Description))
-                .ForMember(
                     dest => dest.ScoreType,
                     opts => opts.MapFrom(src => GetScoreType(src)))
                 .ForMember(
                     dest => dest.Score,
-                    opts => opts.MapFrom(src => !src.WalkOver || src.HomeScore.HasValue ? new MatchScore(src.HomeScore.Value, src.AwayScore.Value) : null))
+                    opts => opts.MapFrom(src => !src.WalkOver && src.HomeScore.HasValue ? new MatchScore(src.HomeScore.Value, src.AwayScore.Value) : null))
                 .ForMember(
                     dest => dest.Players,
                     opts => opts.MapFrom(src => src.Players))
                 .ForMember(
                     dest => dest.Games,
                     opts => opts.MapFrom(src => src.Games))
-                
+
                 .AfterMap((kalender, match) =>
                 {
                     SetMatchPlayerAliases(match);
@@ -130,7 +118,7 @@ namespace Ttc.DataAccess.App_Start
             foreach (var game in match.Games.Where(g => g.Outcome != MatchOutcome.WalkOver))
             {
                 game.Outcome = game.HomePlayerSets > game.OutPlayerSets ? MatchOutcome.Won : MatchOutcome.Lost;
-                if (!match.IsHomeMatch)
+                if (match.IsHomeMatch.HasValue && !match.IsHomeMatch.Value)
                 {
                     game.Outcome = game.Outcome == MatchOutcome.Won ? MatchOutcome.Lost : MatchOutcome.Won;
                 }
@@ -178,10 +166,12 @@ namespace Ttc.DataAccess.App_Start
         /// </summary>
         private static void ChangeMeaningOfHomePlayer(Match match)
         {
-            // TODO: 'fixing' home might result in derby matches being displayed incorrectly (ex: Sporta A vs Erembodegem A)
-            foreach (var ply in match.Players)
+            if (match.IsHomeMatch.HasValue)
             {
-                ply.Home = IsOwnClubPlayer(match.IsHomeMatch, ply.Home);
+                foreach (var ply in match.Players)
+                {
+                    ply.Home = IsOwnClubPlayer(match.IsHomeMatch.Value, ply.Home);
+                }
             }
         }
 
@@ -209,7 +199,7 @@ namespace Ttc.DataAccess.App_Start
                 return MatchOutcome.Draw;
             }
 
-            if (kalendar.IsHomeMatch)
+            if (kalendar.IsHomeMatch.HasValue && !kalendar.IsHomeMatch.Value)
             {
                 return kalendar.HomeScore.Value < kalendar.AwayScore.Value ? MatchOutcome.Lost : MatchOutcome.Won;
             }

@@ -149,14 +149,7 @@ namespace Frenoy.Api
             {
                 // Create new division for each team in the club
                 // Check if it already exists: Two teams could play in the same division
-                TeamEntity teamEntity = _db.Teams.SingleOrDefault(x => x.FrenoyDivisionId.ToString() == frenoyTeam.DivisionId);
-
-                // TODO: we zaten hier: FIXES for 2 teams in same reeks
-                // --> Merge tabellen Reeks en ClubPloeg...
-                // --> Reeksen.SingleOrDefault(... && x.TeamCode == frenoyTeam.????
-                // --> Hier dan 2 reeksen toevoegen...
-                // --> Daarna de Derbys maar 1x toevoegen aan de matchenlijst
-
+                TeamEntity teamEntity = _db.Teams.SingleOrDefault(x => x.FrenoyDivisionId.ToString() == frenoyTeam.DivisionId && x.TeamCode == frenoyTeam.Team);
                 if (teamEntity == null)
                 {
                     teamEntity = CreateReeks(frenoyTeam);
@@ -168,31 +161,13 @@ namespace Frenoy.Api
                     {
                         DivisionId = frenoyTeam.DivisionId
                     });
-                    foreach (var frenoyTeamsInDivision in frenoyDivision.RankingEntries)
+                    foreach (var frenoyTeamsInDivision in frenoyDivision.RankingEntries.Where(x => ExtractTeamCodeFromFrenoyName(x.Team) != frenoyTeam.Team || !IsOwnClub(x.TeamClub)))
                     {
                         var clubPloeg = CreateClubPloeg(teamEntity, frenoyTeamsInDivision);
                         _db.TeamOpponents.Add(clubPloeg);
                     }
                     CommitChanges();
                 }
-
-                // Add Erembodegem players to the home team
-                //var ploeg = _db.Opponents.Single(x => x.ClubId == _thuisClubId && x.ReeksId == reeks.Id && x.Code == frenoyTeam.Team);
-                //if (MapTeamPlayers)
-                //{
-                //    var players = _settings.Players[ploeg.Code];
-                //    foreach (var playerName in players)
-                //    {
-                //        var clubPloegSpeler = new ClubPloegSpeler
-                //        {
-                //            Kapitein = playerName == players.First() ? TeamPlayerType.Captain : TeamPlayerType.Standard,
-                //            SpelerId = GetSpelerId(playerName),
-                //            ReeksId = ploeg.Id
-                //        };
-                //        _db.ClubPloegSpelers.Add(clubPloegSpeler);
-                //    }
-                //    CommitChanges();
-                //}
 
                 // Create the matches=kalender table in the new  division=reeks
                 GetMatchesResponse matches = _frenoy.GetMatches(new GetMatchesRequest
@@ -204,11 +179,29 @@ namespace Frenoy.Api
                     WithDetailsSpecified = true,
                     WithDetails = true,
                 });
-                SyncMatches(teamEntity.Id, teamEntity.TeamCode, matches);
+                SyncMatches(teamEntity.Id, matches);
             }
         }
 
-        public void SyncMatch(TeamEntity teamEntity, string ploegCode, int weekName)
+        private bool IsOwnClub(string teamClub)
+        {
+            return _settings.FrenoyClub == teamClub;
+        }
+
+        public void SyncMatch(int teamId, string frenoyMatchId)
+        {
+            GetMatchesResponse matches = _frenoy.GetMatches(new GetMatchesRequest
+            {
+                Club = _settings.FrenoyClub,
+                Season = _settings.FrenoySeason,
+                WithDetailsSpecified = true,
+                WithDetails = true,
+                MatchId = frenoyMatchId
+            });
+            SyncMatches(teamId, matches);
+        }
+
+        public void SyncMatch(int teamId, string ploegCode, int weekName)
         {
             GetMatchesResponse matches = _frenoy.GetMatches(new GetMatchesRequest
             {
@@ -219,10 +212,10 @@ namespace Frenoy.Api
                 WithDetails = true,
                 WeekName = weekName.ToString()
             });
-            SyncMatches(teamEntity.Id, ploegCode, matches);
+            SyncMatches(teamId, matches);
         }
 
-        private void SyncMatches(int reeksId, string ploegCode, GetMatchesResponse matches)
+        private void SyncMatches(int reeksId, GetMatchesResponse matches)
         {
             foreach (TeamMatchEntryType frenoyMatch in matches.TeamMatchesEntries.Where(x => x.HomeTeam.Trim() != "Vrij" && x.AwayTeam.Trim() != "Vrij"))
             {
@@ -233,84 +226,81 @@ namespace Frenoy.Api
                 MatchEntity kalender = _db.Matches.SingleOrDefault(x => x.FrenoyMatchId == frenoyMatch.MatchId);
                 if (kalender == null)
                 {
-                    kalender = CreateKalenderMatch(reeksId, frenoyMatch, ploegCode);
+                    kalender = CreateKalenderMatch(reeksId, frenoyMatch);
                     _db.Matches.Add(kalender);
                 }
 
                 // Wedstrijdverslagen
-                if (frenoyMatch.MatchDetails != null && frenoyMatch.MatchDetails.DetailsCreated)
+                if (!kalender.IsSyncedWithFrenoy && frenoyMatch.MatchDetails != null && frenoyMatch.MatchDetails.DetailsCreated)
                 {
                     bool isForfeit = frenoyMatch.Score == null || frenoyMatch.Score.ToLowerInvariant().Contains("ff") || frenoyMatch.Score.ToLowerInvariant().Contains("af");
-                    if (true || !kalender.IsSyncedWithFrenoy) // TODO: remove true || after final sync
+                    if (!isForfeit)
                     {
-                        if (!isForfeit)
+                        // Uitslag
+                        kalender.HomeScore = int.Parse(frenoyMatch.Score.Substring(0, frenoyMatch.Score.IndexOf("-")));
+                        kalender.AwayScore = int.Parse(frenoyMatch.Score.Substring(frenoyMatch.Score.IndexOf("-") + 1));
+                        kalender.WalkOver = false;
+
+                        // Spelers
+                        var oldVerslagSpelers = _db.MatchPlayers.Where(x => x.MatchId == kalender.Id).ToArray();
+                        _db.MatchPlayers.RemoveRange(oldVerslagSpelers);
+
+                        AddVerslagPlayers(frenoyMatch.MatchDetails.HomePlayers.Players, kalender, true, kalender.IsHomeMatch.HasValue && kalender.IsHomeMatch.Value);
+                        AddVerslagPlayers(frenoyMatch.MatchDetails.AwayPlayers.Players, kalender, false, kalender.IsHomeMatch.HasValue && kalender.IsHomeMatch.Value);
+
+                        // Matchen
+                        var oldVerslagenIndividueel = _db.MatchGames.Where(x => x.MatchId == kalender.Id).ToArray();
+                        _db.MatchGames.RemoveRange(oldVerslagenIndividueel);
+
+                        int id = 0;
+                        foreach (var frenoyIndividual in frenoyMatch.MatchDetails.IndividualMatchResults)
                         {
-                            // Uitslag
-                            kalender.HomeScore = int.Parse(frenoyMatch.Score.Substring(0, frenoyMatch.Score.IndexOf("-")));
-                            kalender.AwayScore = int.Parse(frenoyMatch.Score.Substring(frenoyMatch.Score.IndexOf("-") + 1));
-                            kalender.WalkOver = false;
-
-                            // Spelers
-                            var oldVerslagSpelers = _db.MatchPlayers.Where(x => x.MatchId == kalender.Id).ToArray();
-                            _db.MatchPlayers.RemoveRange(oldVerslagSpelers);
-
-                            AddVerslagPlayers(frenoyMatch.MatchDetails.HomePlayers.Players, kalender, true, kalender.IsHomeMatch);
-                            AddVerslagPlayers(frenoyMatch.MatchDetails.AwayPlayers.Players, kalender, false, !kalender.IsHomeMatch);
-
-                            // Matchen
-                            var oldVerslagenIndividueel = _db.MatchGames.Where(x => x.MatchId == kalender.Id).ToArray();
-                            _db.MatchGames.RemoveRange(oldVerslagenIndividueel);
-
-                            int id = 0;
-                            foreach (var frenoyIndividual in frenoyMatch.MatchDetails.IndividualMatchResults)
+                            MatchGameEntity matchResult;
+                            int homeUniqueIndex, awayUniqueIndex;
+                            if (!int.TryParse(frenoyIndividual.HomePlayerUniqueIndex, out homeUniqueIndex)
+                                || !int.TryParse(frenoyIndividual.AwayPlayerUniqueIndex, out awayUniqueIndex))
                             {
-                                MatchGameEntity matchResult;
-                                int homeUniqueIndex, awayUniqueIndex;
-                                if (!int.TryParse(frenoyIndividual.HomePlayerUniqueIndex, out homeUniqueIndex)
-                                    || !int.TryParse(frenoyIndividual.AwayPlayerUniqueIndex, out awayUniqueIndex))
+                                // Sporta doubles match:
+                                matchResult = new MatchGameEntity
                                 {
-                                    // Sporta doubles match:
-                                    matchResult = new MatchGameEntity
-                                    {
-                                        Id = id--,
-                                        MatchId = kalender.Id,
-                                        MatchNumber = int.Parse(frenoyIndividual.Position),
-                                        WalkOver = WalkOver.None
-                                    };
-                                }
-                                else
-                                {
-                                    // Sporta/Vttl singles match
-                                    matchResult = new MatchGameEntity
-                                    {
-                                        Id = id--,
-                                        MatchId = kalender.Id,
-                                        MatchNumber = int.Parse(frenoyIndividual.Position),
-                                        HomePlayerUniqueIndex = homeUniqueIndex,
-                                        AwayPlayerUniqueIndex = awayUniqueIndex,
-                                        WalkOver = WalkOver.None
-                                    };
-                                }
-                                
-                                if (frenoyIndividual.IsHomeForfeited || frenoyIndividual.IsAwayForfeited)
-                                {
-                                    matchResult.WalkOver = frenoyIndividual.IsHomeForfeited ? WalkOver.Home : WalkOver.Out;
-                                }
-                                else
-                                {
-                                    matchResult.HomePlayerSets = int.Parse(frenoyIndividual.HomeSetCount);
-                                    matchResult.AwayPlayerSets = int.Parse(frenoyIndividual.AwaySetCount);
-                                }
-                                _db.MatchGames.Add(matchResult);
+                                    Id = id--,
+                                    MatchId = kalender.Id,
+                                    MatchNumber = int.Parse(frenoyIndividual.Position),
+                                    WalkOver = WalkOver.None
+                                };
                             }
+                            else
+                            {
+                                // Sporta/Vttl singles match
+                                matchResult = new MatchGameEntity
+                                {
+                                    Id = id--,
+                                    MatchId = kalender.Id,
+                                    MatchNumber = int.Parse(frenoyIndividual.Position),
+                                    HomePlayerUniqueIndex = homeUniqueIndex,
+                                    AwayPlayerUniqueIndex = awayUniqueIndex,
+                                    WalkOver = WalkOver.None
+                                };
+                            }
+                                
+                            if (frenoyIndividual.IsHomeForfeited || frenoyIndividual.IsAwayForfeited)
+                            {
+                                matchResult.WalkOver = frenoyIndividual.IsHomeForfeited ? WalkOver.Home : WalkOver.Out;
+                            }
+                            else
+                            {
+                                matchResult.HomePlayerSets = int.Parse(frenoyIndividual.HomeSetCount);
+                                matchResult.AwayPlayerSets = int.Parse(frenoyIndividual.AwaySetCount);
+                            }
+                            _db.MatchGames.Add(matchResult);
                         }
-                        else
-                        {
-                            kalender.WalkOver = true;
-                        }
-
-                        kalender.IsSyncedWithFrenoy = true;
                     }
+                    else
+                    {
+                        kalender.WalkOver = true;
+                    }
+
+                    kalender.IsSyncedWithFrenoy = true;
                 }
                 CommitChanges();
             }
@@ -377,7 +367,7 @@ namespace Frenoy.Api
         }
 
         private readonly static Regex VttlReeksRegex = new Regex(@"Afdeling (\d+)(\w+)");
-        private readonly static Regex SportaReeksRegex = new Regex(@"^(\d)(\w?)");
+        private readonly static Regex SportaReeksRegex = new Regex(@"(\d)(\w)?");
         private TeamEntity CreateReeks(TeamEntryType frenoyTeam)
         {
             var reeks = new TeamEntity();
@@ -401,10 +391,11 @@ namespace Frenoy.Api
 
             reeks.FrenoyDivisionId = int.Parse(frenoyTeam.DivisionId);
             reeks.FrenoyTeamId = frenoyTeam.TeamId;
+            reeks.TeamCode = frenoyTeam.Team;
             return reeks;
         }
 
-        private MatchEntity CreateKalenderMatch(int reeksId, TeamMatchEntryType frenoyMatch, string thuisPloegCode)
+        private MatchEntity CreateKalenderMatch(int reeksId, TeamMatchEntryType frenoyMatch)
         {
             var kalender = new MatchEntity
             {
@@ -417,6 +408,10 @@ namespace Frenoy.Api
                 Week = int.Parse(frenoyMatch.WeekName),
             };
 
+            //TODO: we zaten hier
+            // delete match id 563
+            // do not pass reeksId here but find out what the Team is based on HomeClubId and HomeTeamCode
+
             if (kalender.HomeClubId == Constants.OwnClubId)
             {
                 kalender.HomeTeamId = reeksId;
@@ -425,33 +420,7 @@ namespace Frenoy.Api
             {
                 kalender.AwayTeamId = reeksId;
             }
-
-            //kalender.ThuisClubPloegId = GetClubPloegId(reeksId, kalender.ThuisClubId.Value, kalender.ThuisPloeg);
-            //kalender.UitClubPloegId = GetClubPloegId(reeksId, kalender.UitClubId.Value, kalender.UitPloegCode);
-
-            // In the db the ThuisClubId is always Erembodegem
-            //kalender.IsHomeMatch = kalender.ThuisClubId == _thuisClubId && kalender.ThuisPloeg == thuisPloegCode ? 1 : 0;
-            //if (!kalender.IsHomeMatch)
-            //{
-            //    var thuisClubId = kalender.ThuisClubId;
-            //    var thuisPloeg = kalender.ThuisPloeg;
-            //    //var thuisClubPloegId = kalender.ThuisClubPloegId;
-
-            //    kalender.ThuisClubId = kalender.UitClubId;
-            //    kalender.ThuisPloeg = kalender.UitPloegCode;
-            //    //kalender.ThuisClubPloegId = kalender.UitClubPloegId;
-
-            //    kalender.UitClubId = thuisClubId;
-            //    kalender.UitPloegCode = thuisPloeg;
-            //    //kalender.UitClubPloegId = thuisClubPloegId;
-            //}
             return kalender;
-        }
-
-        private int GetClubPloegId(int reeksId, int clubId, string ploeg)
-        {
-            var cb = _db.TeamOpponents.Single(x => x.TeamId == reeksId && x.ClubId == clubId && x.TeamCode == ploeg);
-            return cb.Id;
         }
 
         private TeamOpponentEntity CreateClubPloeg(TeamEntity teamEntity, RankingEntryType frenoyTeam)
@@ -463,12 +432,13 @@ namespace Frenoy.Api
             return clubPloeg;
         }
 
-        private static readonly Regex ClubHasTeamCodeRegex = new Regex(@"\w$");
+        private static readonly Regex ClubHasTeamCodeRegex = new Regex(@"(\w)( \(af\))?$");
         private static string ExtractTeamCodeFromFrenoyName(string team)
         {
-            if (ClubHasTeamCodeRegex.IsMatch(team))
+            var regMatch = ClubHasTeamCodeRegex.Match(team);
+            if (regMatch.Success)
             {
-                return team.Substring(team.Length - 1);
+                return regMatch.Groups[0].Value;
             }
             Debug.Assert(false, "This code path is never been tested");
             return null;

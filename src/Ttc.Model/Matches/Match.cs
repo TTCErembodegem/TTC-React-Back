@@ -32,7 +32,7 @@ namespace Ttc.Model.Matches
         public int Week { get; set; }
 
         public int TeamId { get; set; }
-        public bool IsHomeMatch { get; set; }
+        public bool? IsHomeMatch { get; set; }
         public OpposingTeam Opponent { get; set; }
         #endregion
 

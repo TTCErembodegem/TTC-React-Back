@@ -56,15 +56,15 @@ namespace Ttc.DataAccess
             //    .HasOptional(x => x.Verslag)
             //    .WithRequired(x => x.MatchEntity);
 
-            modelBuilder.Entity<MatchGameEntity>()
-                .HasRequired(c => c.Match)
-                .WithMany(c => c.Games)
-                .HasForeignKey(x => x.MatchId);
+            //modelBuilder.Entity<MatchGameEntity>()
+            //    .HasRequired(c => c.Match)
+            //    .WithMany(c => c.Games)
+            //    .HasForeignKey(x => x.MatchId);
 
-            modelBuilder.Entity<MatchPlayerEntity>()
-                .HasRequired(c => c.Match)
-                .WithMany(c => c.Players)
-                .HasForeignKey(x => x.MatchId);
+            //modelBuilder.Entity<MatchPlayerEntity>()
+            //    .HasRequired(c => c.Match)
+            //    .WithMany(c => c.Players)
+            //    .HasForeignKey(x => x.MatchId);
         }
 
         public TtcDbContext() : base("ttc")

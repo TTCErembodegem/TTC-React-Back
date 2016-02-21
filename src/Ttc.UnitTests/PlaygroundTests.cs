@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using AutoMapper;
+using Frenoy.Api;
 using Newtonsoft.Json.Serialization;
 using NUnit.Framework;
 using Ttc.DataAccess;
@@ -21,21 +22,24 @@ namespace Ttc.UnitTests
     [TestFixture]
     public class PlaygroundTests
     {
-        //[Test]
-        //public void KalenderToVerslag()
-        //{
-        //    using (var dbContext = new TtcDbContext())
-        //    {
-        //        var calendar = dbContext.Kalender
-        //            .Include(x => x.ThuisClubPloeg)
-        //            .Include(x => x.Verslag)
-        //            .Where(x => x.Verslag != null)
-        //            .ToList();
+        [Test]
+        public void SyncDerbyMatch()
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var frenoy = new FrenoyApi(dbContext, Competition.Sporta);
+                //frenoy.SyncMatch();
+            }
+        }
 
-        //        //var result = Mapper.Map<IList<Kalender>, IList<Match>>(calendar);
-        //        Assert.That(calendar.Any());
-        //    }
-        //}
+        [Test]
+        public void FillTeamPlayers()
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                // TODO: FillTeamPlayers
+            }
+        }
 
         [Test]
         public void TeamMapping()

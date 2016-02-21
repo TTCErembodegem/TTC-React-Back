@@ -7,10 +7,14 @@ namespace Ttc.DataAccess.Migrations
     {
         public override void Up()
         {
-            DropTable("verslagspeler");
-            DropTable("verslagindividueel");
-            DropTable("verslag");
-            DropTable("kalender");
+            //DropTable("verslagspeler");
+            //DropTable("verslagindividueel");
+            //DropTable("verslag");
+            //DropTable("kalender");
+
+            //DropTable("clubploegspeler");
+            //DropTable("clubploeg");
+            //DropTable("reeks");
         }
         
         public override void Down()

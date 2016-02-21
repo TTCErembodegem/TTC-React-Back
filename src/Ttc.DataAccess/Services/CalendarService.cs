@@ -23,7 +23,9 @@ namespace Ttc.DataAccess.Services
 
                 var calendar = dbContext.Matches
                     .WithIncludes()
-                    //.Where(x => x.Id == 1554)
+                    .Where(x => x.Id == 467) // Sporta A vs Kruibeke B -- MatchOutcome is verkeerd
+                    //.Where(x => x.Id == 563) // Derby: Sporta A vs B
+                    //.Where(x => x.Id == 484) // St-Pauwels B vs Sporta B
                     .Where(x => x.Date >= dateBegin)
                     .Where(x => x.Date <= dateEnd)
                     .OrderBy(x => x.Date)

@@ -35,7 +35,7 @@ namespace Ttc.DataEntities
         public int? AwayScore { get; set; }
         public bool WalkOver { get; set; }
         public bool IsSyncedWithFrenoy { get; set; }
-        public bool IsHomeMatch => HomeTeamId.HasValue;
+        public bool? IsHomeMatch => !HomeTeamId.HasValue && !AwayTeamId.HasValue ? (bool?)null : HomeTeamId.HasValue;
 
         public override string ToString()
         {

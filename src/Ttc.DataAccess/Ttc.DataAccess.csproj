@@ -156,6 +156,18 @@
     <Compile Include="Migrations\201602202003341_ReeksDerbyFix.Designer.cs">
       <DependentUpon>201602202003341_ReeksDerbyFix.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602202330016_ReeksKiller.cs" />
+    <Compile Include="Migrations\201602202330016_ReeksKiller.Designer.cs">
+      <DependentUpon>201602202330016_ReeksKiller.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602202335226_TeamCreator.cs" />
+    <Compile Include="Migrations\201602202335226_TeamCreator.Designer.cs">
+      <DependentUpon>201602202335226_TeamCreator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602202351366_PlayerId.cs" />
+    <Compile Include="Migrations\201602202351366_PlayerId.Designer.cs">
+      <DependentUpon>201602202351366_PlayerId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\CalendarService.cs" />
     <Compile Include="Services\ClubService.cs" />
@@ -245,6 +257,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201602202003341_ReeksDerbyFix.resx">
       <DependentUpon>201602202003341_ReeksDerbyFix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602202330016_ReeksKiller.resx">
+      <DependentUpon>201602202330016_ReeksKiller.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602202335226_TeamCreator.resx">
+      <DependentUpon>201602202335226_TeamCreator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602202351366_PlayerId.resx">
+      <DependentUpon>201602202351366_PlayerId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
