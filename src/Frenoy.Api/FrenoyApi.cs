@@ -245,8 +245,8 @@ namespace Frenoy.Api
                         var oldVerslagSpelers = _db.MatchPlayers.Where(x => x.MatchId == kalender.Id).ToArray();
                         _db.MatchPlayers.RemoveRange(oldVerslagSpelers);
 
-                        AddVerslagPlayers(frenoyMatch.MatchDetails.HomePlayers.Players, kalender, true, kalender.IsHomeMatch.HasValue && kalender.IsHomeMatch.Value);
-                        AddVerslagPlayers(frenoyMatch.MatchDetails.AwayPlayers.Players, kalender, false, kalender.IsHomeMatch.HasValue && kalender.IsHomeMatch.Value);
+                        AddVerslagPlayers(frenoyMatch.MatchDetails.HomePlayers.Players, kalender, true);
+                        AddVerslagPlayers(frenoyMatch.MatchDetails.AwayPlayers.Players, kalender, false);
 
                         // Matchen
                         var oldVerslagenIndividueel = _db.MatchGames.Where(x => x.MatchId == kalender.Id).ToArray();
@@ -306,7 +306,7 @@ namespace Frenoy.Api
             }
         }
 
-        private void AddVerslagPlayers(TeamMatchPlayerEntryType[] players, MatchEntity verslag, bool thuisSpeler, bool isHomeMatch)
+        private void AddVerslagPlayers(TeamMatchPlayerEntryType[] players, MatchEntity verslag, bool thuisSpeler)
         {
             foreach (var frenoyVerslagSpeler in players)
             {
@@ -327,8 +327,9 @@ namespace Frenoy.Api
                 {
                     Debug.Assert(frenoyVerslagSpeler.IsForfeited, "Either a VictoryCount or IsForfeited");
                 }
+
                 PlayerEntity dbPlayer = null;
-                if ((isHomeMatch && thuisSpeler) || (!isHomeMatch && !thuisSpeler))
+                if (verslag.IsHomeMatch.HasValue && ((verslag.IsHomeMatch.Value && thuisSpeler) || (!verslag.IsHomeMatch.Value && !thuisSpeler)))
                 {
                     if (_isVttl)
                     {

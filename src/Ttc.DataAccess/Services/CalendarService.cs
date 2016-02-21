@@ -23,7 +23,7 @@ namespace Ttc.DataAccess.Services
 
                 var calendar = dbContext.Matches
                     .WithIncludes()
-                    .Where(x => x.Id == 467) // Sporta A vs Kruibeke B -- MatchOutcome is verkeerd
+                    //.Where(x => x.Id == 467) // Sporta A vs Kruibeke B
                     //.Where(x => x.Id == 563) // Derby: Sporta A vs B
                     //.Where(x => x.Id == 484) // St-Pauwels B vs Sporta B
                     .Where(x => x.Date >= dateBegin)
@@ -84,7 +84,7 @@ namespace Ttc.DataAccess.Services
             {
                 var existingSpeler = dbContext.MatchPlayers
                     .Include(x => x.Match)
-                    .FirstOrDefault(x => x.MatchId == matchPlayer.MatchId && x.PlayerId == matchPlayer.PlayerId.Value);
+                    .FirstOrDefault(x => x.MatchId == matchPlayer.MatchId && x.PlayerId == matchPlayer.PlayerId);
 
                 if (existingSpeler != null)
                 {

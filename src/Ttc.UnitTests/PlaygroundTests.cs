@@ -23,12 +23,12 @@ namespace Ttc.UnitTests
     public class PlaygroundTests
     {
         [Test]
-        public void SyncDerbyMatch()
+        public void SyncMatch()
         {
             using (var dbContext = new TtcDbContext())
             {
                 var frenoy = new FrenoyApi(dbContext, Competition.Sporta);
-                //frenoy.SyncMatch();
+                frenoy.SyncMatch(26, "O17/008");
             }
         }
 

@@ -14,7 +14,7 @@
         /// True == TTC Erembodegem player
         /// </summary>
         public bool Home { get; set; }
-        public int? PlayerId { get; set; }
+        public int PlayerId { get; set; }
         public string Alias { get; set; }
 
         public override string ToString() =>  $"{Position} {Name} ({Ranking}), Won={Won}";

@@ -69,6 +69,12 @@ namespace Ttc.DataAccess.App_Start
         
             Mapper.CreateMap<MatchGameEntity, MatchGame>()
                 .ForMember(d => d.Outcome, o => o.MapFrom(src => src.WalkOver == WalkOver.None ? MatchOutcome.NotYetPlayed : MatchOutcome.WalkOver))
+                .ForMember(
+                    dest => dest.OutPlayerSets,
+                    opts => opts.MapFrom(src => src.AwayPlayerSets))
+                .ForMember(
+                    dest => dest.OutPlayerUniqueIndex,
+                    opts => opts.MapFrom(src => src.AwayPlayerUniqueIndex))
                 .ReverseMap()
                 ;
         }
@@ -199,7 +205,7 @@ namespace Ttc.DataAccess.App_Start
                 return MatchOutcome.Draw;
             }
 
-            if (kalendar.IsHomeMatch.HasValue && !kalendar.IsHomeMatch.Value)
+            if (kalendar.IsHomeMatch.HasValue && kalendar.IsHomeMatch.Value)
             {
                 return kalendar.HomeScore.Value < kalendar.AwayScore.Value ? MatchOutcome.Lost : MatchOutcome.Won;
             }
