@@ -29,7 +29,7 @@ namespace Ttc.UnitTests
             using (var dbContext = new TtcDbContext())
             {
                 var frenoy = new FrenoyApi(dbContext, Competition.Sporta);
-                frenoy.SyncMatch(26, "O17/008");
+                frenoy.SyncMatch(29, "O17/036");
             }
         }
 

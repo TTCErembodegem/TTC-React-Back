@@ -264,6 +264,12 @@ namespace Frenoy.Api
                         AddVerslagPlayers(frenoyMatch.MatchDetails.HomePlayers.Players, kalender, true);
                         AddVerslagPlayers(frenoyMatch.MatchDetails.AwayPlayers.Players, kalender, false);
 
+                        var testPlayer = kalender.Players.Count(x => x.PlayerId != 0);
+                        if (testPlayer == 0 && (kalender.AwayTeamId.HasValue || kalender.HomeTeamId.HasValue))
+                        {
+                            var x = 5;
+                        }
+
                         // Matchen
                         var oldVerslagenIndividueel = _db.MatchGames.Where(x => x.MatchId == kalender.Id).ToArray();
                         _db.MatchGames.RemoveRange(oldVerslagenIndividueel);
@@ -366,6 +372,7 @@ namespace Frenoy.Api
                 }
 
                 _db.MatchPlayers.Add(matchPlayerEntity);
+                verslag.Players.Add(matchPlayerEntity);
             }
         }
 

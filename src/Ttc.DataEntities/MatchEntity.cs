@@ -37,6 +37,12 @@ namespace Ttc.DataEntities
         public bool IsSyncedWithFrenoy { get; set; }
         public bool? IsHomeMatch => !HomeTeamId.HasValue && !AwayTeamId.HasValue ? (bool?)null : HomeTeamId.HasValue;
 
+        public MatchEntity()
+        {
+            Players = new List<MatchPlayerEntity>();
+            Games = new List<MatchGameEntity>();
+        }
+
         public override string ToString()
         {
             var str = $"Id={Id}, Date={Date.ToString("d")} {Date.ToString(@"hh\:mm")}";

@@ -24,7 +24,7 @@ namespace Ttc.DataAccess.Services
 
                 var calendar = dbContext.Matches
                     .WithIncludes()
-                    //.Where(x => x.Id == 485)
+                    //.Where(x => x.Id == 558) // 519
                     //.Where(x => x.Id == 467) // Sporta A vs Kruibeke B
                     //.Where(x => x.Id == 563) // Derby: Sporta A vs B
                     //.Where(x => x.Id == 484) // St-Pauwels B vs Sporta B
@@ -133,8 +133,8 @@ namespace Ttc.DataAccess.Services
                     .WithIncludes()
                     .Where(kal => (kal.AwayClubId == opponent.ClubId && kal.AwayPloegCode == opponent.TeamCode) || (kal.HomeClubId == opponent.ClubId && kal.HomeTeamCode == opponent.TeamCode))
                     .Where(kal => kal.Date < DateTime.Now)
-                    .OrderByDescending(kal => kal.Date)
-                    .Take(5)
+                    //.OrderByDescending(kal => kal.Date)
+                    //.Take(5)
                     .ToList();
 
                 var result = Mapper.Map<IList<MatchEntity>, IList<OtherMatch>>(calendar);
