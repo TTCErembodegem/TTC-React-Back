@@ -25,7 +25,7 @@ namespace Ttc.DataAccess.Services
                 var result = Mapper.Map<IList<TeamEntity>, IList<Team>>(teams);
                 foreach (var team in result)
                 {
-                    var frenoy = new FrenoyApi(dbContext, Competition.Sporta);
+                    var frenoy = new FrenoyApi(dbContext, team.Competition);
                     var rankings = frenoy.GetTeamRankings(team.Frenoy.DivisionId);
 
                     team.Ranking = rankings;
