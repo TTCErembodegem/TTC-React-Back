@@ -1,38 +1,32 @@
-﻿using System.Web.Http;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Web.Http;
+using System.Web.Http.Cors;
+using Ttc.DataAccess.Services;
+using Ttc.Model;
 using Ttc.WebApi.Utilities;
 
 namespace Ttc.WebApi.Controllers
 {
-    public class User
-    {
-        public int PlayerId { get; set; }
-    }
-
     [AllowAnonymous]
+    [RoutePrefix("api/users")]
     public class UsersController : BaseController
     {
-        public User Get()
+        #region Constructor
+        private readonly PlayerService _service;
+
+        public UsersController(PlayerService service)
         {
-            // Heh heh. This will have to be replaced with something more.. dynamic :p
-            return new User
-            {
-                PlayerId = 20
-            };
+            _service = service;
         }
+        #endregion
 
         [HttpPost]
-        public string LegacyLogin(string username, string password)
+        //[Route("Login")]
+        public User Login([FromBody]UserCredentials user)
         {
-            // header: login link
-            // new page:
-            // - login with Google/Facebook/...
-            // - existing password
-
-            // Login: is searchable players dropdownlist (chosen?) 
-
-            // like stackoverflow.com
-
-            return "";
+            var player = _service.Login(user);
+            return player;
         }
     }
 }

@@ -27,6 +27,15 @@ namespace Ttc.DataAccess
         public DbSet<Backup.BackupReport> BackupReports { get; set; }
         public DbSet<Backup.BackupTeamPlayer> BackupTeamPlayers { get; set; }
 
+        public int CurrentYear
+        {
+            get
+            {
+                if (DateTime.Now.Month < 9) return DateTime.Now.Year -1;
+                return DateTime.Now.Year;
+            }
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();

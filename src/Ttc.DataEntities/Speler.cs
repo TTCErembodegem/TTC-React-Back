@@ -3,9 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ttc.DataEntities
 {
-    [Table("speler")]
+    [Table(TableName)]
     public class PlayerEntity
     {
+        public const string TableName = "speler";
+
         [Key]
         public int Id { get; set; }
         public string Naam { get; set; }
