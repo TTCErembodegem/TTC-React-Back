@@ -36,13 +36,16 @@ namespace Ttc.UnitTests
         [Test]
         public void FillTeamPlayers()
         {
+            var settings = FrenoySettings.VttlSettings;
+            var comp = Competition.Vttl;
+
             using (var dbContext = new TtcDbContext())
             {
-                foreach (KeyValuePair<string, string[]> dict in FrenoySettings.SportaSettings.Players)
+                foreach (KeyValuePair<string, string[]> dict in settings.Players)
                 {
                     TeamEntity team = dbContext.Teams
-                        .Where(x => x.Year == FrenoySettings.SportaSettings.Jaar)
-                        .Single(x => x.Competition == Competition.Sporta.ToString() && x.TeamCode == dict.Key);
+                        .Where(x => x.Year == settings.Jaar)
+                        .Single(x => x.Competition == comp.ToString() && x.TeamCode == dict.Key);
 
                     foreach (string player in dict.Value)
                     {

@@ -16,6 +16,9 @@ namespace Ttc.DataAccess.Migrations
 
         protected override void Seed(Ttc.DataAccess.TtcDbContext context)
         {
+            // TODO: setup a seed that inserts everything Sporta/Vttl for current year
+            // TODO: check if FrenoyMatchIds are unique or just unique per season...
+
             //context.Database.ExecuteSqlCommand("DELETE FROM dbo.verslagspeler");
             //context.Database.ExecuteSqlCommand("DELETE FROM dbo.verslagindividueel");
 
@@ -45,7 +48,7 @@ namespace Ttc.DataAccess.Migrations
     //        base.Generate(dropIndexOperation, writer);
     //    }
 
-    //    // TODO: Override other Generate overloads that involve table names
+    //    // TODO: implement Generate overloads that involve table names and remove the dbo. parts
 
     //    private string StripDbo(string table)
     //    {

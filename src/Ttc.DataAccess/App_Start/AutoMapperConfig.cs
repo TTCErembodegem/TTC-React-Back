@@ -217,7 +217,7 @@ namespace Ttc.DataAccess.App_Start
 
         private static MatchOutcome GetScoreType(MatchEntity kalendar)
         {
-            if (kalendar.Date > DateTime.Now || (kalendar.AwayScore == 0 && kalendar.HomeScore == 0))
+            if (kalendar.Date > DateTime.Now || (kalendar.AwayScore == 0 && kalendar.HomeScore == 0) || (kalendar.AwayScore == null && kalendar.HomeScore == null))
             {
                 if (Constants.HasMatchStarted(kalendar.Date))
                 {

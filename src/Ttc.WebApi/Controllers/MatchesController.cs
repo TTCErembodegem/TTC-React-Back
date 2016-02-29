@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Web.Http;
 using Ttc.DataAccess.Services;
 using Ttc.Model;
@@ -23,7 +24,11 @@ namespace Ttc.WebApi.Controllers
         #endregion
 
         [Route("GetRelevantMatches")]
-        public IEnumerable<Match> GetRelevantMatches() => _service.GetRelevantMatches();
+        public IEnumerable<Match> GetRelevantMatches()
+        {
+            //Thread.Sleep(50000);
+            return _service.GetRelevantMatches();
+        } 
 
         [HttpPost]
         public Match TogglePlayer([FromBody]MatchPlayer player)
