@@ -41,7 +41,7 @@ namespace Ttc.DataAccess.Services
             using (var dbContext = new TtcDbContext())
             {
                 var pwdCheck = dbContext.Database.SqlQuery<int>(
-                    $"SELECT COUNT(0) FROM {PlayerEntity.TableName} WHERE id={{0}} AND paswoord=MD5({{1}})", 
+                    $"SELECT COUNT(0) FROM {PlayerEntity.TableName} WHERE id={{0}} AND paswoord=MD5({{1}})",
                     user.PlayerId, 
                     user.Password).FirstOrDefault();
 

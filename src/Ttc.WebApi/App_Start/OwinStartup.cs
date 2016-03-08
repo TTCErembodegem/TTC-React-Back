@@ -1,5 +1,6 @@
 ﻿using System.Web.Http;
 using Microsoft.Owin;
+using Microsoft.Owin.Security.Cookies;
 using Newtonsoft.Json.Serialization;
 using Owin;
 using SimpleInjector.Extensions.ExecutionContextScoping;
@@ -31,6 +32,10 @@ namespace Ttc.WebApi
             GlobalBackendConfiguration.ConfigureAutoMapper();
 
             app.UseWebApi(config);
+
+            //config.MessageHandlers.Add(new AuthHandler());
+
+            
         }
 
         private static void ConfigureJson(HttpConfiguration config)

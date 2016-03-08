@@ -16,6 +16,7 @@ namespace Ttc.DataAccess.Services
         {
             // TODO: kalender gaat toch niet de hoofdpagina worden
             // hoofdpagina = jouw volgende matchen. jouw team. en jouw speler details
+            // TODO: do not return match.players if not IsPlayed and not BeingPlayed
 
             using (var dbContext = new TtcDbContext())
             {
