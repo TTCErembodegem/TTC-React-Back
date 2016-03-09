@@ -20,12 +20,12 @@ namespace Ttc.DataAccess.Services
 
             using (var dbContext = new TtcDbContext())
             {
-                var dateBegin = DateTime.Now.AddDays(-20);
-                var dateEnd = DateTime.Now.AddDays(20);
+                var dateBegin = DateTime.Now.AddDays(-10);
+                var dateEnd = DateTime.Now.AddDays(10);
 
                 var calendar = dbContext.Matches
                     .WithIncludes()
-                    //.Where(x => x.Id == 819)
+                    //.Where(x => x.Id == 802)
                     //.Where(x => x.Id == 467) // Sporta A vs Kruibeke B
                     //.Where(x => x.Id == 563) // Derby: Sporta A vs B
                     //.Where(x => x.Id == 484) // St-Pauwels B vs Sporta B
@@ -35,6 +35,14 @@ namespace Ttc.DataAccess.Services
                     .OrderBy(x => x.Date)
                     .ToList();
 
+                var matchIds = calendar.Select(x => x.Id).ToArray();
+                var comments = dbContext.MatchComments.Where(x => matchIds.Contains(x.MatchId)).ToArray();
+                foreach (var match in calendar)
+                {
+                    match.Comments = comments.Where(x => x.MatchId == match.Id).ToArray();
+                }
+
+                // TODO: Al deze dingen, doe nieuwe requests, gebruiker niet laten wachten...
                 var heenmatchen = new List<MatchEntity>();
                 foreach (var kalender in calendar)
                 {
@@ -86,10 +94,14 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
-                var calendar = dbContext.Matches
+                var match = dbContext.Matches
                     .WithIncludes()
-                    .SingleOrDefault(x => x.Id == matchId);
-                return Map(calendar);
+                    .Single(x => x.Id == matchId);
+
+                var comments = dbContext.MatchComments.Where(x => x.MatchId == matchId).ToArray();
+                match.Comments = comments;
+
+                return Map(match);
             }
         }
 
@@ -141,6 +153,32 @@ namespace Ttc.DataAccess.Services
                 var result = Mapper.Map<IList<MatchEntity>, IList<OtherMatch>>(calendar);
                 return result;
             }
+        }
+
+        public Match UpdateReport(MatchReport report, bool isMainReport = true)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                if (isMainReport)
+                {
+                    var existingMatch = dbContext.Matches.First(x => x.Id == report.MatchId);
+                    existingMatch.ReportPlayerId = report.PlayerId;
+                    existingMatch.Description = report.Text;
+                }
+                else
+                {
+                    dbContext.MatchComments.Add(new MatchCommentEntity
+                    {
+                        PlayerId = report.PlayerId,
+                        MatchId = report.MatchId,
+                        Text = report.Text
+                    });
+                }
+                
+                dbContext.SaveChanges();
+            }
+            var newMatch = GetMatch(report.MatchId);
+            return newMatch;
         }
     }
 }

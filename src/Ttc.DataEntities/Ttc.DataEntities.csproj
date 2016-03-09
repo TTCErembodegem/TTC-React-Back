@@ -53,6 +53,7 @@
     <Compile Include="ClubContact.cs" />
     <Compile Include="ClubEntity.cs" />
     <Compile Include="ClubLokaal.cs" />
+    <Compile Include="MatchCommentEntity.cs" />
     <Compile Include="TeamOpponentEntity.cs" />
     <Compile Include="TeamPlayerEntity.cs" />
     <Compile Include="Constants.cs" />

@@ -23,6 +23,7 @@ namespace Ttc.DataAccess
         public DbSet<MatchEntity> Matches { get; set; }
         public DbSet<MatchPlayerEntity> MatchPlayers { get; set; }
         public DbSet<MatchGameEntity> MatchGames { get; set; }
+        public DbSet<MatchCommentEntity> MatchComments { get; set; }
 
         public DbSet<Backup.BackupReport> BackupReports { get; set; }
         public DbSet<Backup.BackupTeamPlayer> BackupTeamPlayers { get; set; }

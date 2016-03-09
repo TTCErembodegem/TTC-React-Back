@@ -61,7 +61,7 @@ namespace Ttc.DataAccess.Services
                 return new User
                 {
                     PlayerId = user.PlayerId,
-                    Security = new[] { "CAN_MANAGETEAM" },
+                    Security = new[] { "CAN_MANAGETEAM", "CAN_EDITALLREPORTS", "IS_ADMIN", "IS_DEV" },
                     Teams = teams.ToList()
                 };
             }

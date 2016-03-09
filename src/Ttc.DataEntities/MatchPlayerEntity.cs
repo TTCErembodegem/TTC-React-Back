@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ttc.DataEntities
@@ -25,6 +26,8 @@ namespace Ttc.DataEntities
         public bool Home { get; set; }
 
         public int Position { get; set; }
+
+        // TODO: Name & UniqueIndex are required (and non 0) or the automapper crashes (some attribute?)
         public string Name { get; set; }
         public string Ranking { get; set; }
         public int UniqueIndex { get; set; }

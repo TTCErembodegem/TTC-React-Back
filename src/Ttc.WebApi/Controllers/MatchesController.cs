@@ -31,9 +31,26 @@ namespace Ttc.WebApi.Controllers
         } 
 
         [HttpPost]
+        [Route("TogglePlayer")]
         public Match TogglePlayer([FromBody]MatchPlayer player)
         {
             var result = _service.ToggleMatchPlayer(player);
+            return result;
+        }
+
+        [HttpPost]
+        [Route("Report")]
+        public Match Report([FromBody]MatchReport report)
+        {
+            var result = _service.UpdateReport(report);
+            return result;
+        }
+
+        [HttpPost]
+        [Route("Comment")]
+        public Match Comment([FromBody]MatchReport report)
+        {
+            var result = _service.UpdateReport(report, false);
             return result;
         }
 

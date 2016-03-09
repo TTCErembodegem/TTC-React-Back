@@ -45,12 +45,14 @@ namespace Ttc.Model.Matches
         public bool IsPlayed { get; set; }
         public ICollection<MatchPlayer> Players { get; set; } // TODO: do not return this if the match has not yet started and the user is not logged in
         public ICollection<MatchGame> Games { get; set; }
+        public ICollection<MatchReport> Comments { get; set; }
         #endregion
 
         public Match()
         {
             Players = new List<MatchPlayer>();
             Games = new List<MatchGame>();
+            Comments = new List<MatchReport>();
             ScoreType = MatchOutcome.NotYetPlayed;
             Score = new MatchScore();
         }
