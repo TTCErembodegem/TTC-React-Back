@@ -5,8 +5,10 @@ namespace Ttc.Model
     public class User
     {
         public int PlayerId { get; set; }
+        public string Alias { get; set; }
         public ICollection<int> Teams { get; set; }
         public ICollection<string> Security { get; set; }
+        public string Token { get; set; }
 
         public User()
         {
@@ -21,5 +23,10 @@ namespace Ttc.Model
     {
         public int PlayerId { get; set; }
         public string Password { get; set; }
+
+        public override string ToString()
+        {
+            return $"PlayerId: {PlayerId}, Password: {Password}";
+        }
     }
 }

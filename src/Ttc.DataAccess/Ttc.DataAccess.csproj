@@ -172,6 +172,10 @@
     <Compile Include="Migrations\201603090040111_AddMatchComments.Designer.cs">
       <DependentUpon>201603090040111_AddMatchComments.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603131358562_SpelerToegang.cs" />
+    <Compile Include="Migrations\201603131358562_SpelerToegang.Designer.cs">
+      <DependentUpon>201603131358562_SpelerToegang.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\ServiceExtensions.cs" />
     <Compile Include="Services\ClubService.cs" />
@@ -274,6 +278,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603090040111_AddMatchComments.resx">
       <DependentUpon>201603090040111_AddMatchComments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603131358562_SpelerToegang.resx">
+      <DependentUpon>201603131358562_SpelerToegang.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

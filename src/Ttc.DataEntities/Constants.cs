@@ -11,6 +11,8 @@ namespace Ttc.DataEntities
         /// Id van Dirk DS
         /// </summary>
         public const int SuperPlayerId = 4;
+        public const int JornPlayerId = 36;
+        public const int WouterPlayerId = 20;
 
         /// <summary>
         /// A match is considered started this time before the official start time

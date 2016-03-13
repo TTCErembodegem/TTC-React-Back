@@ -50,20 +50,50 @@ namespace Ttc.DataAccess.Services
                     return null;
                 }
 
-                int currentYear = dbContext.CurrentYear;
-                var teams = dbContext.Teams
-                    .Include(x => x.Players)
-                    .Where(x => x.Year == currentYear)
-                    .Where(x => x.Players.Any(ply => ply.PlayerId == user.PlayerId))
-                    .Select(x => x.Id);
+                return GetUser(user.PlayerId);
+            }
+        }
 
-                // TODO: CAN_MANAGETEAM hardcoded. Link security to speler.Toegang
-                return new User
-                {
-                    PlayerId = user.PlayerId,
-                    Security = new[] { "CAN_MANAGETEAM", "CAN_EDITALLREPORTS", "IS_ADMIN", "IS_DEV" },
-                    Teams = teams.ToList()
-                };
+        public User GetUser(int playerId)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                return GetUser(dbContext, playerId);
+            }
+        }
+
+        private User GetUser(TtcDbContext dbContext, int playerId)
+        {
+            int currentYear = dbContext.CurrentYear;
+            var teams = dbContext.Teams
+                .Include(x => x.Players)
+                .Where(x => x.Year == currentYear)
+                .Where(x => x.Players.Any(ply => ply.PlayerId == playerId))
+                .Select(x => x.Id);
+
+            var player = dbContext.Players.Single(ply => ply.Id == playerId);
+            return new User
+            {
+                PlayerId = playerId,
+                Alias = player.NaamKort,
+                Security = GetPlayerSecurity(player.Toegang),
+                Teams = teams.ToList()
+            };
+        }
+
+        private ICollection<string> GetPlayerSecurity(PlayerToegang toegang)
+        {
+            switch (toegang)
+            {
+                case PlayerToegang.Dev:
+                    return new[] { "CAN_MANAGETEAM", "CAN_EDITALLREPORTS", "IS_ADMIN", "IS_DEV" };
+
+                case PlayerToegang.Board:
+                    return new[] {"CAN_MANAGETEAM", "CAN_EDITALLREPORTS", "IS_ADMIN"};
+
+                case PlayerToegang.Player:
+                default:
+                    return new string[] { };
             }
         }
     }

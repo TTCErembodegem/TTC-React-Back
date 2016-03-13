@@ -1,8 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ttc.DataEntities
 {
+    [Flags]
+    public enum PlayerToegang
+    {
+        Player = 1,
+        Board = 7,
+        Dev = 8
+    }
+
     [Table(TableName)]
     public class PlayerEntity
     {
@@ -12,6 +21,7 @@ namespace Ttc.DataEntities
         public int Id { get; set; }
         public string Naam { get; set; }
         public string NaamKort { get; set; }
+        public PlayerToegang Toegang { get; set; }
         public string Stijl { get; set; }
         public string BesteSlag { get; set; }
 

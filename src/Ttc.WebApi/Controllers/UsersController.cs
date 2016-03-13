@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using JWT;
+using Newtonsoft.Json;
 using Ttc.DataAccess.Services;
 using Ttc.Model;
 using Ttc.WebApi.Utilities;
@@ -24,28 +25,39 @@ namespace Ttc.WebApi.Controllers
         #endregion
 
         [HttpPost]
-        //[Route("Login")]
-        //[ValidateAntiForgeryToken]
+        [Route("Login")]
         public User Login([FromBody]UserCredentials user)
         {
             var player = _service.Login(user);
             if (player != null)
             {
-                var token = CreateToken(player);
+                player.Token = CreateToken(player);
             }
             return player;
+        }
+
+        [HttpPost]
+        [Route("ValidateToken")]
+        public User ValidateToken([FromBody]ValidateTokenRequest token)
+        {
+            string apikey = WebApi.Properties.Settings.Default.JwtSecret;
+            dynamic decodedToken = JsonConvert.DeserializeObject(JsonWebToken.Decode(token.Token, apikey));
+            int userId = (int)decodedToken.userId;
+            User user = _service.GetUser(userId);
+            user.Token = token.Token;
+            return user;
         }
 
         private static string CreateToken(User user)
         {
             var unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            var expiry = Math.Round((DateTime.UtcNow.AddHours(2) - unixEpoch).TotalSeconds);
+            var expiry = Math.Round((DateTime.UtcNow.AddMonths(6) - unixEpoch).TotalSeconds);
             var issuedAt = Math.Round((DateTime.UtcNow - unixEpoch).TotalSeconds);
-            var notBefore = Math.Round((DateTime.UtcNow.AddMonths(6) - unixEpoch).TotalSeconds);
+            var notBefore = Math.Round((DateTime.UtcNow.AddDays(-1) - unixEpoch).TotalSeconds);
 
             var payload = new Dictionary<string, object>
             {
-                //{"email", user.Email},
+                {"alias", user.Alias},
                 {"userId", user.PlayerId},
                 {"role", "Admin"  },
                 {"sub", user.PlayerId},
@@ -54,11 +66,14 @@ namespace Ttc.WebApi.Controllers
                 {"exp", expiry}
             };
 
-            //var secret = ConfigurationManager.AppSettings.Get("jwtKey");
-            const string apikey = "secretKey";
-
+            string apikey = WebApi.Properties.Settings.Default.JwtSecret;
             var token = JsonWebToken.Encode(payload, apikey, JwtHashAlgorithm.HS256);
             return token;
         }
+    }
+
+    public class ValidateTokenRequest
+    {
+        public string Token { get; set; }
     }
 }

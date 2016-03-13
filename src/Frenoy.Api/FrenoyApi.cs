@@ -584,22 +584,29 @@ namespace Frenoy.Api
 
         public ICollection<DivisionRanking> GetTeamRankings(int divisionId)
         {
-            var rankings = _frenoy.GetDivisionRanking(new GetDivisionRankingRequest
+            try
             {
-                DivisionId = divisionId.ToString(),
-            });
-
-            return rankings.RankingEntries
-                .Select(x => new DivisionRanking
+                var rankings = _frenoy.GetDivisionRanking(new GetDivisionRankingRequest
                 {
-                    Position = int.Parse(x.Position),
-                    GamesDraw = int.Parse(x.GamesDraw),
-                    GamesWon = int.Parse(x.GamesWon),
-                    GamesLost = int.Parse(x.GamesLost),
-                    Points = int.Parse(x.Points),
-                    ClubId = GetClubId(x.TeamClub),
-                    TeamCode = ExtractTeamCodeFromFrenoyName(x.Team)
-                }).ToArray();
+                    DivisionId = divisionId.ToString(),
+                });
+
+                return rankings.RankingEntries
+                    .Select(x => new DivisionRanking
+                    {
+                        Position = int.Parse(x.Position),
+                        GamesDraw = int.Parse(x.GamesDraw),
+                        GamesWon = int.Parse(x.GamesWon),
+                        GamesLost = int.Parse(x.GamesLost),
+                        Points = int.Parse(x.Points),
+                        ClubId = GetClubId(x.TeamClub),
+                        TeamCode = ExtractTeamCodeFromFrenoyName(x.Team)
+                    }).ToArray();
+            }
+            catch
+            {
+                return new List<DivisionRanking>();
+            }
         }
     }
 }
