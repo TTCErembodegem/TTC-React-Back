@@ -164,7 +164,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\AuthHandler.cs" />
     <Compile Include="App_Start\IoCInitializer.cs" />
     <Compile Include="App_Start\OwinStartup.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
@@ -180,6 +179,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\Auth\TtcAuthorizationFilterAttribute.cs" />
+    <Compile Include="Utilities\Auth\TtcPrincipal.cs" />
+    <Compile Include="Utilities\Auth\ValidateTokenRequest.cs" />
     <Compile Include="Utilities\BaseController.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -205,9 +207,7 @@
       <Name>Ttc.Model</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utilities\Auth\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

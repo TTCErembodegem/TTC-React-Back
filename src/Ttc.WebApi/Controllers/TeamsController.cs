@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Web.Http;
 using Ttc.DataAccess.Services;
 using Ttc.Model.Teams;
 using Ttc.WebApi.Utilities;
@@ -16,6 +17,7 @@ namespace Ttc.WebApi.Controllers
         }
         #endregion
 
+        [AllowAnonymous]
         public IEnumerable<Team> Get() => _service.GetForCurrentYear();
     }
 }

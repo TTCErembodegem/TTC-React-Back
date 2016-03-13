@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web.Http;
 using Ttc.DataAccess.Services;
 using Ttc.Model.Players;
 using Ttc.WebApi.Utilities;
@@ -17,11 +18,9 @@ namespace Ttc.WebApi.Controllers
         }
         #endregion
 
+        [AllowAnonymous]
         public IEnumerable<Player> Get()
         {
-            // TODO: we zaten hier: Token valideren en gevoelige data verwijderen...
-            //var headerValues = Request.Headers.Authorization.Parameter;
-
             var result = _service.GetActiveOwnClub();
             return result;
         } 

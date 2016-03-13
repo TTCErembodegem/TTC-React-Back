@@ -24,6 +24,7 @@ namespace Ttc.WebApi.Controllers
         #endregion
 
         [Route("GetRelevantMatches")]
+        [AllowAnonymous]
         public IEnumerable<Match> GetRelevantMatches()
         {
             //Thread.Sleep(50000);
@@ -56,6 +57,7 @@ namespace Ttc.WebApi.Controllers
 
         [HttpGet]
         [Route("GetLastOpponentMatches")]
+        [AllowAnonymous]
         public IEnumerable<OtherMatch> GetLastOpponentMatches(int teamId, int clubId, string teamCode)
         {
             var opponent = new OpposingTeam

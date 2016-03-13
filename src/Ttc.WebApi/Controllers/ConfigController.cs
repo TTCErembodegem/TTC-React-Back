@@ -1,4 +1,5 @@
-﻿using Ttc.DataAccess.Services;
+﻿using System.Web.Http;
+using Ttc.DataAccess.Services;
 using Ttc.WebApi.Utilities;
 
 namespace Ttc.WebApi.Controllers
@@ -14,6 +15,7 @@ namespace Ttc.WebApi.Controllers
         }
         #endregion
 
+        [AllowAnonymous]
         public object Get() => _service.Get();
     }
 }

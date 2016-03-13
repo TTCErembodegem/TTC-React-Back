@@ -32,10 +32,6 @@ namespace Ttc.WebApi
             GlobalBackendConfiguration.ConfigureAutoMapper();
 
             app.UseWebApi(config);
-
-            //config.MessageHandlers.Add(new AuthHandler());
-
-            
         }
 
         private static void ConfigureJson(HttpConfiguration config)
