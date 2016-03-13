@@ -27,8 +27,9 @@ namespace Ttc.WebApi.Controllers
         [AllowAnonymous]
         public IEnumerable<Match> GetRelevantMatches()
         {
-            //Thread.Sleep(50000);
-            return _service.GetRelevantMatches();
+            var result = _service.GetRelevantMatches();
+            CleanSensitiveData(result);
+            return result;
         } 
 
         [HttpPost]
@@ -65,7 +66,8 @@ namespace Ttc.WebApi.Controllers
                 ClubId = clubId,
                 TeamCode = teamCode
             };
-            return _service.GetLastOpponentMatches(teamId, opponent);
+            var result = _service.GetLastOpponentMatches(teamId, opponent);
+            return result;
         }
     }
 }

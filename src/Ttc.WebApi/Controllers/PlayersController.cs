@@ -4,6 +4,7 @@ using System.Web.Http;
 using Ttc.DataAccess.Services;
 using Ttc.Model.Players;
 using Ttc.WebApi.Utilities;
+using Ttc.WebApi.Utilities.Auth;
 
 namespace Ttc.WebApi.Controllers
 {
@@ -22,6 +23,7 @@ namespace Ttc.WebApi.Controllers
         public IEnumerable<Player> Get()
         {
             var result = _service.GetActiveOwnClub();
+            CleanSensitiveData(result);
             return result;
         } 
     }

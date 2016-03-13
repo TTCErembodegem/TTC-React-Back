@@ -1,4 +1,6 @@
-﻿namespace Ttc.Model.Players
+﻿using Ttc.Model.Core;
+
+namespace Ttc.Model.Players
 {
     public class Player
     {
@@ -8,6 +10,8 @@
         public bool Active { get; set; }
 
         public PlayerStyle Style { get; set; }
+
+        [TtcConfidential]
         public Contact Contact { get; set; }
 
         public PlayerCompetition Vttl { get; set; }

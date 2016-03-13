@@ -12,7 +12,7 @@ namespace Ttc.DataAccess.Services
 {
     public class PlayerService
     {
-        public IEnumerable<Player> GetActiveOwnClub()
+        public ICollection<Player> GetActiveOwnClub()
         {
             using (var dbContext = new TtcDbContext())
             {

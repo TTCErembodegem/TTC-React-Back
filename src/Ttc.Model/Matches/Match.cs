@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
+using Ttc.Model.Core;
 using Ttc.Model.Teams;
 
 namespace Ttc.Model.Matches
@@ -43,7 +45,9 @@ namespace Ttc.Model.Matches
         public MatchOutcome ScoreType { get; set; }
         public string Description { get; set; }
         public bool IsPlayed { get; set; }
-        public ICollection<MatchPlayer> Players { get; set; } // TODO: do not return this if the match has not yet started and the user is not logged in
+
+        [TtcConfidential("MATCH")]
+        public ICollection<MatchPlayer> Players { get; set; }
         public ICollection<MatchGame> Games { get; set; }
         public ICollection<MatchReport> Comments { get; set; }
         #endregion

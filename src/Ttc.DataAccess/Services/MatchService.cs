@@ -12,7 +12,7 @@ namespace Ttc.DataAccess.Services
 {
     public class MatchService
     {
-        public IEnumerable<Match> GetRelevantMatches()
+        public ICollection<Match> GetRelevantMatches()
         {
             // TODO: kalender gaat toch niet de hoofdpagina worden
             // hoofdpagina = jouw volgende matchen. jouw team. en jouw speler details
@@ -133,7 +133,7 @@ namespace Ttc.DataAccess.Services
             return Mapper.Map<MatchEntity, Match>(matchEntity);
         }
 
-        public IEnumerable<OtherMatch> GetLastOpponentMatches(int teamId, OpposingTeam opponent)
+        public ICollection<OtherMatch> GetLastOpponentMatches(int teamId, OpposingTeam opponent)
         {
             using (var dbContext = new TtcDbContext())
             {
