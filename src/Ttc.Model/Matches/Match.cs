@@ -14,6 +14,7 @@ namespace Ttc.Model.Matches
         public int Id { get; set; }
         public DateTime Date { get; set; }
         public string FrenoyMatchId { get; set; }
+        public bool IsSyncedWithFrenoy { get; set; }
         public int Week { get; set; }
 
         public OpposingTeam Home { get; set; }
@@ -32,6 +33,7 @@ namespace Ttc.Model.Matches
         public int Id { get; set; }
         public DateTime Date { get; set; }
         public string FrenoyMatchId { get; set; }
+        public bool IsSyncedWithFrenoy { get; set; }
         public int Week { get; set; }
 
         public int TeamId { get; set; }
