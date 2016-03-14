@@ -42,7 +42,7 @@ namespace Ttc.DataAccess.Services
             {
                 var pwdCheck = dbContext.Database.SqlQuery<int>(
                     $"SELECT COUNT(0) FROM {PlayerEntity.TableName} WHERE id={{0}} AND paswoord=MD5({{1}})",
-                    user.PlayerId, 
+                    user.PlayerId,
                     user.Password).FirstOrDefault();
 
                 if (pwdCheck != 1)
@@ -51,6 +51,19 @@ namespace Ttc.DataAccess.Services
                 }
 
                 return GetUser(user.PlayerId);
+            }
+        }
+
+        public User ChangePassword(UserCredentials userNewCredentials)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                dbContext.Database.ExecuteSqlCommand(
+                $"UPDATE {PlayerEntity.TableName} SET paswoord=MD5({{1}}) WHERE id={{0}}",
+                userNewCredentials.PlayerId,
+                userNewCredentials.Password);
+
+                return GetUser(userNewCredentials.PlayerId);
             }
         }
 
@@ -89,7 +102,7 @@ namespace Ttc.DataAccess.Services
                     return new[] { "CAN_MANAGETEAM", "CAN_EDITALLREPORTS", "IS_ADMIN", "IS_DEV" };
 
                 case PlayerToegang.Board:
-                    return new[] {"CAN_MANAGETEAM", "CAN_EDITALLREPORTS", "IS_ADMIN"};
+                    return new[] { "CAN_MANAGETEAM", "CAN_EDITALLREPORTS", "IS_ADMIN" };
 
                 case PlayerToegang.Player:
                 default:
