@@ -7,6 +7,8 @@ using AutoMapper;
 using Ttc.DataEntities;
 using Ttc.Model;
 using Ttc.Model.Players;
+using System.Security.Cryptography;
+using System.Net.Mail;
 
 namespace Ttc.DataAccess.Services
 {
@@ -54,16 +56,62 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        public User ChangePassword(UserCredentials userNewCredentials)
+        public User ChangePassword(PasswordCredentials userNewCredentials)
         {
             using (var dbContext = new TtcDbContext())
             {
-                dbContext.Database.ExecuteSqlCommand(
-                $"UPDATE {PlayerEntity.TableName} SET paswoord=MD5({{1}}) WHERE id={{0}}",
-                userNewCredentials.PlayerId,
-                userNewCredentials.Password);
+                var pwdCheck = dbContext.Database.SqlQuery<int>(
+                    $"SELECT COUNT(0) FROM {PlayerEntity.TableName} WHERE id={{0}} AND paswoord=MD5({{1}})",
+                    userNewCredentials.PlayerId,
+                    userNewCredentials.OldPassword).FirstOrDefault();
 
-                return GetUser(userNewCredentials.PlayerId);
+                if (pwdCheck != 1)
+                {
+                    return null;
+                }
+                else
+                {
+                    dbContext.Database.ExecuteSqlCommand(
+                    $"UPDATE {PlayerEntity.TableName} SET paswoord=MD5({{1}}) WHERE id={{0}}",
+                    userNewCredentials.PlayerId,
+                    userNewCredentials.NewPassword);
+
+                    return GetUser(userNewCredentials.PlayerId);
+                }
+            }
+        }
+
+        public User NewPassword(PasswordCredentials userNewCredentials)
+        {
+            var emailForPlayer = string.Empty;
+            using (var dbContext = new TtcDbContext())
+            {
+                if (userNewCredentials.PlayerId != 0)
+                {
+                    emailForPlayer = dbContext.Database.SqlQuery<string>(
+                    $"SELECT Email FROM {PlayerEntity.TableName} WHERE id={{0}}",
+                    userNewCredentials.PlayerId).FirstOrDefault();
+                }
+                else
+                {
+                    return null;
+                }
+
+                if (!string.IsNullOrEmpty(emailForPlayer))
+                {
+                    var newPassword = GenerateNewMd5Password();
+                    newPassword = "Jornie";
+                    dbContext.Database.ExecuteSqlCommand(
+                    $"UPDATE {PlayerEntity.TableName} SET paswoord=MD5({{1}}) WHERE id={{0}}",
+                    userNewCredentials.PlayerId,
+                    newPassword);
+                    SendEmailToUserWithNewPassword(dbContext, emailForPlayer, newPassword);
+                    return GetUser(userNewCredentials.PlayerId);
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 
@@ -109,5 +157,35 @@ namespace Ttc.DataAccess.Services
                     return new string[] { };
             }
         }
+
+        #region Email Functionality
+        private void SendEmailToUserWithNewPassword(TtcDbContext dbContext, string emailForPlayer, string newPassword)
+        {
+            string to = emailForPlayer;
+            string from = "info@ttc-erembodegem.be";
+            MailMessage message = new MailMessage(from, to);
+            message.Subject = "Using the new SMTP client.";
+            message.Body = $"Dit is uw nieuw paswoord voor de site van TTC Erembodegem: {newPassword}";
+            SmtpClient client = new SmtpClient();
+            // Credentials are necessary if the server requires the client 
+            // to authenticate before it will send e-mail on the client's behalf.
+            client.UseDefaultCredentials = true;
+        }
+
+        private string GenerateNewMd5Password()
+        {
+            var bytes = new byte[16];
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(bytes);
+            }
+
+            // and if you need it as a string...
+            return BitConverter.ToString(bytes);
+
+            // or maybe...
+            //return BitConverter.ToString(bytes).Replace("-", "").ToLower();
+        }
+        #endregion
     }
 }
