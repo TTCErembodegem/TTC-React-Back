@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Data.Entity;
@@ -7,8 +6,6 @@ using AutoMapper;
 using Ttc.DataEntities;
 using Ttc.Model;
 using Ttc.Model.Players;
-using System.Security.Cryptography;
-using System.Net.Mail;
 using System.IO;
 
 namespace Ttc.DataAccess.Services
