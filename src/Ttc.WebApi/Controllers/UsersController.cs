@@ -38,6 +38,32 @@ namespace Ttc.WebApi.Controllers
         }
 
         [HttpPost]
+        [Route("ChangePassword")]
+        [AllowAnonymous]
+        public User ChangePassword([FromBody]PasswordCredentials userNewPassword)
+        {
+            var player = _service.ChangePassword(userNewPassword);
+            if (player != null)
+            {
+                player.Token = TtcAuthorizationFilterAttribute.CreateToken(player);
+            }
+            return player;
+        }
+
+        [HttpPost]
+        [Route("NewPassword")]
+        [AllowAnonymous]
+        public User NewPassword([FromBody]PasswordCredentials userNewPassword)
+        {
+            var player = _service.NewPassword(userNewPassword);
+            if (player != null)
+            {
+                player.Token = TtcAuthorizationFilterAttribute.CreateToken(player);
+            }
+            return player;
+        }
+
+        [HttpPost]
         [Route("ValidateToken")]
         [AllowAnonymous]
         public User ValidateToken([FromBody]ValidateTokenRequest token)

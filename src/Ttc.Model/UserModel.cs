@@ -29,4 +29,16 @@ namespace Ttc.Model
             return $"PlayerId: {PlayerId}, Password: {Password}";
         }
     }
+
+    public class PasswordCredentials
+    {
+        public int PlayerId { get; set; }
+        public string OldPassword { get; set; }
+        public string NewPassword { get; set; }
+
+        public override string ToString()
+        {
+            return $"PlayerId: {PlayerId}, OldPassword: {OldPassword}, NewPassword: {NewPassword}";
+        }
+    }
 }
