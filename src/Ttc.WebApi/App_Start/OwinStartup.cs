@@ -6,6 +6,7 @@ using Owin;
 using SimpleInjector.Extensions.ExecutionContextScoping;
 using SimpleInjector.Integration.WebApi;
 using Ttc.DataAccess;
+using Ttc.WebApi.Utilities;
 
 [assembly: OwinStartup(typeof(Ttc.WebApi.OwinStartup))]
 namespace Ttc.WebApi
@@ -30,6 +31,8 @@ namespace Ttc.WebApi
             WebApiConfig.Register(config);
             ConfigureJson(config);
             GlobalBackendConfiguration.ConfigureAutoMapper();
+
+            config.Filters.Add(new TtcExceptionFilterAttribute());
 
             app.UseWebApi(config);
         }

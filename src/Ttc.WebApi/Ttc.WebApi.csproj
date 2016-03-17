@@ -183,6 +183,7 @@
     <Compile Include="Utilities\Auth\TtcPrincipal.cs" />
     <Compile Include="Utilities\Auth\ValidateTokenRequest.cs" />
     <Compile Include="Utilities\BaseController.cs" />
+    <Compile Include="Utilities\ExceptionFilter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
