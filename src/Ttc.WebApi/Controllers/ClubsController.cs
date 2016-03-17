@@ -6,6 +6,7 @@ using Ttc.WebApi.Utilities;
 
 namespace Ttc.WebApi.Controllers
 {
+    [RoutePrefix("api/clubs")]
     public class ClubsController : BaseController
     {
         #region Constructor

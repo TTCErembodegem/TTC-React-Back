@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Linq;
 using AutoMapper;
 using Frenoy.Api;
-using Newtonsoft.Json.Serialization;
 using NUnit.Framework;
 using Ttc.DataAccess;
 using Ttc.DataAccess.App_Start;
@@ -28,7 +27,7 @@ namespace Ttc.UnitTests
         {
             using (var dbContext = new TtcDbContext())
             {
-                var frenoy = new FrenoyApi(dbContext, Competition.Sporta);
+                var frenoy = new FrenoyMatchesApi(dbContext, Competition.Sporta);
                 frenoy.SyncMatch(29, "O17/036");
             }
         }

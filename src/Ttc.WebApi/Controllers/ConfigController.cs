@@ -4,6 +4,7 @@ using Ttc.WebApi.Utilities;
 
 namespace Ttc.WebApi.Controllers
 {
+    [RoutePrefix("api/config")]
     public class ConfigController : BaseController
     {
         #region Constructor

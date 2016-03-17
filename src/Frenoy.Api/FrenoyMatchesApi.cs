@@ -19,118 +19,13 @@ using Match = Ttc.Model.Matches.Match;
 
 namespace Frenoy.Api
 {
-    public class FrenoyApi
+    public class FrenoyMatchesApi : FrenoyApiBase
     {
-        #region Fields
-        const string FrenoyVttlWsdlUrl = "http://api.vttl.be/0.7/?wsdl";
-        const string FrenoySportaWsdlUrl = "http://tafeltennis.sporcrea.be/api/?wsdl";
-        const string FrenoyVttlEndpoint = "http://api.vttl.be/0.7/index.php?s=vttl";
-        const string FrenoySportaEndpoint = "http://tafeltennis.sporcrea.be/api/index.php?s=sporcrea";
-
-        private readonly ITtcDbContext _db;
-        private readonly FrenoySettings _settings;
-        private readonly TabTAPI_PortTypeClient _frenoy;
-        private readonly int _thuisClubId;
-        private readonly bool _isVttl;
-        #endregion
-
         #region Constructor
-        public FrenoyApi(ITtcDbContext ttcDbContext, Competition comp)
+        public FrenoyMatchesApi(ITtcDbContext ttcDbContext, Competition comp)
+            : base(ttcDbContext, comp)
         {
-            _db = ttcDbContext;
-            bool isVttl = comp == Competition.Vttl;
-            _settings = isVttl ? FrenoySettings.VttlSettings : FrenoySettings.SportaSettings;
-
-            _isVttl = isVttl;
-            if (isVttl)
-            {
-                _thuisClubId = _db.Clubs.Single(x => x.CodeVttl == _settings.FrenoyClub).Id;
-                _frenoy = new FrenoyVttl.TabTAPI_PortTypeClient();
-            }
-            else
-            {
-                // Sporta
-                _thuisClubId = _db.Clubs.Single(x => x.CodeSporta == _settings.FrenoyClub).Id;
-
-                var binding = new BasicHttpBinding("TabTAPI_Binding");
-                binding.Security.Mode = BasicHttpSecurityMode.None;
-                var endpoint = new EndpointAddress(FrenoySportaEndpoint);
-                _frenoy = new TabTAPI_PortTypeClient(binding, endpoint);
-            }
-        }
-        #endregion
-
-        #region ClubLokalen
-        public void SyncClubLokalen()
-        {
-            // TODO: put this in separate class
-            // --> these methods need to be applied to vttl and sporta together
-            // TODO: need to check with Dirk/Jelle if frenoy club locations are actually better than current data...
-
-            Debug.Assert(false, "legacy db data might be better?");
-
-            Func<ClubEntity, string> getClubCode;
-            IEnumerable<ClubEntity> clubs;
-            if (_isVttl)
-            {
-                getClubCode = dbClub => dbClub.CodeVttl;
-                clubs = _db.Clubs.Include(x => x.Lokalen).Where(club => !string.IsNullOrEmpty(club.CodeVttl)).ToArray();
-            }
-            else
-            {
-                getClubCode = dbClub => dbClub.CodeSporta;
-                clubs = _db.Clubs.Include(x => x.Lokalen).Where(club => !string.IsNullOrEmpty(club.CodeSporta)).ToArray();
-            }
-            SyncClubLokalen(clubs, getClubCode);
-        }
-
-        private void SyncClubLokalen(IEnumerable<ClubEntity> clubs, Func<ClubEntity, string> getClubCode)
-        {
-            foreach (var dbClub in clubs)
-            {
-                var oldLokalen = _db.ClubLokalen.Where(x => x.ClubId == dbClub.Id).ToArray();
-
-                var frenoyClubs = _frenoy.GetClubs(new GetClubs
-                {
-                    Club = getClubCode(dbClub)
-                });
-
-                var frenoyClub = frenoyClubs.ClubEntries.FirstOrDefault();
-                if (frenoyClub == null)
-                {
-                    Debug.Print("Got some wrong CodeSporta/Vttl in legacy db: " + dbClub.Naam);
-                }
-                else if (frenoyClub.VenueEntries == null)
-                {
-                    Debug.Print("Missing frenoy data?: " + dbClub.Naam);
-                }
-                else if (frenoyClub.VenueEntries.Length < dbClub.Lokalen.Count)
-                {
-                    Debug.Print("we got better data...: " + dbClub.Naam);
-                }
-                else
-                {
-                    _db.ClubLokalen.RemoveRange(oldLokalen);
-
-                    foreach (var frenoyLokaal in frenoyClub.VenueEntries)
-                    {
-                        //Debug.Assert(string.IsNullOrWhiteSpace(frenoyLokaal.Comment), "comments opslaan in db?");
-                        Debug.Assert(frenoyLokaal.ClubVenue == "1");
-                        var lokaal = new ClubLokaal
-                        {
-                            Lokaal = frenoyLokaal.Name,
-                            Adres = frenoyLokaal.Street,
-                            ClubId = dbClub.Id,
-                            Gemeente = frenoyLokaal.Town.Substring(frenoyLokaal.Town.IndexOf(" ") + 1),
-                            Telefoon = frenoyLokaal.Phone,
-                            Postcode = int.Parse(frenoyLokaal.Town.Substring(0, frenoyLokaal.Town.IndexOf(" "))),
-                            Hoofd = frenoyLokaal.ClubVenue == "1" ? 1 : 0
-                        };
-                        _db.ClubLokalen.Add(lokaal);
-                    }
-                }
-            }
-            _db.SaveChanges();
+            
         }
         #endregion
 
@@ -462,36 +357,6 @@ namespace Frenoy.Api
             return clubPloeg;
         }
 
-        private static readonly Regex ClubHasTeamCodeRegex = new Regex(@"(\w)( \(af\))?$");
-        private static string ExtractTeamCodeFromFrenoyName(string team)
-        {
-            var regMatch = ClubHasTeamCodeRegex.Match(team);
-            if (regMatch.Success)
-            {
-                return regMatch.Groups[0].Value;
-            }
-            Debug.Assert(false, "This code path is never been tested");
-            return null;
-        }
-
-        private int GetClubId(string frenoyClubCode)
-        {
-            ClubEntity club;
-            if (_isVttl)
-            {
-                club = _db.Clubs.SingleOrDefault(x => x.CodeVttl == frenoyClubCode);
-            }
-            else
-            {
-                club = _db.Clubs.SingleOrDefault(x => x.CodeSporta == frenoyClubCode);
-            }
-            if (club == null)
-            {
-                club = CreateClub(frenoyClubCode);
-            }
-            return club.Id;
-        }
-
         private string GetFrenoyClubdId(int clubId)
         {
             if (_isVttl)
@@ -502,44 +367,6 @@ namespace Frenoy.Api
             {
                 return _db.Clubs.Single(x => x.Id == clubId).CodeSporta;
             }
-        }
-
-        private ClubEntity CreateClub(string frenoyClubCode)
-        {
-            Debug.Assert(_isVttl, "or need to write an if");
-            var frenoyClub = _frenoy.GetClubs(new GetClubs
-            {
-                Club = frenoyClubCode,
-                Season = _settings.FrenoySeason
-            });
-            Debug.Assert(frenoyClub.ClubEntries.Count() == 1);
-
-            var club = new ClubEntity
-            {
-                CodeVttl = frenoyClubCode,
-                Actief = 1,
-                Naam = frenoyClub.ClubEntries.First().LongName,
-                Douche = 0
-            };
-            _db.Clubs.Add(club);
-            CommitChanges();
-
-            foreach (var frenoyLokaal in frenoyClub.ClubEntries.First().VenueEntries)
-            {
-                var lokaal = new ClubLokaal
-                {
-                    ClubId = club.Id,
-                    Telefoon = frenoyLokaal.Phone,
-                    Lokaal = frenoyLokaal.Name,
-                    Adres = frenoyLokaal.Street,
-                    Postcode = int.Parse(frenoyLokaal.Town.Substring(0, frenoyLokaal.Town.IndexOf(" "))),
-                    Gemeente = frenoyLokaal.Town.Substring(frenoyLokaal.Town.IndexOf(" ") + 1),
-                    Hoofd = 1
-                };
-                _db.ClubLokalen.Add(lokaal);
-            }
-
-            return club;
         }
         #endregion
 
@@ -559,54 +386,6 @@ namespace Frenoy.Api
                 }
             }
         }
-
-        private void CommitChanges()
-        {
-            _db.SaveChanges();
-        }
         #endregion
-
-        public string GetFrenoyMatchId(int frenoyDivisionId, int week, string frenoyClubId)
-        {
-            var match = _frenoy.GetMatches(new GetMatchesRequest
-            {   
-                WeekName = week.ToString(),
-                DivisionId = frenoyDivisionId.ToString(),
-                Club = frenoyClubId
-            });
-
-            if (match.MatchCount == "0")
-            {
-                return null;
-            }
-            return match.TeamMatchesEntries.First().MatchId;
-        }
-
-        public ICollection<DivisionRanking> GetTeamRankings(int divisionId)
-        {
-            try
-            {
-                var rankings = _frenoy.GetDivisionRanking(new GetDivisionRankingRequest
-                {
-                    DivisionId = divisionId.ToString(),
-                });
-
-                return rankings.RankingEntries
-                    .Select(x => new DivisionRanking
-                    {
-                        Position = int.Parse(x.Position),
-                        GamesDraw = int.Parse(x.GamesDraw),
-                        GamesWon = int.Parse(x.GamesWon),
-                        GamesLost = int.Parse(x.GamesLost),
-                        Points = int.Parse(x.Points),
-                        ClubId = GetClubId(x.TeamClub),
-                        TeamCode = ExtractTeamCodeFromFrenoyName(x.Team)
-                    }).ToArray();
-            }
-            catch
-            {
-                return new List<DivisionRanking>();
-            }
-        }
     }
 }

@@ -78,7 +78,7 @@ namespace Ttc.DataAccess.Services
                     if (kalender.Date < DateTime.Now && !kalender.IsSyncedWithFrenoy)
                     {
                         var team = dbContext.Teams.Single(x => x.Id == kalender.HomeTeamId || x.Id == kalender.AwayTeamId);
-                        var frenoySync = new FrenoyApi(dbContext, Constants.NormalizeCompetition(team.Competition));
+                        var frenoySync = new FrenoyMatchesApi(dbContext, Constants.NormalizeCompetition(team.Competition));
                         frenoySync.SyncMatch(team.Id, kalender.FrenoyMatchId);
                     }
                 }
@@ -137,7 +137,7 @@ namespace Ttc.DataAccess.Services
             {
                 var team = dbContext.Teams.Single(x => x.Id == teamId);
 
-                var frenoy = new FrenoyApi(dbContext, Constants.NormalizeCompetition(team.Competition));
+                var frenoy = new FrenoyMatchesApi(dbContext, Constants.NormalizeCompetition(team.Competition));
                 frenoy.SyncMatches(team, opponent);
 
                 var calendar = dbContext.Matches

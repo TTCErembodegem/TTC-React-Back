@@ -6,6 +6,7 @@ using Ttc.WebApi.Utilities;
 
 namespace Ttc.WebApi.Controllers
 {
+    [RoutePrefix("api/teams")]
     public class TeamsController : BaseController
     {
         #region Constructor
@@ -19,5 +20,13 @@ namespace Ttc.WebApi.Controllers
 
         [AllowAnonymous]
         public IEnumerable<Team> Get() => _service.GetForCurrentYear();
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("Ranking")]
+        public Team Ranking(int teamId)
+        {
+            return _service.GetTeam(teamId, true);
+        }
     }
 }

@@ -20,6 +20,11 @@ namespace Ttc.Model.Teams
         // TODO: Opponents can be replaced with the Ranking
         public ICollection<OpposingTeam> Opponents { get; set; }
 
+        public Team()
+        {
+            Ranking = new List<DivisionRanking>();
+        }
+
         /// <summary>
         /// Vttl or Sporta
         /// </summary>
