@@ -16,7 +16,6 @@ namespace Ttc.DataAccess.Services
         {
             // TODO: kalender gaat toch niet de hoofdpagina worden
             // hoofdpagina = jouw volgende matchen. jouw team. en jouw speler details
-            // TODO: do not return match.players if not IsPlayed and not BeingPlayed
 
             using (var dbContext = new TtcDbContext())
             {
@@ -32,7 +31,6 @@ namespace Ttc.DataAccess.Services
                     .Where(x => x.HomeClubId == Constants.OwnClubId || x.AwayClubId == Constants.OwnClubId)
                     .Where(x => x.Date >= dateBegin)
                     .Where(x => x.Date <= dateEnd)
-                    .OrderBy(x => x.Date)
                     .ToList();
 
                 var matchIds = calendar.Select(x => x.Id).ToArray();

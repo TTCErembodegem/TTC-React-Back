@@ -29,6 +29,7 @@ namespace Ttc.DataAccess.Services
                     var rankings = frenoy.GetTeamRankings(team.Frenoy.DivisionId);
 
                     team.Ranking = rankings;
+                    //team.Ranking = new List<DivisionRanking>();
                 }
 
                 return result;
