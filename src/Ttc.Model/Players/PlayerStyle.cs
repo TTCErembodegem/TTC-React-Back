@@ -22,6 +22,6 @@
         }
         #endregion
 
-        public override string ToString() => $"Name={Name}, BestStroke={BestStroke}";
+        public override string ToString() => $"PlayerId={PlayerId}, Name={Name}, BestStroke={BestStroke}";
     }
 }
