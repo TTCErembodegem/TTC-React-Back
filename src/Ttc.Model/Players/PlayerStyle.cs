@@ -3,8 +3,9 @@
     public class PlayerStyle
     {
         #region Properties
-        public string Name { get; }
-        public string BestStroke { get; }
+        public int PlayerId { get; set; }
+        public string Name { get; set; }
+        public string BestStroke { get; set; }
         #endregion
 
         #region Constructor
@@ -13,8 +14,9 @@
             
         }
 
-        public PlayerStyle(string styleName, string bestStroke)
+        public PlayerStyle(int playerId, string styleName, string bestStroke)
         {
+            PlayerId = playerId;
             Name = styleName;
             BestStroke = bestStroke;
         }

@@ -161,5 +161,23 @@ namespace Ttc.DataAccess.Services
             return path;
         }
         #endregion
+
+        public Player UpdateStyle(PlayerStyle playerStyle)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var existingSpeler = dbContext.Players.FirstOrDefault(x => x.Id == playerStyle.PlayerId);
+                if (existingSpeler == null)
+                {
+                    return null;
+                }
+
+                existingSpeler.Stijl = playerStyle.Name;
+                existingSpeler.BesteSlag = playerStyle.BestStroke;
+                dbContext.SaveChanges();
+            }
+            var newMatch = GetPlayer(playerStyle.PlayerId);
+            return newMatch;
+        }
     }
 }

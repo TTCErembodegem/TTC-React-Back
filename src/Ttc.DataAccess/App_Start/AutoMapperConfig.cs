@@ -340,7 +340,7 @@ namespace Ttc.DataAccess.App_Start
                     opts => opts.MapFrom(src => !src.IsGestopt))
                 .ForMember(
                     dest => dest.Style,
-                    opts => opts.MapFrom(src => new PlayerStyle(src.Stijl, src.BesteSlag)))
+                    opts => opts.MapFrom(src => new PlayerStyle(src.Id, src.Stijl, src.BesteSlag)))
                 .ForMember(
                     dest => dest.Contact,
                     opts => opts.MapFrom(src => new Contact(src.Adres, src.Gemeente, src.Gsm, src.Email)))

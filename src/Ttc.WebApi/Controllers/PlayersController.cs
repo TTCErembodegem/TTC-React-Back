@@ -8,6 +8,7 @@ using Ttc.WebApi.Utilities.Auth;
 
 namespace Ttc.WebApi.Controllers
 {
+    [RoutePrefix("api/players")]
     public class PlayersController : BaseController
     {
         #region Constructor
@@ -25,6 +26,14 @@ namespace Ttc.WebApi.Controllers
             var result = _service.GetActiveOwnClub();
             CleanSensitiveData(result);
             return result;
-        } 
+        }
+
+        [HttpPost]
+        [Route("UpdateStyle")]
+        public Player UpdateStyle([FromBody]PlayerStyle playerStyle)
+        {
+            var result = _service.UpdateStyle(playerStyle);
+            return result;
+        }
     }
 }
