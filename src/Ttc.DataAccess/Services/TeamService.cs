@@ -14,7 +14,7 @@ namespace Ttc.DataAccess.Services
 {
     public class TeamService
     {
-        private readonly static TimeSpan FrenoyTeamRankingExpiration = TimeSpan.FromHours(5);
+        private readonly static TimeSpan FrenoyTeamRankingExpiration = TimeSpan.FromHours(1);
 
         public IEnumerable<Team> GetForCurrentYear()
         {
