@@ -9,6 +9,11 @@ using Ttc.WebApi.Utilities;
 
 namespace Ttc.WebApi.Controllers
 {
+    public class IdDto
+    {
+        public int Id { get; set; } // oh boy
+    }
+
     [RoutePrefix("api/matches")]
     public class MatchesController : BaseController
     {
@@ -23,6 +28,7 @@ namespace Ttc.WebApi.Controllers
         }
         #endregion
 
+        #region Getters
         [Route("GetRelevantMatches")]
         [AllowAnonymous]
         public IEnumerable<Match> GetRelevantMatches()
@@ -30,7 +36,39 @@ namespace Ttc.WebApi.Controllers
             var result = _service.GetRelevantMatches();
             CleanSensitiveData(result);
             return result;
-        } 
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("GetFirstRoundMatch")]
+        public Match GetFirstRoundMatch(int matchId)
+        {
+            return _service.GetFirstRoundMatch(matchId);
+        }
+
+        [HttpGet]
+        [Route("GetLastOpponentMatches")]
+        [AllowAnonymous]
+        public IEnumerable<OtherMatch> GetLastOpponentMatches(int teamId, int clubId, string teamCode)
+        {
+            var opponent = new OpposingTeam
+            {
+                ClubId = clubId,
+                TeamCode = teamCode
+            };
+            var result = _service.GetLastOpponentMatches(teamId, opponent);
+            return result;
+        }
+        #endregion
+
+        #region Puts
+        [HttpPost]
+        [Route("FrenoyMatchSync")]
+        public Match FrenoyMatchSync([FromBody]IdDto matchId)
+        {
+            var result = _service.FrenoyMatchSync(matchId.Id);
+            return result;
+        }
 
         [HttpPost]
         [Route("TogglePlayer")]
@@ -55,19 +93,6 @@ namespace Ttc.WebApi.Controllers
             var result = _service.UpdateReport(report, false);
             return result;
         }
-
-        [HttpGet]
-        [Route("GetLastOpponentMatches")]
-        [AllowAnonymous]
-        public IEnumerable<OtherMatch> GetLastOpponentMatches(int teamId, int clubId, string teamCode)
-        {
-            var opponent = new OpposingTeam
-            {
-                ClubId = clubId,
-                TeamCode = teamCode
-            };
-            var result = _service.GetLastOpponentMatches(teamId, opponent);
-            return result;
-        }
+        #endregion
     }
 }

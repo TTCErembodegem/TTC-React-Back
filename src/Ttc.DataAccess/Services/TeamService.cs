@@ -72,14 +72,20 @@ namespace Ttc.DataAccess.Services
             var ranking = frenoy.GetTeamRankings(divisionId);
             if (!RankingCache.ContainsKey(key))
             {
-                // TODO: no locking
-                RankingCache.Add(key, ranking);
+                lock (CacheLock)
+                {
+                    if (!RankingCache.ContainsKey(key))
+                    {
+                        RankingCache.Add(key, ranking);
+                    }
+                }
             }
             return ranking;
         }
 
         #region Cache
         private static readonly Dictionary<TeamRankingKey, ICollection<DivisionRanking>> RankingCache = new Dictionary<TeamRankingKey, ICollection<DivisionRanking>>();
+        private static readonly object CacheLock = new object();
 
         private struct TeamRankingKey
         {

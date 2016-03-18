@@ -134,41 +134,37 @@ namespace Frenoy.Api
                 Debug.Assert(frenoyMatch.TimeSpecified);
 
                 // Kalender entries
-                MatchEntity kalender = _db.Matches.SingleOrDefault(x => x.FrenoyMatchId == frenoyMatch.MatchId);
-                if (kalender == null)
+                MatchEntity matchEntity = _db.Matches.SingleOrDefault(x => x.FrenoyMatchId == frenoyMatch.MatchId);
+                if (matchEntity == null)
                 {
-                    kalender = CreateKalenderMatch(reeksId, frenoyMatch);
-                    _db.Matches.Add(kalender);
+                    matchEntity = CreateKalenderMatch(reeksId, frenoyMatch);
+                    _db.Matches.Add(matchEntity);
                 }
 
                 // Wedstrijdverslagen
-                if (!kalender.IsSyncedWithFrenoy && frenoyMatch.MatchDetails != null && frenoyMatch.MatchDetails.DetailsCreated)
+                if (!matchEntity.IsSyncedWithFrenoy && frenoyMatch.MatchDetails != null && frenoyMatch.MatchDetails.DetailsCreated && ShouldAttemptMatchSync(matchEntity.Id))
                 {
+                    matchEntity.IsSyncedWithFrenoy = true;
+
                     bool isForfeit = frenoyMatch.Score == null || frenoyMatch.Score.ToLowerInvariant().Contains("ff") || frenoyMatch.Score.ToLowerInvariant().Contains("af");
                     if (!isForfeit)
                     {
                         // Uitslag
-                        kalender.HomeScore = int.Parse(frenoyMatch.Score.Substring(0, frenoyMatch.Score.IndexOf("-")));
-                        kalender.AwayScore = int.Parse(frenoyMatch.Score.Substring(frenoyMatch.Score.IndexOf("-") + 1));
-                        kalender.WalkOver = false;
+                        matchEntity.HomeScore = int.Parse(frenoyMatch.Score.Substring(0, frenoyMatch.Score.IndexOf("-")));
+                        matchEntity.AwayScore = int.Parse(frenoyMatch.Score.Substring(frenoyMatch.Score.IndexOf("-") + 1));
+                        matchEntity.WalkOver = false;
 
                         // Spelers
-                        var oldVerslagSpelers = _db.MatchPlayers.Where(x => x.MatchId == kalender.Id).ToArray();
-                        _db.MatchPlayers.RemoveRange(oldVerslagSpelers);
+                        AddVerslagPlayers(frenoyMatch.MatchDetails.HomePlayers.Players, matchEntity, true);
+                        AddVerslagPlayers(frenoyMatch.MatchDetails.AwayPlayers.Players, matchEntity, false);
 
-                        AddVerslagPlayers(frenoyMatch.MatchDetails.HomePlayers.Players, kalender, true);
-                        AddVerslagPlayers(frenoyMatch.MatchDetails.AwayPlayers.Players, kalender, false);
-
-                        var testPlayer = kalender.Players.Count(x => x.PlayerId != 0);
-                        if (testPlayer == 0 && (kalender.AwayTeamId.HasValue || kalender.HomeTeamId.HasValue))
+                        var testPlayer = matchEntity.Players.Count(x => x.PlayerId != 0) == 0 || matchEntity.Players.Count > 8;
+                        if (testPlayer && (matchEntity.AwayTeamId.HasValue || matchEntity.HomeTeamId.HasValue))
                         {
-                            var x = 5;
+                            Debug.Assert(false, "player problem");
                         }
 
                         // Matchen
-                        var oldVerslagenIndividueel = _db.MatchGames.Where(x => x.MatchId == kalender.Id).ToArray();
-                        _db.MatchGames.RemoveRange(oldVerslagenIndividueel);
-
                         int id = 0;
                         foreach (var frenoyIndividual in frenoyMatch.MatchDetails.IndividualMatchResults)
                         {
@@ -181,7 +177,7 @@ namespace Frenoy.Api
                                 matchResult = new MatchGameEntity
                                 {
                                     Id = id--,
-                                    MatchId = kalender.Id,
+                                    MatchId = matchEntity.Id,
                                     MatchNumber = int.Parse(frenoyIndividual.Position),
                                     WalkOver = WalkOver.None
                                 };
@@ -192,7 +188,7 @@ namespace Frenoy.Api
                                 matchResult = new MatchGameEntity
                                 {
                                     Id = id--,
-                                    MatchId = kalender.Id,
+                                    MatchId = matchEntity.Id,
                                     MatchNumber = int.Parse(frenoyIndividual.Position),
                                     HomePlayerUniqueIndex = homeUniqueIndex,
                                     AwayPlayerUniqueIndex = awayUniqueIndex,
@@ -209,27 +205,49 @@ namespace Frenoy.Api
                                 matchResult.HomePlayerSets = int.Parse(frenoyIndividual.HomeSetCount);
                                 matchResult.AwayPlayerSets = int.Parse(frenoyIndividual.AwaySetCount);
                             }
-                            _db.MatchGames.Add(matchResult);
+                            matchEntity.Games.Add(matchResult);
                         }
                     }
                     else
                     {
-                        kalender.WalkOver = true;
+                        matchEntity.WalkOver = true;
                     }
 
-                    kalender.IsSyncedWithFrenoy = true;
+                    var oldVerslagSpelers = _db.MatchPlayers.Where(x => x.MatchId == matchEntity.Id).ToArray();
+                    _db.MatchPlayers.RemoveRange(oldVerslagSpelers);
+
+                    var oldVerslagenIndividueel = _db.MatchGames.Where(x => x.MatchId == matchEntity.Id).ToArray();
+                    _db.MatchGames.RemoveRange(oldVerslagenIndividueel);
                 }
+
                 CommitChanges();
             }
         }
 
-        private void AddVerslagPlayers(TeamMatchPlayerEntryType[] players, MatchEntity verslag, bool thuisSpeler)
+        private static readonly Dictionary<int, DateTime> FrenoyNoPesterCache = new Dictionary<int, DateTime>();
+        private static readonly object FrenoyNoPesterLock = new object();
+        private static bool ShouldAttemptMatchSync(int matchId)
+        {
+            lock (FrenoyNoPesterLock)
+            {
+                if (!FrenoyNoPesterCache.ContainsKey(matchId))
+                {
+                    FrenoyNoPesterCache.Add(matchId, DateTime.Now);
+                    return true;
+                }
+
+                var shouldSync = FrenoyNoPesterCache[matchId] > DateTime.Now.AddHours(1);
+                return shouldSync;
+            }
+        }
+
+        private void AddVerslagPlayers(TeamMatchPlayerEntryType[] players, MatchEntity match, bool thuisSpeler)
         {
             foreach (var frenoyVerslagSpeler in players)
             {
                 MatchPlayerEntity matchPlayerEntity = new MatchPlayerEntity
                 {
-                    MatchId = verslag.Id,
+                    MatchId = match.Id,
                     Ranking = frenoyVerslagSpeler.Ranking,
                     Home = thuisSpeler,
                     Name = GetSpelerNaam(frenoyVerslagSpeler),
@@ -246,7 +264,7 @@ namespace Frenoy.Api
                 }
 
                 PlayerEntity dbPlayer = null;
-                if (verslag.IsHomeMatch.HasValue && ((verslag.IsHomeMatch.Value && thuisSpeler) || (!verslag.IsHomeMatch.Value && !thuisSpeler)))
+                if (match.IsHomeMatch.HasValue && ((match.IsHomeMatch.Value && thuisSpeler) || (!match.IsHomeMatch.Value && !thuisSpeler)))
                 {
                     if (_isVttl)
                     {
@@ -266,8 +284,7 @@ namespace Frenoy.Api
                     }
                 }
 
-                _db.MatchPlayers.Add(matchPlayerEntity);
-                verslag.Players.Add(matchPlayerEntity);
+                match.Players.Add(matchPlayerEntity);
             }
         }
 

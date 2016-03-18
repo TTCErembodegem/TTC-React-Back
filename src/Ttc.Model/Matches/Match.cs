@@ -37,6 +37,10 @@ namespace Ttc.Model.Matches
         public int Week { get; set; }
 
         public int TeamId { get; set; }
+        /// <summary>
+        /// Null when TTC Erembodegem did not play (~ ReadonlyMatch)
+        /// True/False: Was TTC Erembodegem, True=Was in Erembodegem
+        /// </summary>
         public bool? IsHomeMatch { get; set; }
         public OpposingTeam Opponent { get; set; }
         #endregion

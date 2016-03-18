@@ -36,6 +36,11 @@ namespace Ttc.DataEntities
         public int? AwayScore { get; set; }
         public bool WalkOver { get; set; }
         public bool IsSyncedWithFrenoy { get; set; }
+
+        /// <summary>
+        /// Null when TTC Erembodegem did not play (~ ReadonlyMatch)
+        /// True/False: Was TTC Erembodegem, True=Was in Erembodegem
+        /// </summary>
         public bool? IsHomeMatch => !HomeTeamId.HasValue && !AwayTeamId.HasValue ? (bool?)null : HomeTeamId.HasValue;
 
         public MatchEntity()
