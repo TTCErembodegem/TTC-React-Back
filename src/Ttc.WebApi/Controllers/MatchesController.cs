@@ -93,6 +93,31 @@ namespace Ttc.WebApi.Controllers
             var result = _service.UpdateReport(report, false);
             return result;
         }
+
+        [HttpPost]
+        [Route("UpdateScore")]
+        public Match UpdateScore([FromBody]MatchScoreDto score)
+        {
+            if (score.Home < 0 || score.Out < 0 || score.Home + score.Out > 16)
+            {
+                return null;
+            }
+
+            var result = _service.UpdateScore(score.MatchId, new MatchScore(score.Home, score.Out));
+            return result;
+        }
         #endregion
+    }
+
+    public class MatchScoreDto
+    {
+        public int MatchId { get; set; }
+        public int Home { get; set; }
+        public int Out { get; set; }
+
+        public override string ToString()
+        {
+            return $"MatchId: {MatchId}, Home: {Home}, Out: {Out}";
+        }
     }
 }

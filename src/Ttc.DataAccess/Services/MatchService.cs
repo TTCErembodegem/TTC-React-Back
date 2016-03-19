@@ -197,6 +197,22 @@ namespace Ttc.DataAccess.Services
                 return Map(match);
             }
         }
+
+        public Match UpdateScore(int matchId, MatchScore score)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var match = dbContext.Matches
+                    .WithIncludes()
+                    .Single(x => x.Id == matchId);
+
+                match.AwayScore = score.Out;
+                match.HomeScore = score.Home;
+                dbContext.SaveChanges();
+
+                return Map(match);
+            }
+        }
         #endregion
     }
 }
