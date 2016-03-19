@@ -18,6 +18,9 @@ namespace Ttc.DataAccess.Services
             // TODO: kalender gaat toch niet de hoofdpagina worden
             // hoofdpagina = jouw volgende matchen. jouw team. en jouw speler details
 
+            // TODO: indexen op Date enazo...
+            // TODO: run the migrations in release mode
+
             using (var dbContext = new TtcDbContext())
             {
                 var dateBegin = DateTime.Now.AddDays(-10);
