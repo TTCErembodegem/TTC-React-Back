@@ -105,10 +105,7 @@ namespace Ttc.DataAccess.Services
                 _created = DateTime.Now;
             }
 
-            public override string ToString()
-            {
-                return $"Competition: {_competition}, DivisionId: {_divisionId}";
-            }
+            public override string ToString() => $"Competition: {_competition}, DivisionId: {_divisionId}";
 
             public override bool Equals(object obj)
             {

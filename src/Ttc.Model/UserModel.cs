@@ -24,10 +24,7 @@ namespace Ttc.Model
         public int PlayerId { get; set; }
         public string Password { get; set; }
 
-        public override string ToString()
-        {
-            return $"PlayerId: {PlayerId}, Password: {Password}";
-        }
+        public override string ToString() => $"PlayerId: {PlayerId}, Password: {Password}";
     }
 
     public class PasswordCredentials
@@ -36,9 +33,6 @@ namespace Ttc.Model
         public string OldPassword { get; set; }
         public string NewPassword { get; set; }
 
-        public override string ToString()
-        {
-            return $"PlayerId: {PlayerId}, OldPassword: {OldPassword}, NewPassword: {NewPassword}";
-        }
+        public override string ToString() => $"PlayerId: {PlayerId}, OldPassword: {OldPassword}, NewPassword: {NewPassword}";
     }
 }
