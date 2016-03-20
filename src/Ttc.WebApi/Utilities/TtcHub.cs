@@ -8,9 +8,9 @@ namespace Ttc.WebApi.Utilities
 {
     public class TtcHub : Hub
     {
-        public void Send(string name, string message)
+        public void BroadcastSnackbar(string message)
         {
-            Clients.All.broadcastMessage(name, message);
+            Clients.All.broadcastSnackbar(message);
         }
     }
 }
