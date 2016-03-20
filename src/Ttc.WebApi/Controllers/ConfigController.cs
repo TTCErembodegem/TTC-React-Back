@@ -18,5 +18,7 @@ namespace Ttc.WebApi.Controllers
 
         [AllowAnonymous]
         public object Get() => _service.Get();
+
+
     }
 }

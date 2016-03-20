@@ -13,6 +13,11 @@ namespace Ttc.WebApi.Utilities.Auth
     {
         protected override bool IsAuthorized(HttpActionContext actionContext)
         {
+            if (actionContext.Request.Headers.Authorization == null)
+            {
+                return true; // TODO: only true for sockets
+            }
+
             var token = actionContext.Request.Headers.Authorization.Parameter;
             var user = ValidateToken(token);
             if (user != null)

@@ -1,5 +1,7 @@
 ﻿using System.Web.Http;
+using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
+using Microsoft.Owin.Cors;
 using Microsoft.Owin.Security.Cookies;
 using Newtonsoft.Json.Serialization;
 using Owin;
@@ -31,6 +33,12 @@ namespace Ttc.WebApi
             WebApiConfig.Register(config);
             ConfigureJson(config);
             GlobalBackendConfiguration.ConfigureAutoMapper();
+
+            app.Map("/signalr", map =>
+            {
+                map.UseCors(CorsOptions.AllowAll);
+                map.RunSignalR(new HubConfiguration() {EnableDetailedErrors = true, EnableJSONP = true});
+            });
 
             config.Filters.Add(new TtcExceptionFilterAttribute());
 
