@@ -12,5 +12,10 @@ namespace Ttc.WebApi.Utilities
         {
             Clients.All.broadcastSnackbar(message);
         }
+
+        public void BroadcastReload(string type, object data)
+        {
+            Clients.All.broadcastReload(type, data);
+        }
     }
 }
