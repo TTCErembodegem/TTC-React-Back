@@ -197,7 +197,7 @@ namespace Ttc.DataAccess.Services
                     var frenoySync = new FrenoyMatchesApi(dbContext, Constants.NormalizeCompetition(team.Competition));
                     frenoySync.SyncMatch(team.Id, match.FrenoyMatchId);
                 }
-                return Map(match);
+                return GetMatch(dbContext, match.Id);
             }
         }
 
@@ -213,7 +213,7 @@ namespace Ttc.DataAccess.Services
                 match.HomeScore = score.Home;
                 dbContext.SaveChanges();
 
-                return Map(match);
+                return GetMatch(dbContext, match.Id);
             }
         }
         #endregion
