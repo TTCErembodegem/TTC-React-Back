@@ -13,9 +13,15 @@ namespace Ttc.WebApi.Utilities
             Clients.All.broadcastSnackbar(message);
         }
 
-        public void BroadcastReload(string type, object data)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataType">match, player, ...</param>
+        /// <param name="data">The match, the player, ...</param>
+        /// <param name="updateType">Updated a comment, a report, the score, ...</param>
+        public void BroadcastReload(string dataType, object data, string updateType)
         {
-            Clients.All.broadcastReload(type, data);
+            Clients.All.broadcastReload(dataType, data, updateType);
         }
     }
 }
