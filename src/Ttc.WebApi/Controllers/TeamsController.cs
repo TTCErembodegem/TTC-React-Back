@@ -21,6 +21,9 @@ namespace Ttc.WebApi.Controllers
         [AllowAnonymous]
         public IEnumerable<Team> Get() => _service.GetForCurrentYear();
 
+        [AllowAnonymous]
+        public Team Get(int id) => _service.GetTeam(id, false);
+
         [HttpGet]
         [AllowAnonymous]
         [Route("Ranking")]

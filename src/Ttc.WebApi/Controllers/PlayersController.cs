@@ -28,6 +28,14 @@ namespace Ttc.WebApi.Controllers
             return result;
         }
 
+        [AllowAnonymous]
+        public Player Get(int id)
+        {
+            var result = _service.GetPlayer(id);
+            CleanSensitiveData(result);
+            return result;
+        }
+
         [HttpPost]
         [Route("UpdateStyle")]
         public Player UpdateStyle([FromBody]PlayerStyle playerStyle)

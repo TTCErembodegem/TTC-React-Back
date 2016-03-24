@@ -20,5 +20,8 @@ namespace Ttc.WebApi.Controllers
 
         [AllowAnonymous]
         public IEnumerable<Club> Get() => _service.GetActiveClubs();
+
+        //[AllowAnonymous]
+        //public Club Get(int id) => _service.GetClub(id);
     }
 }

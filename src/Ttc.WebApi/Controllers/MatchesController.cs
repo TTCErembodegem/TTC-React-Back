@@ -38,6 +38,14 @@ namespace Ttc.WebApi.Controllers
             return result;
         }
 
+        [AllowAnonymous]
+        public Match Get(int id)
+        {
+            var result = _service.GetMatch(id);
+            CleanSensitiveData(result);
+            return result;
+        }
+
         [HttpGet]
         [AllowAnonymous]
         [Route("GetFirstRoundMatch")]
