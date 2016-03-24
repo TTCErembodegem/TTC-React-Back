@@ -76,8 +76,8 @@ namespace Frenoy.Api
                     Season = _settings.FrenoySeason.ToString(),
                     DivisionId = teamEntity.FrenoyDivisionId.ToString(),
                     Team = teamEntity.TeamCode,
-                    WithDetailsSpecified = true,
-                    WithDetails = true,
+                    WithDetailsSpecified = false,
+                    WithDetails = false,
                 });
                 SyncMatches(teamEntity.Id, teamEntity.FrenoyDivisionId, matches, false);
             }
@@ -92,7 +92,7 @@ namespace Frenoy.Api
         {
             GetMatchesResponse matches = _frenoy.GetMatches(new GetMatchesRequest
             {
-                Club = _settings.FrenoyClub,
+                DivisionId = frenoyDivisionId.ToString(),
                 Season = _settings.FrenoySeason.ToString(),
                 WithDetailsSpecified = true,
                 WithDetails = true,
@@ -108,11 +108,11 @@ namespace Frenoy.Api
                 Club = GetFrenoyClubdId(opponent.ClubId),
                 Season = _settings.FrenoySeason.ToString(),
                 Team = opponent.TeamCode,
-                WithDetailsSpecified = true,
-                WithDetails = true,
+                WithDetailsSpecified = false,
+                WithDetails = false,
                 DivisionId = team.FrenoyDivisionId.ToString()
             });
-            SyncMatches(team.Id, team.FrenoyDivisionId, matches);
+            SyncMatches(team.Id, team.FrenoyDivisionId, matches, false);
         }
 
         public void SyncMatches(int teamId, int frenoyDivisionId, GetMatchesResponse matches, bool alsoSyncMatchDetails = true)

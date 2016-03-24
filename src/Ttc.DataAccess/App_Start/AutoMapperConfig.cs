@@ -19,7 +19,7 @@ namespace Ttc.DataAccess.App_Start
         {
             PlayerMapping(klassementToValueConverter);
             ClubMapping();
-            CalendarMapping();
+            MatchMapping();
             TeamMapping();
             ReportMapping();
         }
@@ -91,7 +91,7 @@ namespace Ttc.DataAccess.App_Start
                 ;
         }
 
-        private static void CalendarMapping()
+        private static void MatchMapping()
         {
             Mapper.CreateMap<MatchEntity, OtherMatch>()
                 .ForMember(

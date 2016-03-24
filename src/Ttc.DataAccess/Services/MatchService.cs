@@ -15,36 +15,28 @@ namespace Ttc.DataAccess.Services
         #region Getters
         public ICollection<Match> GetRelevantMatches()
         {
-            // TODO: kalender gaat toch niet de hoofdpagina worden
-            // hoofdpagina = jouw volgende matchen. jouw team. en jouw speler details
-
-            // TODO: indexen op Date enazo...
-            // TODO: run the migrations in release mode
-
+            // TODO: hoofdpagina = jouw volgende matchen. jouw team. en jouw speler details
             using (var dbContext = new TtcDbContext())
             {
                 var dateBegin = DateTime.Now.AddDays(-10);
                 var dateEnd = DateTime.Now.AddDays(20);
 
-                var calendar = dbContext.Matches
+                var matchEntities = dbContext.Matches
                     .WithIncludes()
                     //.Where(x => x.Id == 802)
-                    //.Where(x => x.Id == 467) // Sporta A vs Kruibeke B
-                    //.Where(x => x.Id == 563) // Derby: Sporta A vs B
-                    //.Where(x => x.Id == 484) // St-Pauwels B vs Sporta B
                     .Where(x => x.HomeClubId == Constants.OwnClubId || x.AwayClubId == Constants.OwnClubId)
                     .Where(x => x.Date >= dateBegin)
                     .Where(x => x.Date <= dateEnd)
                     .ToList();
 
-                var matchIds = calendar.Select(x => x.Id).ToArray();
+                var matchIds = matchEntities.Select(x => x.Id).ToArray();
                 var comments = dbContext.MatchComments.Where(x => matchIds.Contains(x.MatchId)).ToArray();
-                foreach (var match in calendar)
+                foreach (var match in matchEntities)
                 {
                     match.Comments = comments.Where(x => x.MatchId == match.Id).ToArray();
                 }
 
-                var result = Mapper.Map<IList<MatchEntity>, IList<Match>>(calendar);                
+                var result = Mapper.Map<IList<MatchEntity>, IList<Match>>(matchEntities);                
                 return result;
             }
         }
@@ -66,7 +58,7 @@ namespace Ttc.DataAccess.Services
                 var frenoy = new FrenoyMatchesApi(dbContext, Constants.NormalizeCompetition(team.Competition));
                 frenoy.SyncMatches(team, opponent);
 
-                var calendar = dbContext.Matches
+                var matchEntities = dbContext.Matches
                     .WithIncludes()
                     .Where(kal => (kal.AwayClubId == opponent.ClubId && kal.AwayTeamCode == opponent.TeamCode) || (kal.HomeClubId == opponent.ClubId && kal.HomeTeamCode == opponent.TeamCode))
                     .Where(kal => kal.Date < DateTime.Now)
@@ -76,7 +68,7 @@ namespace Ttc.DataAccess.Services
 
                 // No comments for OpponentMatches
 
-                var result = Mapper.Map<IList<MatchEntity>, IList<OtherMatch>>(calendar);
+                var result = Mapper.Map<IList<MatchEntity>, IList<OtherMatch>>(matchEntities);
                 return result;
             }
         }
@@ -187,21 +179,38 @@ namespace Ttc.DataAccess.Services
             return newMatch;
         }
 
+        public OtherMatch FrenoyOtherMatchSync(int matchId)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                FrenoyMatchSyncCore(dbContext, matchId);
+                var match = dbContext.Matches
+                    .WithIncludes()
+                    .Single(x => x.Id == matchId);
+                return Mapper.Map<MatchEntity, OtherMatch>(match);
+            }
+        }
+
+        private static void FrenoyMatchSyncCore(TtcDbContext dbContext, int matchId)
+        {
+            var match = dbContext.Matches
+                    .WithIncludes()
+                    .Single(x => x.Id == matchId);
+
+            if (match.Date < DateTime.Now && !match.IsSyncedWithFrenoy)
+            {
+                var team = dbContext.Teams.First(x => x.FrenoyDivisionId == match.FrenoyDivisionId);
+                var frenoySync = new FrenoyMatchesApi(dbContext, Constants.NormalizeCompetition(team.Competition));
+                frenoySync.SyncMatch(team.Id, match.FrenoyDivisionId, match.FrenoyMatchId);
+            }
+        }
+
         public Match FrenoyMatchSync(int matchId)
         {
             using (var dbContext = new TtcDbContext())
             {
-                var match = dbContext.Matches
-                    .WithIncludes()
-                    .Single(x => x.Id == matchId);
-
-                if (match.Date < DateTime.Now && !match.IsSyncedWithFrenoy)
-                {
-                    var team = dbContext.Teams.Single(x => x.Id == match.HomeTeamId || x.Id == match.AwayTeamId);
-                    var frenoySync = new FrenoyMatchesApi(dbContext, Constants.NormalizeCompetition(team.Competition));
-                    frenoySync.SyncMatch(team.Id, match.FrenoyDivisionId, match.FrenoyMatchId);
-                }
-                return GetMatch(dbContext, match.Id);
+                FrenoyMatchSyncCore(dbContext, matchId);
+                return GetMatch(dbContext, matchId);
             }
         }
 

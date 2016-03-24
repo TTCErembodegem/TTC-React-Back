@@ -80,6 +80,15 @@ namespace Ttc.WebApi.Controllers
         }
 
         [HttpPost]
+        [Route("FrenoyOtherMatchSync")]
+        [AllowAnonymous]
+        public OtherMatch FrenoyOtherMatchSync([FromBody]IdDto matchId)
+        {
+            var result = _service.FrenoyOtherMatchSync(matchId.Id);
+            return result;
+        }
+
+        [HttpPost]
         [Route("TogglePlayer")]
         public Match TogglePlayer([FromBody]MatchPlayer player)
         {
