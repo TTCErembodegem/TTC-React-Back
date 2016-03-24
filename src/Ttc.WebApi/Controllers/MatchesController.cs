@@ -72,6 +72,7 @@ namespace Ttc.WebApi.Controllers
         #region Puts
         [HttpPost]
         [Route("FrenoyMatchSync")]
+        [AllowAnonymous]
         public Match FrenoyMatchSync([FromBody]IdDto matchId)
         {
             var result = _service.FrenoyMatchSync(matchId.Id);

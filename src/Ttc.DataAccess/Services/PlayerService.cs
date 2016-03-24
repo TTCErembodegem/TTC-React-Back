@@ -38,6 +38,12 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
+                const int SystemPlayerIdFromFrontend = -1;
+                if (user.PlayerId == SystemPlayerIdFromFrontend)
+                {
+                    user.PlayerId = dbContext.Players.Single(ply => ply.NaamKort == "SYSTEM").Id;
+                }
+
                 var pwdCheck = dbContext.Database.SqlQuery<int>(
                     $"SELECT COUNT(0) FROM {PlayerEntity.TableName} WHERE id={{0}} AND paswoord=MD5({{1}})",
                     user.PlayerId,
@@ -79,32 +85,26 @@ namespace Ttc.DataAccess.Services
 
         public User NewPassword(PasswordCredentials userNewCredentials)
         {
-            var emailForPlayer = string.Empty;
+            if (userNewCredentials.PlayerId == 0)
+            {
+                return null;
+            }
+
             using (var dbContext = new TtcDbContext())
             {
-                if (userNewCredentials.PlayerId != 0)
-                {
-                    emailForPlayer = dbContext.Players.Single(x => x.Id == userNewCredentials.PlayerId).Email;
-                }
-                else
-                {
-                    return null;
-                }
-
+                var emailForPlayer = dbContext.Players.Single(x => x.Id == userNewCredentials.PlayerId).Email;
                 if (!string.IsNullOrEmpty(emailForPlayer))
                 {
-                    var newPassword = GenerateNewPassword();
+                    string newPassword = GenerateNewPassword();
                     dbContext.Database.ExecuteSqlCommand(
-                    $"UPDATE {PlayerEntity.TableName} SET paswoord=MD5({{1}}) WHERE id={{0}}",
-                    userNewCredentials.PlayerId,
-                    newPassword);
+                        $"UPDATE {PlayerEntity.TableName} SET paswoord=MD5({{1}}) WHERE id={{0}}",
+                        userNewCredentials.PlayerId,
+                        newPassword);
+
                     return GetUser(userNewCredentials.PlayerId);
                 }
-                else
-                {
-                    return null;
-                }
             }
+            return null;
         }
 
         public User GetUser(int playerId)
@@ -115,7 +115,7 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        private User GetUser(TtcDbContext dbContext, int playerId)
+        private static User GetUser(TtcDbContext dbContext, int playerId)
         {
             int currentYear = dbContext.CurrentYear;
             var teams = dbContext.Teams
@@ -134,10 +134,13 @@ namespace Ttc.DataAccess.Services
             };
         }
 
-        private ICollection<string> GetPlayerSecurity(PlayerToegang toegang)
+        private static ICollection<string> GetPlayerSecurity(PlayerToegang toegang)
         {
             switch (toegang)
             {
+                case PlayerToegang.System:
+                    return new[] { "CAN_MANAGETEAM", "CAN_EDITALLREPORTS", "IS_ADMIN", "IS_SYSTEM" };
+
                 case PlayerToegang.Dev:
                     return new[] { "CAN_MANAGETEAM", "CAN_EDITALLREPORTS", "IS_ADMIN", "IS_DEV" };
 
@@ -152,10 +155,10 @@ namespace Ttc.DataAccess.Services
 
         #region New Password Helpers
 
-        private string GenerateNewPassword()
+        private static string GenerateNewPassword()
         {
             string path = Path.GetRandomFileName();
-            path = path.Replace(".", ""); // Remove period.
+            path = path.Replace(".", "");
             return path;
         }
         #endregion

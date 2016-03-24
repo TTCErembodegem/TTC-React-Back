@@ -62,7 +62,7 @@ namespace Ttc.WebApi.Utilities.Auth
             {
                 Alias = (string)user.alias,
                 PlayerId = (int)user.playerId,
-                Teams = ((string)user.teams).Split(',').Select(int.Parse).ToArray(),
+                Teams = !string.IsNullOrWhiteSpace((string)user.teams) ? ((string)user.teams).Split(',').Select(int.Parse).ToArray() : new int[] {},
             };
 
             userModel.Security = JsonConvert.DeserializeObject<List<string>>((string)user.security);
