@@ -30,6 +30,9 @@ namespace Frenoy.Api
         #endregion
 
         #region Public API
+        /// <summary>
+        /// Initial season sync
+        /// </summary>
         public void SyncTeamsAndMatches()
         {
             var frenoyTeams = _frenoy.GetClubTeams(new GetClubTeamsRequest
@@ -76,7 +79,7 @@ namespace Frenoy.Api
                     WithDetailsSpecified = true,
                     WithDetails = true,
                 });
-                SyncMatches(teamEntity.Id, teamEntity.FrenoyDivisionId, matches);
+                SyncMatches(teamEntity.Id, teamEntity.FrenoyDivisionId, matches, false);
             }
         }
 
@@ -112,7 +115,7 @@ namespace Frenoy.Api
             SyncMatches(team.Id, team.FrenoyDivisionId, matches);
         }
 
-        public void SyncMatches(int reeksId, int frenoyDivisionId, GetMatchesResponse matches)
+        public void SyncMatches(int reeksId, int frenoyDivisionId, GetMatchesResponse matches, bool alsoSyncMatchDetails = true)
         {
             foreach (TeamMatchEntryType frenoyMatch in matches.TeamMatchesEntries.Where(x => x.HomeTeam.Trim() != "Vrij" && x.AwayTeam.Trim() != "Vrij"))
             {
@@ -128,7 +131,7 @@ namespace Frenoy.Api
                 }
 
                 // Wedstrijdverslagen
-                if (!matchEntity.IsSyncedWithFrenoy && frenoyMatch.MatchDetails != null && frenoyMatch.MatchDetails.DetailsCreated && ShouldAttemptMatchSync(matchEntity.Id))
+                if (alsoSyncMatchDetails && !matchEntity.IsSyncedWithFrenoy && frenoyMatch.MatchDetails != null && frenoyMatch.MatchDetails.DetailsCreated && ShouldAttemptMatchSync(matchEntity.Id))
                 {
                     matchEntity.IsSyncedWithFrenoy = true;
 
@@ -328,7 +331,6 @@ namespace Frenoy.Api
                 AwayClubId = GetClubId(frenoyMatch.AwayClub),
                 AwayTeamCode = ExtractTeamCodeFromFrenoyName(frenoyMatch.AwayTeam),
                 Week = int.Parse(frenoyMatch.WeekName),
-                FrenoyUniqueId = int.Parse(frenoyMatch.MatchUniqueId),
                 FrenoySeason = _settings.FrenoySeason,
                 FrenoyDivisionId = frenoyDivisionId,
                 Competition = _settings.Competition,

@@ -6,7 +6,7 @@ using Ttc.Model.Players;
 
 namespace Ttc.DataEntities
 {
-    [Table("match")]
+    [Table("matches")]
     public class MatchEntity
     {
         [Key]
@@ -18,13 +18,15 @@ namespace Ttc.DataEntities
         public int Week { get; set; }
         [MaxLength(20)]
         public string FrenoyMatchId { get; set; }
-        public int FrenoyUniqueId { get; set; }
-        public int FrenoyDivisionId { get; set; }
+
+        // TODO: not yet send to the frontend
+        public int FrenoyDivisionId { get; set; } // TODO: can be used in frontend to determine if getOpponentMatches already happened
         /// <summary>
         /// 2015-2016 = 16
         /// </summary>
-        public int FrenoySeason { get; set; }
-        public Competition Competition { get; set; }
+        public int FrenoySeason { get; set; } // TODO: need extra filtering on season in frontend
+        public Competition Competition { get; set; } // TODO: in frontend: match.getTeam().competition ==> match.competition
+        // ---
 
         public int? HomeTeamId { get; set; }
         [ForeignKey("HomeTeamId")]

@@ -1,6 +1,11 @@
+using System.Collections.Generic;
 using System.Data.Entity.Migrations.Design;
 using System.Data.Entity.Migrations.Model;
 using System.Data.Entity.Migrations.Utilities;
+using Frenoy.Api;
+using Ttc.DataEntities;
+using Ttc.Model.Players;
+using Ttc.Model.Teams;
 
 namespace Ttc.DataAccess.Migrations
 {
@@ -16,25 +21,72 @@ namespace Ttc.DataAccess.Migrations
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(Ttc.DataAccess.TtcDbContext context)
+        public static void Seed(TtcDbContext context, bool clearMatches, bool syncTeamPlayers)
         {
-            // TODO: check if FrenoyMatchIds are unique or just unique per season...
+            if (clearMatches)
+            {
+                context.Database.ExecuteSqlCommand("DELETE FROM matchplayer");
+                context.Database.ExecuteSqlCommand("DELETE FROM matchgame");
+                context.Database.ExecuteSqlCommand("DELETE FROM matchcomment");
+                context.Database.ExecuteSqlCommand("DELETE FROM matches");
+            }
+            if (syncTeamPlayers)
+            {
+                context.Database.ExecuteSqlCommand("DELETE FROM teamplayer");
+            }
 
-            //context.Database.ExecuteSqlCommand("DELETE FROM dbo.verslagspeler");
-            //context.Database.ExecuteSqlCommand("DELETE FROM dbo.verslagindividueel");
+            if (!context.Matches.Any())
+            {
+                var vttl = new FrenoyMatchesApi(context, Competition.Vttl);
+                vttl.SyncTeamsAndMatches();
+                if (syncTeamPlayers)
+                {
+                    AddTeamPlayers(context, FrenoySettings.VttlSettings);
+                }
 
-            //  This method will be called after migrating to the latest version.
+                var sporta = new FrenoyMatchesApi(context, Competition.Sporta);
+                sporta.SyncTeamsAndMatches();
+                if (syncTeamPlayers)
+                {
+                    AddTeamPlayers(context, FrenoySettings.SportaSettings);
+                }
+            }
+        }
 
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
+        protected override void Seed(TtcDbContext context)
+        {
+            Seed(context, true, true);
+
+            // Clublokaal user account
+            context.Players.AddOrUpdate(p => p.NaamKort, new PlayerEntity
+            {
+                Gestopt = 1,
+                Naam = "SYSTEM",
+                NaamKort = "SYSTEM",
+                Toegang = PlayerToegang.System
+            });
+            context.Database.ExecuteSqlCommand("UPDATE speler SET paswoord=MD5('system') WHERE Naam='SYSTEM'");
+        }
+
+        private static void AddTeamPlayers(TtcDbContext context, FrenoySettings settings)
+        {
+            foreach (KeyValuePair<string, string[]> dict in settings.Players)
+            {
+                TeamEntity team = context.Teams
+                    .Where(x => x.Year == settings.Year)
+                    .Single(x => x.Competition.ToUpper() == settings.Competition.ToString().ToUpper() && x.TeamCode == dict.Key);
+
+                foreach (string player in dict.Value)
+                {
+                    var newPlayer = new TeamPlayerEntity
+                    {
+                        TeamId = team.Id,
+                        PlayerType = TeamPlayerType.Standard,
+                        PlayerId = context.Players.Single(x => x.NaamKort == player).Id
+                    };
+                    context.TeamPlayers.Add(newPlayer);
+                }
+            }
         }
     }
 }

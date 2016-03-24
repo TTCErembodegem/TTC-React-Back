@@ -188,6 +188,14 @@
     <Compile Include="Migrations\201603241218100_TeamEntityStrings.Designer.cs">
       <DependentUpon>201603241218100_TeamEntityStrings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603241235307_MatchEntityTableRename.cs" />
+    <Compile Include="Migrations\201603241235307_MatchEntityTableRename.Designer.cs">
+      <DependentUpon>201603241235307_MatchEntityTableRename.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603241301236_MatchEntityFrenoyUniqueIdCanBeAbsent.cs" />
+    <Compile Include="Migrations\201603241301236_MatchEntityFrenoyUniqueIdCanBeAbsent.Designer.cs">
+      <DependentUpon>201603241301236_MatchEntityFrenoyUniqueIdCanBeAbsent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\ServiceExtensions.cs" />
     <Compile Include="Services\ClubService.cs" />
@@ -302,6 +310,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603241218100_TeamEntityStrings.resx">
       <DependentUpon>201603241218100_TeamEntityStrings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603241235307_MatchEntityTableRename.resx">
+      <DependentUpon>201603241235307_MatchEntityTableRename.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603241301236_MatchEntityFrenoyUniqueIdCanBeAbsent.resx">
+      <DependentUpon>201603241301236_MatchEntityFrenoyUniqueIdCanBeAbsent.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

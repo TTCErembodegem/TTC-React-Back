@@ -9,7 +9,11 @@ namespace Ttc.DataEntities
     {
         Player = 1,
         Board = 7,
-        Dev = 8
+        Dev = 8,
+        /// <summary>
+        /// Algemeen toegankelijke computer in het clublokaal
+        /// </summary>
+        System = 9,
     }
 
     [Table(TableName)]

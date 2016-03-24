@@ -111,6 +111,8 @@ namespace Ttc.DataAccess.Services
                         .SingleOrDefault(x => x.Date < kalender.Date);
                 }
 
+                // TODO: comments not fetched here
+
                 return Map(prevKalender);
             }
         }
