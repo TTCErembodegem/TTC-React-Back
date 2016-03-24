@@ -10,6 +10,8 @@ namespace Ttc.DataEntities
     {
         [Key]
         public int Id { get; set; }
+
+        //[Index]
         public DateTime Date { get; set; }
 
         public int Week { get; set; }
@@ -18,12 +20,14 @@ namespace Ttc.DataEntities
         public int? HomeTeamId { get; set; }
         [ForeignKey("HomeTeamId")]
         public TeamEntity HomeTeam { get; set; }
+        //[Index]
         public int HomeClubId { get; set; }
         public string HomeTeamCode { get; set; }
 
         public int? AwayTeamId { get; set; }
         [ForeignKey("AwayTeamId")]
         public TeamEntity AwayTeam { get; set; }
+        //[Index]
         public int AwayClubId { get; set; }
         public string AwayPloegCode { get; set; } // TODO: rename to AwayTeamCode
 

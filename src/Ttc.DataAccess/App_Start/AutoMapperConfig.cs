@@ -222,14 +222,14 @@ namespace Ttc.DataAccess.App_Start
 
         private static MatchOutcome GetScoreType(MatchEntity match)
         {
+            var now = DateTime.Now;
+            var yesterday = now.Subtract(TimeSpan.FromDays(1));
+            if ((match.Date.Date == now.Date && now.Hour >= match.Date.Hour - 10) || (match.Date.Date == yesterday.Date && now.Hour < match.Date.Hour - 10))
+            {
+                return MatchOutcome.BeingPlayed;
+            }
             if (match.Date.Date >= DateTime.Now.Date)
             {
-                var now = DateTime.Now;
-                var yesterday = now.Subtract(TimeSpan.FromDays(1));
-                if ((match.Date.Date == now.Date && now.Hour >= match.Date.Hour - 10) || (match.Date.Date == yesterday.Date && now.Hour < match.Date.Hour - 10))
-                {
-                    return MatchOutcome.BeingPlayed;
-                }
                 return MatchOutcome.NotYetPlayed;
             }
             
