@@ -130,17 +130,20 @@ namespace Frenoy.Api
                     _db.Matches.Add(matchEntity);
                 }
 
-                bool isForfeit = frenoyMatch.Score == null || frenoyMatch.Score.ToLowerInvariant().Contains("ff") || frenoyMatch.Score.ToLowerInvariant().Contains("af");
-                if (!isForfeit)
+                if (frenoyMatch.Score != null)
                 {
-                    // Uitslag
-                    matchEntity.HomeScore = int.Parse(frenoyMatch.Score.Substring(0, frenoyMatch.Score.IndexOf("-")));
-                    matchEntity.AwayScore = int.Parse(frenoyMatch.Score.Substring(frenoyMatch.Score.IndexOf("-") + 1));
-                    matchEntity.WalkOver = false;
-                }
-                else
-                {
-                    matchEntity.WalkOver = true;
+                    bool isForfeit = frenoyMatch.Score.ToLowerInvariant().Contains("ff") || frenoyMatch.Score.ToLowerInvariant().Contains("af");
+                    if (!isForfeit)
+                    {
+                        // Uitslag
+                        matchEntity.HomeScore = int.Parse(frenoyMatch.Score.Substring(0, frenoyMatch.Score.IndexOf("-")));
+                        matchEntity.AwayScore = int.Parse(frenoyMatch.Score.Substring(frenoyMatch.Score.IndexOf("-") + 1));
+                        matchEntity.WalkOver = false;
+                    }
+                    else
+                    {
+                        matchEntity.WalkOver = true;
+                    }
                 }
 
                 // Wedstrijdverslagen
@@ -155,18 +158,21 @@ namespace Frenoy.Api
                     AssertMatchPlayers(matchEntity);
 
                     // Matchen
-                    int id = 0;
-                    foreach (var frenoyIndividual in frenoyMatch.MatchDetails.IndividualMatchResults)
+                    if (frenoyMatch.MatchDetails.IndividualMatchResults != null)
                     {
-                        id--;
-                        AddMatchGames(frenoyIndividual, id, matchEntity);
+                        int id = 0;
+                        foreach (var frenoyIndividual in frenoyMatch.MatchDetails.IndividualMatchResults)
+                        {
+                            id--;
+                            AddMatchGames(frenoyIndividual, id, matchEntity);
+                        }
                     }
 
-                    var oldVerslagSpelers = _db.MatchPlayers.Where(x => x.MatchId == matchEntity.Id).ToArray();
-                    _db.MatchPlayers.RemoveRange(oldVerslagSpelers);
+                    var oldMatchPlayers = _db.MatchPlayers.Where(x => x.MatchId == matchEntity.Id).ToArray();
+                    _db.MatchPlayers.RemoveRange(oldMatchPlayers);
 
-                    var oldVerslagenIndividueel = _db.MatchGames.Where(x => x.MatchId == matchEntity.Id).ToArray();
-                    _db.MatchGames.RemoveRange(oldVerslagenIndividueel);
+                    var oldMatchGames = _db.MatchGames.Where(x => x.MatchId == matchEntity.Id).ToArray();
+                    _db.MatchGames.RemoveRange(oldMatchGames);
                 }
 
                 CommitChanges();
