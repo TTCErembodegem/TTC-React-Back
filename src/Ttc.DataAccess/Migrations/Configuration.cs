@@ -1,3 +1,7 @@
+using System.Data.Entity.Migrations.Design;
+using System.Data.Entity.Migrations.Model;
+using System.Data.Entity.Migrations.Utilities;
+
 namespace Ttc.DataAccess.Migrations
 {
     using System;
@@ -10,8 +14,6 @@ namespace Ttc.DataAccess.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-
-            //SetSqlGenerator("MySql.Data.MySqlClient", new MySql.Data.Entity.MySqlMigrationSqlGenerator());
         }
 
         protected override void Seed(Ttc.DataAccess.TtcDbContext context)
@@ -35,28 +37,4 @@ namespace Ttc.DataAccess.Migrations
             //
         }
     }
-
-    //CodeGenerator = new MyCodeGenerator();
-    //class MyCodeGenerator : CSharpMigrationCodeGenerator
-    //{
-    //    protected override void Generate(
-    //        DropIndexOperation dropIndexOperation, IndentedTextWriter writer)
-    //    {
-    //        dropIndexOperation.Table = StripDbo(dropIndexOperation.Table);
-
-    //        base.Generate(dropIndexOperation, writer);
-    //    }
-
-    //    // TODO: implement Generate overloads that involve table names and remove the dbo. parts
-
-    //    private string StripDbo(string table)
-    //    {
-    //        if (table.StartsWith("dbo."))
-    //        {
-    //            return table.Substring(4);
-    //        }
-
-    //        return table;
-    //    }
-    //}
 }

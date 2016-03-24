@@ -106,7 +106,7 @@ namespace Ttc.DataAccess.App_Start
                     opts => opts.MapFrom(src => new OpposingTeam
                     {
                         ClubId = src.AwayClubId,
-                        TeamCode = src.AwayPloegCode
+                        TeamCode = src.AwayTeamCode
                     }))
                 .ForMember(
                     dest => dest.IsPlayed,
@@ -136,7 +136,7 @@ namespace Ttc.DataAccess.App_Start
                     opts => opts.MapFrom(src => new OpposingTeam
                     {
                         ClubId = src.HomeTeamId.HasValue ? src.AwayClubId : src.HomeClubId,
-                        TeamCode = src.HomeTeamId.HasValue ? src.AwayPloegCode : src.HomeTeamCode
+                        TeamCode = src.HomeTeamId.HasValue ? src.AwayTeamCode : src.HomeTeamCode
                     }))
                 .ForMember(
                     dest => dest.IsPlayed,

@@ -176,6 +176,18 @@
     <Compile Include="Migrations\201603131358562_SpelerToegang.Designer.cs">
       <DependentUpon>201603131358562_SpelerToegang.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603241212155_MatchEntityChanges.cs" />
+    <Compile Include="Migrations\201603241212155_MatchEntityChanges.Designer.cs">
+      <DependentUpon>201603241212155_MatchEntityChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603241215219_MatchPlayerEntityStrings.cs" />
+    <Compile Include="Migrations\201603241215219_MatchPlayerEntityStrings.Designer.cs">
+      <DependentUpon>201603241215219_MatchPlayerEntityStrings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603241218100_TeamEntityStrings.cs" />
+    <Compile Include="Migrations\201603241218100_TeamEntityStrings.Designer.cs">
+      <DependentUpon>201603241218100_TeamEntityStrings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\ServiceExtensions.cs" />
     <Compile Include="Services\ClubService.cs" />
@@ -281,6 +293,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603131358562_SpelerToegang.resx">
       <DependentUpon>201603131358562_SpelerToegang.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603241212155_MatchEntityChanges.resx">
+      <DependentUpon>201603241212155_MatchEntityChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603241215219_MatchPlayerEntityStrings.resx">
+      <DependentUpon>201603241215219_MatchPlayerEntityStrings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603241218100_TeamEntityStrings.resx">
+      <DependentUpon>201603241218100_TeamEntityStrings.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

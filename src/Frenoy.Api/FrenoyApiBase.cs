@@ -97,7 +97,7 @@ namespace Frenoy.Api
             var frenoyClub = _frenoy.GetClubs(new GetClubs
             {
                 Club = frenoyClubCode,
-                Season = _settings.FrenoySeason
+                Season = _settings.FrenoySeason.ToString()
             });
             Debug.Assert(frenoyClub.ClubEntries.Count() == 1);
 

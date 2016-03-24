@@ -39,6 +39,8 @@ namespace Ttc.DataAccess
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.HasDefaultSchema("");
+
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Types().Configure(c => c.ToTable(ToLowerCaseTableName(c.ClrType)));
 
@@ -51,30 +53,6 @@ namespace Ttc.DataAccess
                 .HasRequired(c => c.Club)
                 .WithMany(c => c.Contacten)
                 .HasForeignKey(x => x.ClubId);
-
-            //modelBuilder.Entity<MatchEntity>()
-            //    .HasRequired(c => c.Reeks)
-            //    .WithMany(c => c.Matchen)
-            //    .HasForeignKey(x => x.ReeksId);
-
-            //modelBuilder.Entity<ClubPloegSpeler>()
-            //    .HasRequired(c => c.Reeks)
-            //    .WithMany(c => c.Spelers)
-            //    .HasForeignKey(x => x.ReeksId);
-
-            //modelBuilder.Entity<MatchEntity>()
-            //    .HasOptional(x => x.Verslag)
-            //    .WithRequired(x => x.MatchEntity);
-
-            //modelBuilder.Entity<MatchGameEntity>()
-            //    .HasRequired(c => c.Match)
-            //    .WithMany(c => c.Games)
-            //    .HasForeignKey(x => x.MatchId);
-
-            //modelBuilder.Entity<MatchPlayerEntity>()
-            //    .HasRequired(c => c.Match)
-            //    .WithMany(c => c.Players)
-            //    .HasForeignKey(x => x.MatchId);
         }
 
         public TtcDbContext() : base("ttc")

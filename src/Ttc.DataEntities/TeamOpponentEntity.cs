@@ -21,6 +21,7 @@ namespace Ttc.DataEntities
         /// <summary>
         /// Team A, B, C, ...
         /// </summary>
+        [MaxLength(2)]
         public string TeamCode { get; set; }
 
         public override string ToString() => $"Id={Id}, Reeks=_{Team}_, ClubId={ClubId}, TeamCode={TeamCode}";

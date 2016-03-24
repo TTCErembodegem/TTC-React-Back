@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Ttc.Model.Players;
 
 namespace Ttc.DataEntities
 {
@@ -11,17 +12,26 @@ namespace Ttc.DataEntities
         [Key]
         public int Id { get; set; }
 
-        //[Index]
+        [Index]
         public DateTime Date { get; set; }
 
         public int Week { get; set; }
+        [MaxLength(20)]
         public string FrenoyMatchId { get; set; }
+        public int FrenoyUniqueId { get; set; }
+        public int FrenoyDivisionId { get; set; }
+        /// <summary>
+        /// 2015-2016 = 16
+        /// </summary>
+        public int FrenoySeason { get; set; }
+        public Competition Competition { get; set; }
 
         public int? HomeTeamId { get; set; }
         [ForeignKey("HomeTeamId")]
         public TeamEntity HomeTeam { get; set; }
         //[Index]
         public int HomeClubId { get; set; }
+        [MaxLength(2)]
         public string HomeTeamCode { get; set; }
 
         public int? AwayTeamId { get; set; }
@@ -29,7 +39,9 @@ namespace Ttc.DataEntities
         public TeamEntity AwayTeam { get; set; }
         //[Index]
         public int AwayClubId { get; set; }
-        public string AwayPloegCode { get; set; } // TODO: rename to AwayTeamCode
+
+        [MaxLength(2)]
+        public string AwayTeamCode { get; set; } 
 
         public int ReportPlayerId { get; set; }
         public ICollection<MatchGameEntity> Games { get; set; }
@@ -57,7 +69,7 @@ namespace Ttc.DataEntities
         public override string ToString()
         {
             var str = $"Id={Id}, Date={Date.ToString("d")} {Date.ToString(@"hh\:mm")}";
-            return $"{str}, UitClubId={AwayClubId}, UitPloeg={AwayPloegCode}";
+            return $"{str}, UitClubId={AwayClubId}, UitPloeg={AwayTeamCode}";
         }
     }
 }

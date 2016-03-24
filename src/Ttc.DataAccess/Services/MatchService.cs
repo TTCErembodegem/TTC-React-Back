@@ -68,11 +68,13 @@ namespace Ttc.DataAccess.Services
 
                 var calendar = dbContext.Matches
                     .WithIncludes()
-                    .Where(kal => (kal.AwayClubId == opponent.ClubId && kal.AwayPloegCode == opponent.TeamCode) || (kal.HomeClubId == opponent.ClubId && kal.HomeTeamCode == opponent.TeamCode))
+                    .Where(kal => (kal.AwayClubId == opponent.ClubId && kal.AwayTeamCode == opponent.TeamCode) || (kal.HomeClubId == opponent.ClubId && kal.HomeTeamCode == opponent.TeamCode))
                     .Where(kal => kal.Date < DateTime.Now)
                     //.OrderByDescending(kal => kal.Date)
                     //.Take(5)
                     .ToList();
+
+                // No comments for OpponentMatches
 
                 var result = Mapper.Map<IList<MatchEntity>, IList<OtherMatch>>(calendar);
                 return result;
@@ -94,7 +96,7 @@ namespace Ttc.DataAccess.Services
                 {
                     prevKalender = dbContext.Matches
                         .WithIncludes()
-                        .Where(x => x.HomeTeamCode == kalender.AwayPloegCode)
+                        .Where(x => x.HomeTeamCode == kalender.AwayTeamCode)
                         .Where(x => x.HomeClubId == kalender.AwayClubId)
                         .Where(x => x.AwayTeamId == kalender.HomeTeamId)
                         .SingleOrDefault(x => x.Date < kalender.Date);
@@ -103,7 +105,7 @@ namespace Ttc.DataAccess.Services
                 {
                     prevKalender = dbContext.Matches
                         .WithIncludes()
-                        .Where(x => x.AwayPloegCode == kalender.HomeTeamCode)
+                        .Where(x => x.AwayTeamCode == kalender.HomeTeamCode)
                         .Where(x => x.AwayClubId == kalender.HomeClubId)
                         .Where(x => x.HomeTeamId == kalender.AwayTeamId)
                         .SingleOrDefault(x => x.Date < kalender.Date);
@@ -195,7 +197,7 @@ namespace Ttc.DataAccess.Services
                 {
                     var team = dbContext.Teams.Single(x => x.Id == match.HomeTeamId || x.Id == match.AwayTeamId);
                     var frenoySync = new FrenoyMatchesApi(dbContext, Constants.NormalizeCompetition(team.Competition));
-                    frenoySync.SyncMatch(team.Id, match.FrenoyMatchId);
+                    frenoySync.SyncMatch(team.Id, match.FrenoyDivisionId, match.FrenoyMatchId);
                 }
                 return GetMatch(dbContext, match.Id);
             }

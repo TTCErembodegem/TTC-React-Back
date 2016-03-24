@@ -22,15 +22,15 @@ namespace Ttc.UnitTests
     [TestFixture]
     public class PlaygroundTests
     {
-        [Test]
-        public void SyncMatch()
-        {
-            using (var dbContext = new TtcDbContext())
-            {
-                var frenoy = new FrenoyMatchesApi(dbContext, Competition.Sporta);
-                frenoy.SyncMatch(29, "O17/036");
-            }
-        }
+        //[Test]
+        //public void SyncMatch()
+        //{
+        //    using (var dbContext = new TtcDbContext())
+        //    {
+        //        var frenoy = new FrenoyMatchesApi(dbContext, Competition.Sporta);
+        //        frenoy.SyncMatch(29, "O17/036");
+        //    }
+        //}
 
         [Test]
         public void FillTeamPlayers()
@@ -43,7 +43,7 @@ namespace Ttc.UnitTests
                 foreach (KeyValuePair<string, string[]> dict in settings.Players)
                 {
                     TeamEntity team = dbContext.Teams
-                        .Where(x => x.Year == settings.Jaar)
+                        .Where(x => x.Year == settings.Year)
                         .Single(x => x.Competition == comp.ToString() && x.TeamCode == dict.Key);
 
                     foreach (string player in dict.Value)

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Frenoy.Api.FrenoyVttl;
+using Ttc.Model.Players;
 
 namespace Frenoy.Api
 {
@@ -10,12 +11,12 @@ namespace Frenoy.Api
     public class FrenoySettings
     {
         public string FrenoyClub { get; set; }
-        public string FrenoySeason { get; set; }
-        public string Competitie { get; set; }
-        public string ReeksType { get; set; }
-        public int Jaar { get; set; }
+        public int FrenoySeason { get; set; }
+        public Competition Competition { get; set; }
+        public string DivisionType { get; set; }
+        public int Year { get; set; }
 
-        public override string ToString() => $"FrenoyClub={FrenoyClub}, FrenoySeason={FrenoySeason}, Competitie={Competitie}, ReeksType={ReeksType}, Jaar={Jaar}";
+        public override string ToString() => $"FrenoyClub={FrenoyClub}, FrenoySeason={FrenoySeason}, Competitie={Competition}, ReeksType={DivisionType}, Jaar={Year}";
 
         /// <summary>
         /// Keys = TeamCode
@@ -26,10 +27,10 @@ namespace Frenoy.Api
         public static FrenoySettings VttlSettings => new FrenoySettings
         {
             FrenoyClub = "OVL134",
-            FrenoySeason = "16",
-            Jaar = 2015,
-            Competitie = "VTTL",
-            ReeksType = "Prov",
+            FrenoySeason = 16,
+            Year = 2015,
+            Competition = Competition.Vttl,
+            DivisionType = "Prov",
             Players = new Dictionary<string, string[]>
             {
                 ["A"] = new[] { "Dirk DS.", "Kharmis", "Jorn", "Sami", "Jurgen E.", "Wouter" },
@@ -44,18 +45,18 @@ namespace Frenoy.Api
         public static FrenoySettings SportaSettings => new FrenoySettings
         {
             FrenoyClub = "4055",
-            FrenoySeason = "16",
-            Jaar = 2015,
-            Competitie = "Sporta",
-            ReeksType = "Afd",
+            FrenoySeason = 16,
+            Year = 2015,
+            Competition = Competition.Sporta,
+            DivisionType = "Afd",
             Players = new Dictionary<string, string[]>
             {
                 ["A"] = new[] { "Dirk DS.", "Kharmis", "Jorn", "Sami", "Wouter" },
                 ["B"] = new[] { "Bart", "Patrick", "Geert", "Dirk B", "Jelle" },
                 ["C"] = new[] { "Dries", "Maarten", "Luc", "Jan", "Veerle" },
                 ["D"] = new[] { "Leo", "Guy", "Patrick DS", "Tuur", "Peter V" },
-                ["E"] = new[] { "Dirk K.", "Etienne", "Peter N", "Marnix", "Thierry", "Martin" },
-                ["F"] = new[] { "Tim", "Rudi", "Daniel", "Tim", "Etienne C.", "Myriam", "Wim", "Martin" }
+                ["E"] = new[] { "Dirk K.", "Etienne", "Peter N", "Marnix", "Thierry" },
+                ["F"] = new[] { "Tim", "Rudi", "Daniel", "Etienne C.", "Myriam", "Wim" }
             }
         };
     }
