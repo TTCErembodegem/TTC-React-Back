@@ -8,9 +8,9 @@ namespace Ttc.DataAccess.Services
 {
     internal static class ServiceExtensions
     {
-        public static IQueryable<MatchEntity> WithIncludes(this DbSet<MatchEntity> kalender)
+        public static IQueryable<MatchEntity> WithIncludes(this DbSet<MatchEntity> matches)
         {
-            return kalender
+            return matches
                 .Include(x => x.HomeTeam)
                 .Include(x => x.AwayTeam)
                 .Include(x => x.Games)

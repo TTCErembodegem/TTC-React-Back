@@ -22,16 +22,6 @@ namespace Ttc.UnitTests
     [TestFixture]
     public class PlaygroundTests
     {
-        //[Test]
-        //public void SyncMatch()
-        //{
-        //    using (var dbContext = new TtcDbContext())
-        //    {
-        //        var frenoy = new FrenoyMatchesApi(dbContext, Competition.Sporta);
-        //        frenoy.SyncMatch(29, "O17/036");
-        //    }
-        //}
-
         [Test]
         public void FillTeamPlayers()
         {
@@ -79,12 +69,6 @@ namespace Ttc.UnitTests
         {
             using (var dbContext = new TtcDbContext())
             {
-                //var pastMatchEntity = dbContext.Kalender
-                //    .Include(x => x.Verslag)
-                //    .Include("Verslag.Spelers")
-                //    .Single(x => x.Id == 1597);
-                //Assert.That(pastMatchEntity.Verslag, Is.Not.Null);
-
                 AutoMapperConfig.Configure(new KlassementValueConverter());
 
                 var serv = new MatchService();

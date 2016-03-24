@@ -24,7 +24,7 @@ namespace Ttc.DataAccess.Services
             using (var dbContext = new TtcDbContext())
             {
                 var dateBegin = DateTime.Now.AddDays(-10);
-                var dateEnd = DateTime.Now.AddDays(10);
+                var dateEnd = DateTime.Now.AddDays(20);
 
                 var calendar = dbContext.Matches
                     .WithIncludes()
@@ -85,35 +85,35 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
-                var kalender = dbContext.Matches.Single(x => x.Id == matchId);
-                if (!kalender.IsHomeMatch.HasValue)
+                var matchEntities = dbContext.Matches.Single(x => x.Id == matchId);
+                if (!matchEntities.IsHomeMatch.HasValue)
                 {
                     return null;
                 }
 
-                MatchEntity prevKalender;
-                if (kalender.IsHomeMatch.Value)
+                MatchEntity firstRoundMatch;
+                if (matchEntities.IsHomeMatch.Value)
                 {
-                    prevKalender = dbContext.Matches
+                    firstRoundMatch = dbContext.Matches
                         .WithIncludes()
-                        .Where(x => x.HomeTeamCode == kalender.AwayTeamCode)
-                        .Where(x => x.HomeClubId == kalender.AwayClubId)
-                        .Where(x => x.AwayTeamId == kalender.HomeTeamId)
-                        .SingleOrDefault(x => x.Date < kalender.Date);
+                        .Where(x => x.HomeTeamCode == matchEntities.AwayTeamCode)
+                        .Where(x => x.HomeClubId == matchEntities.AwayClubId)
+                        .Where(x => x.AwayTeamId == matchEntities.HomeTeamId)
+                        .SingleOrDefault(x => x.Date < matchEntities.Date);
                 }
                 else
                 {
-                    prevKalender = dbContext.Matches
+                    firstRoundMatch = dbContext.Matches
                         .WithIncludes()
-                        .Where(x => x.AwayTeamCode == kalender.HomeTeamCode)
-                        .Where(x => x.AwayClubId == kalender.HomeClubId)
-                        .Where(x => x.HomeTeamId == kalender.AwayTeamId)
-                        .SingleOrDefault(x => x.Date < kalender.Date);
+                        .Where(x => x.AwayTeamCode == matchEntities.HomeTeamCode)
+                        .Where(x => x.AwayClubId == matchEntities.HomeClubId)
+                        .Where(x => x.HomeTeamId == matchEntities.AwayTeamId)
+                        .SingleOrDefault(x => x.Date < matchEntities.Date);
                 }
 
                 // TODO: comments not fetched here
 
-                return Map(prevKalender);
+                return Map(firstRoundMatch);
             }
         }
         #endregion

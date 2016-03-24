@@ -16,7 +16,7 @@ namespace Frenoy.Api
         public string DivisionType { get; set; }
         public int Year { get; set; }
 
-        public override string ToString() => $"FrenoyClub={FrenoyClub}, FrenoySeason={FrenoySeason}, Competitie={Competition}, ReeksType={DivisionType}, Jaar={Year}";
+        public override string ToString() => $"FrenoyClub={FrenoyClub}, FrenoySeason={FrenoySeason}, Competitie={Competition}, Division={DivisionType}, Jaar={Year}";
 
         /// <summary>
         /// Keys = TeamCode

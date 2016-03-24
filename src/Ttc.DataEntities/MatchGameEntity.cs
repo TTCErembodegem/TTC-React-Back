@@ -21,6 +21,6 @@ namespace Ttc.DataEntities
         public int AwayPlayerSets { get; set; }
         public WalkOver WalkOver { get; set; }
 
-        public override string ToString() => $"KalenderId={MatchId}, Match#={MatchNumber}, ThuisSpeler={HomePlayerUniqueIndex}:{AwayPlayerUniqueIndex}, UitSpeler={HomePlayerSets}:{AwayPlayerSets}";
+        public override string ToString() => $"Id={MatchId}, Match#={MatchNumber}, ThuisSpeler={HomePlayerUniqueIndex}:{AwayPlayerUniqueIndex}, UitSpeler={HomePlayerSets}:{AwayPlayerSets}";
     }
 }

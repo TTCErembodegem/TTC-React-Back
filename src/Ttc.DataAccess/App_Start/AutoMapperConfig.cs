@@ -120,11 +120,11 @@ namespace Ttc.DataAccess.App_Start
                     dest => dest.Score,
                     opts => opts.MapFrom(src => !src.WalkOver && src.HomeScore.HasValue ? new MatchScore(src.HomeScore.Value, src.AwayScore.Value) : null))
 
-                .AfterMap((kalender, match) =>
+                .AfterMap((matchEntity, match) =>
                 {
                     //SetMatchPlayerAliases(match);
                     //ChangeMeaningOfHomePlayer(match);
-                    //SetIndividualMatchesOutcome(match);
+                    SetIndividualMatchesOutcome(match.Games, null);
                 });
 
             Mapper.CreateMap<MatchEntity, Match>()
@@ -150,20 +150,20 @@ namespace Ttc.DataAccess.App_Start
                     dest => dest.Score,
                     opts => opts.MapFrom(src => !src.WalkOver && src.HomeScore.HasValue ? new MatchScore(src.HomeScore.Value, src.AwayScore.Value) : null))
 
-                .AfterMap((kalender, match) =>
+                .AfterMap((matchEntity, match) =>
                 {
                     SetMatchPlayerAliases(match);
                     ChangeMeaningOfHomePlayer(match);
-                    SetIndividualMatchesOutcome(match);
+                    SetIndividualMatchesOutcome(match.Games, match.IsHomeMatch);
                 });
         }
 
-        private static void SetIndividualMatchesOutcome(Match match)
+        private static void SetIndividualMatchesOutcome(IEnumerable<MatchGame> games, bool? isHomeMatch)
         {
-            foreach (var game in match.Games.Where(g => g.Outcome != MatchOutcome.WalkOver))
+            foreach (var game in games.Where(g => g.Outcome != MatchOutcome.WalkOver))
             {
                 game.Outcome = game.HomePlayerSets > game.OutPlayerSets ? MatchOutcome.Won : MatchOutcome.Lost;
-                if (match.IsHomeMatch.HasValue && !match.IsHomeMatch.Value)
+                if (isHomeMatch.HasValue && !isHomeMatch.Value)
                 {
                     game.Outcome = game.Outcome == MatchOutcome.Won ? MatchOutcome.Lost : MatchOutcome.Won;
                 }
