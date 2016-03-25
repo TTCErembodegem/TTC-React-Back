@@ -55,7 +55,11 @@ namespace Ttc.DataAccess.Migrations
 
         protected override void Seed(TtcDbContext context)
         {
+#if DEBUG
             Seed(context, true, true);
+#else
+            Seed(context, false, false);
+#endif
 
             // Clublokaal user account
             context.Players.AddOrUpdate(p => p.NaamKort, new PlayerEntity
@@ -65,7 +69,7 @@ namespace Ttc.DataAccess.Migrations
                 NaamKort = "SYSTEM",
                 Toegang = PlayerToegang.System
             });
-            context.Database.ExecuteSqlCommand("UPDATE speler SET paswoord=MD5('system') WHERE Naam='SYSTEM'");
+            context.Database.ExecuteSqlCommand("UPDATE speler SET paswoord=MD5('system') WHERE Naam='SYSTEM' AND paswoord IS NULL");
         }
 
         private static void AddTeamPlayers(TtcDbContext context, FrenoySettings settings)
