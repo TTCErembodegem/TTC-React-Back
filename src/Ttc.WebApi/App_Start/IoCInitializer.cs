@@ -15,9 +15,6 @@ namespace Ttc.WebApi
     {
         public static Container Initialize()
         {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("nl-BE");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("nl-BE");
-
             var container = new Container();
             container.Options.DefaultScopedLifestyle = new ExecutionContextScopeLifestyle();
             

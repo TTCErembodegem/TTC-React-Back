@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
+using System.Threading;
 
 namespace Ttc.DataEntities
 {
@@ -20,9 +22,9 @@ namespace Ttc.DataEntities
         //public PlayerEntity Player { get; set; }
         public int PlayerId { get; set; }
 
-        public MatchCommentEntity()
+        public override string ToString()
         {
-            PostedOn = DateTime.Now;
+            return $"Id: {Id}, Text: {Text}, MatchId: {MatchId}, PlayerId: {PlayerId}";
         }
     }
 }

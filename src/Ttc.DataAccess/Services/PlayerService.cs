@@ -117,7 +117,7 @@ namespace Ttc.DataAccess.Services
 
         private static User GetUser(TtcDbContext dbContext, int playerId)
         {
-            int currentYear = dbContext.CurrentYear;
+            int currentYear = TtcDbContext.CurrentYear;
             var teams = dbContext.Teams
                 .Include(x => x.Players)
                 .Where(x => x.Year == currentYear)

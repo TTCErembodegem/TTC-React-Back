@@ -58,11 +58,11 @@ namespace Ttc.DataAccess.Services
                 var frenoy = new FrenoyMatchesApi(dbContext, Constants.NormalizeCompetition(team.Competition));
                 frenoy.SyncMatches(team, opponent);
 
+                var now = DateTime.Now;
                 var matchEntities = dbContext.Matches
                     .WithIncludes()
                     .Where(kal => (kal.AwayClubId == opponent.ClubId && kal.AwayTeamCode == opponent.TeamCode) || (kal.HomeClubId == opponent.ClubId && kal.HomeTeamCode == opponent.TeamCode))
-                    .Where(kal => kal.Date < DateTime.Now)
-                    //.OrderByDescending(kal => kal.Date)
+                    .Where(kal => kal.Date <= now)
                     //.Take(5)
                     .ToList();
 
@@ -167,6 +167,7 @@ namespace Ttc.DataAccess.Services
                 {
                     dbContext.MatchComments.Add(new MatchCommentEntity
                     {
+                        PostedOn = TtcDbContext.GetCurrentBelgianDateTime(),
                         PlayerId = report.PlayerId,
                         MatchId = report.MatchId,
                         Text = report.Text

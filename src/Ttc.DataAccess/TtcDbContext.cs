@@ -28,7 +28,19 @@ namespace Ttc.DataAccess
         public DbSet<Backup.BackupReport> BackupReports { get; set; }
         public DbSet<Backup.BackupTeamPlayer> BackupTeamPlayers { get; set; }
 
-        public int CurrentYear
+        /// <summary>
+        /// Get the same time as the Frenoy Api
+        /// </summary>
+        public static DateTime GetCurrentBelgianDateTime()
+        {
+            DateTime belgianTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Romance Standard Time");
+            return belgianTime;
+        }
+
+        /// <summary>
+        /// Get current year season (not frenoy season!)
+        /// </summary>
+        public static int CurrentYear
         {
             get
             {

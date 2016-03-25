@@ -25,6 +25,11 @@ namespace Ttc.Model.Matches
         public bool IsPlayed { get; set; }
         public ICollection<MatchPlayer> Players { get; set; }
         public ICollection<MatchGame> Games { get; set; }
+
+        public override string ToString()
+        {
+            return $"Id: {Id}, Date: {Date}, FrenoyMatchId: {FrenoyMatchId}, IsSyncedWithFrenoy: {IsSyncedWithFrenoy}, Home: {Home}, Away: {Away}, Score: {Score}";
+        }
     }
 
     public class Match
