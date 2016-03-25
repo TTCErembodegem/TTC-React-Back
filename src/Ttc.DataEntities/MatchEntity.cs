@@ -71,7 +71,7 @@ namespace Ttc.DataEntities
         public override string ToString()
         {
             var str = $"Id={Id}, Date={Date.ToString("d")} {Date.ToString(@"hh\:mm")}";
-            return $"{str}, UitClubId={AwayClubId}, UitPloeg={AwayTeamCode}";
+            return $"{str}, Club={AwayClubId}, Team={AwayTeamCode}";
         }
     }
 }

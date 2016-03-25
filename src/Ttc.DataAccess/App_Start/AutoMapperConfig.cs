@@ -60,10 +60,10 @@ namespace Ttc.DataAccess.App_Start
         }
 
         private static ICollection<OpposingTeam> MapAllTeams(TeamEntity src)
-        => src.Opponents.Select(ploeg => new OpposingTeam
+        => src.Opponents.Select(opponent => new OpposingTeam
         {
-            ClubId = ploeg.ClubId,
-            TeamCode = ploeg.TeamCode
+            ClubId = opponent.ClubId,
+            TeamCode = opponent.TeamCode
         }).ToArray();
         #endregion
 

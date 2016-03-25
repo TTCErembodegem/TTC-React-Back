@@ -6,6 +6,7 @@ using AutoMapper;
 using Frenoy.Api;
 using Ttc.DataEntities;
 using Ttc.Model.Matches;
+using Ttc.Model.Players;
 using Ttc.Model.Teams;
 
 namespace Ttc.DataAccess.Services
@@ -56,7 +57,7 @@ namespace Ttc.DataAccess.Services
                 var team = dbContext.Teams.Single(x => x.Id == teamId);
 
                 var frenoy = new FrenoyMatchesApi(dbContext, Constants.NormalizeCompetition(team.Competition));
-                frenoy.SyncMatches(team, opponent);
+                frenoy.SyncLastOpponentMatches(team, opponent);
 
                 var now = DateTime.Now;
                 var matchEntities = dbContext.Matches
@@ -200,9 +201,8 @@ namespace Ttc.DataAccess.Services
 
             if (match.Date < DateTime.Now && !match.IsSyncedWithFrenoy)
             {
-                var team = dbContext.Teams.First(x => x.FrenoyDivisionId == match.FrenoyDivisionId);
-                var frenoySync = new FrenoyMatchesApi(dbContext, Constants.NormalizeCompetition(team.Competition));
-                frenoySync.SyncMatch(team.Id, match.FrenoyDivisionId, match.FrenoyMatchId);
+                var frenoySync = new FrenoyMatchesApi(dbContext, match.Competition);
+                frenoySync.SyncMatchDetails(match);
             }
         }
 
