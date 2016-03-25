@@ -55,14 +55,22 @@ namespace Ttc.WebApi.Utilities.Auth
 
         public static User ValidateToken(string token)
         {
-            string apikey = WebApi.Properties.Settings.Default.JwtSecret;
-            dynamic user = JsonConvert.DeserializeObject(JsonWebToken.Decode(token, apikey));
+            dynamic user;
+            try
+            {
+                string apikey = WebApi.Properties.Settings.Default.JwtSecret;
+                user = JsonConvert.DeserializeObject(JsonWebToken.Decode(token, apikey));
+            }
+            catch
+            {
+                return null;
+            }
 
             var userModel = new User
             {
                 Alias = (string)user.alias,
                 PlayerId = (int)user.playerId,
-                Teams = !string.IsNullOrWhiteSpace((string)user.teams) ? ((string)user.teams).Split(',').Select(int.Parse).ToArray() : new int[] {},
+                Teams = !string.IsNullOrWhiteSpace((string)user.teams) ? ((string)user.teams).Split(',').Select(int.Parse).ToArray() : new int[] { },
             };
 
             userModel.Security = JsonConvert.DeserializeObject<List<string>>((string)user.security);
