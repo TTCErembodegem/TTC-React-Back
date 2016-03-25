@@ -62,9 +62,9 @@ namespace Ttc.DataAccess.Services
                 var now = DateTime.Now;
                 var matchEntities = dbContext.Matches
                     .WithIncludes()
-                    .Where(kal => (kal.AwayClubId == opponent.ClubId && kal.AwayTeamCode == opponent.TeamCode) || (kal.HomeClubId == opponent.ClubId && kal.HomeTeamCode == opponent.TeamCode))
-                    .Where(kal => kal.Date <= now)
-                    //.Take(5)
+                    .Where(match => (match.AwayClubId == opponent.ClubId && match.AwayTeamCode == opponent.TeamCode) || (match.HomeClubId == opponent.ClubId && match.HomeTeamCode == opponent.TeamCode))
+                    .Where(match => match.FrenoyDivisionId == team.FrenoyDivisionId)
+                    .Where(match => match.Date <= now)
                     .ToList();
 
                 // No comments for OpponentMatches
