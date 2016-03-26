@@ -27,9 +27,6 @@ namespace Ttc.WebApi.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("Ranking")]
-        public Team Ranking(int teamId)
-        {
-            return _service.GetTeam(teamId, true);
-        }
+        public Team Ranking(int teamId) => _service.GetTeam(teamId, true);
     }
 }

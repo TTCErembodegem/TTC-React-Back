@@ -66,9 +66,6 @@ namespace Ttc.WebApi.Controllers
         [HttpPost]
         [Route("ValidateToken")]
         [AllowAnonymous]
-        public User ValidateToken([FromBody]ValidateTokenRequest token)
-        {
-            return TtcAuthorizationFilterAttribute.ValidateToken(token.Token);
-        }
+        public User ValidateToken([FromBody]ValidateTokenRequest token) => TtcAuthorizationFilterAttribute.ValidateToken(token.Token);
     }
 }
