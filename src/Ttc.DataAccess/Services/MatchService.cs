@@ -171,7 +171,8 @@ namespace Ttc.DataAccess.Services
                         PostedOn = TtcDbContext.GetCurrentBelgianDateTime(),
                         PlayerId = report.PlayerId,
                         MatchId = report.MatchId,
-                        Text = report.Text
+                        Text = report.Text,
+                        Hidden = report.Hidden
                     });
                 }
                 

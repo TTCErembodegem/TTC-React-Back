@@ -30,7 +30,7 @@ namespace Ttc.WebApi.Utilities
             {
                 foreach (var record in data)
                 {
-                    CleanSensitiveData(record);
+                    CleanSensitiveDataCore(record);
                 }
             }
         }

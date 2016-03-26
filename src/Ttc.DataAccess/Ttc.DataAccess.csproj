@@ -200,6 +200,10 @@
     <Compile Include="Migrations\201603260252143_DataCleansing.Designer.cs">
       <DependentUpon>201603260252143_DataCleansing.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603260418361_HiddenMatchComments.cs" />
+    <Compile Include="Migrations\201603260418361_HiddenMatchComments.Designer.cs">
+      <DependentUpon>201603260418361_HiddenMatchComments.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\ServiceExtensions.cs" />
     <Compile Include="Services\ClubService.cs" />
@@ -323,6 +327,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603260252143_DataCleansing.resx">
       <DependentUpon>201603260252143_DataCleansing.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603260418361_HiddenMatchComments.resx">
+      <DependentUpon>201603260418361_HiddenMatchComments.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

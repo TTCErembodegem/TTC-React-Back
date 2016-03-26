@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Ttc.Model.Matches;
 
 namespace Ttc.Model.Core
@@ -16,6 +18,9 @@ namespace Ttc.Model.Core
             if (strategy == "MATCH")
             {
                 Strategy = new TtcConfidentialMatchStrategy();
+            } else if (strategy == "MATCH-COMMENTS")
+            {
+                Strategy = new TtcConfidentialMatchCommentsStrategy();
             }
         }
     }
@@ -33,6 +38,20 @@ namespace Ttc.Model.Core
                 return false;
             }
             return true;
+        }
+    }
+
+    public class TtcConfidentialMatchCommentsStrategy : ITtcConfidentialStrategy
+    {
+        public bool ShouldHide(object data)
+        {
+            var comments = ((Match)data).Comments;
+            var toRemove = comments.Where(c => c.Hidden).ToArray();
+            foreach (var rm in toRemove)
+            {
+                comments.Remove(rm);
+            }
+            return false;
         }
     }
 

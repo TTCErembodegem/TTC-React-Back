@@ -15,7 +15,7 @@ namespace Ttc.DataAccess.Migrations
             Sql("update clublokaal set telefoon = replace(telefoon, '.', '')");
             Sql("update clublokaal set telefoon = replace(telefoon, ' ', '')");
 
-            Sql("UPDATE `ttc`.`club` SET `Naam`= 'Gent Het Netje Over' WHERE  Naam='TTC Het Netje Over Gent'");
+            Sql("UPDATE club SET Naam= 'Gent Het Netje Over' WHERE  Naam='TTC Het Netje Over Gent'");
         }
         
         public override void Down()

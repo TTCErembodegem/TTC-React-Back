@@ -60,6 +60,7 @@ namespace Ttc.Model.Matches
         [TtcConfidential("MATCH")]
         public ICollection<MatchPlayer> Players { get; set; }
         public ICollection<MatchGame> Games { get; set; }
+        [TtcConfidential("MATCH-COMMENTS")]
         public ICollection<MatchReport> Comments { get; set; }
         #endregion
 

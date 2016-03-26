@@ -13,6 +13,7 @@ namespace Ttc.DataEntities
         public int Id { get; set; }
         public DateTime PostedOn { get; set; }
         public string Text { get; set; }
+        public bool Hidden { get; set; }
 
         [ForeignKey("MatchId")]
         public MatchEntity Match { get; set; }

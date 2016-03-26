@@ -51,7 +51,9 @@ namespace Ttc.WebApi.Controllers
         [Route("GetFirstRoundMatch")]
         public Match GetFirstRoundMatch(int matchId)
         {
-            return _service.GetFirstRoundMatch(matchId);
+            var result = _service.GetFirstRoundMatch(matchId);
+            CleanSensitiveData(result);
+            return result;
         }
 
         [HttpGet]
@@ -76,6 +78,7 @@ namespace Ttc.WebApi.Controllers
         public Match FrenoyMatchSync([FromBody]IdDto matchId)
         {
             var result = _service.FrenoyMatchSync(matchId.Id);
+            CleanSensitiveData(result);
             return result;
         }
 

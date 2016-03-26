@@ -13,6 +13,7 @@ namespace Ttc.Model.Matches
         public string Text { get; set; }
         public int PlayerId { get; set; }
         public DateTime PostedOn { get; set; }
+        public bool Hidden { get; set; }
 
         public override string ToString() => $"MatchId: {MatchId}, Text: {Text}, PlayerId: {PlayerId}";
     }
