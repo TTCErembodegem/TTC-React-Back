@@ -196,6 +196,10 @@
     <Compile Include="Migrations\201603241301236_MatchEntityFrenoyUniqueIdCanBeAbsent.Designer.cs">
       <DependentUpon>201603241301236_MatchEntityFrenoyUniqueIdCanBeAbsent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603260252143_DataCleansing.cs" />
+    <Compile Include="Migrations\201603260252143_DataCleansing.Designer.cs">
+      <DependentUpon>201603260252143_DataCleansing.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\ServiceExtensions.cs" />
     <Compile Include="Services\ClubService.cs" />
@@ -316,6 +320,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603241301236_MatchEntityFrenoyUniqueIdCanBeAbsent.resx">
       <DependentUpon>201603241301236_MatchEntityFrenoyUniqueIdCanBeAbsent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603260252143_DataCleansing.resx">
+      <DependentUpon>201603260252143_DataCleansing.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

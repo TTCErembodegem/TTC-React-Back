@@ -35,8 +35,6 @@ namespace Ttc.DataAccess.Migrations
                 context.Database.ExecuteSqlCommand("DELETE FROM teamplayer");
             }
 
-            context.Database.ExecuteSqlCommand("UPDATE `ttc`.`club` SET `Naam`= 'Gent Het Netje Over' WHERE  Naam='TTC Het Netje Over Gent'");
-
             if (!context.Matches.Any())
             {
                 var vttl = new FrenoyMatchesApi(context, Competition.Vttl);
