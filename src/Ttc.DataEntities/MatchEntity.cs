@@ -25,8 +25,7 @@ namespace Ttc.DataEntities
         /// 2015-2016 = 16
         /// </summary>
         public int FrenoySeason { get; set; } // TODO: need extra filtering on season in frontend
-        public Competition Competition { get; set; } // TODO: in frontend: match.getTeam().competition ==> match.competition
-        // ---
+        public Competition Competition { get; set; }
 
         public int? HomeTeamId { get; set; }
         [ForeignKey("HomeTeamId")]
