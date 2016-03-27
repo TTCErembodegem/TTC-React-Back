@@ -54,17 +54,18 @@ namespace Ttc.WebApi.Controllers
                 await Request.Content.ReadAsMultipartAsync(provider);
 
                 var file = provider.FileData.First();
-                string publicFileName = "/img/temp/" + file.LocalFileName.Replace(fullPath, "").Replace("\\", "");
 
                 var localFileName = file.Headers.ContentDisposition.Name.Substring(1);
                 localFileName = localFileName.Substring(0, localFileName.Length - 1);
                 var originalFile = new FileInfo(localFileName);
-                publicFileName = Path.ChangeExtension(file.LocalFileName, originalFile.Extension);
-                File.Move(file.LocalFileName, publicFileName);
-                
+                string localFileNameWithExt = Path.ChangeExtension(file.LocalFileName, originalFile.Extension);
+                File.Move(file.LocalFileName, localFileNameWithExt);
+
                 //string fieldType = provider.FormData.GetValues("uploadType").First();
                 //file.Headers.ContentDisposition.Name
                 //provider.FormData.GetValues(key)
+
+                string publicFileName = "/img/temp/" + localFileNameWithExt.Replace(fullPath, "").Replace("\\", "");
 
                 return Request.CreateResponse(HttpStatusCode.OK, new { fileName = publicFileName });
             }
