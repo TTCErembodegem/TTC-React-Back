@@ -136,9 +136,6 @@ namespace Ttc.WebApi.Controllers
         public int Home { get; set; }
         public int Out { get; set; }
 
-        public override string ToString()
-        {
-            return $"MatchId: {MatchId}, Home: {Home}, Out: {Out}";
-        }
+        public override string ToString() => $"MatchId: {MatchId}, Home: {Home}, Out: {Out}";
     }
 }

@@ -23,9 +23,6 @@ namespace Ttc.DataEntities
         //public PlayerEntity Player { get; set; }
         public int PlayerId { get; set; }
 
-        public override string ToString()
-        {
-            return $"Id: {Id}, Text: {Text}, MatchId: {MatchId}, PlayerId: {PlayerId}";
-        }
+        public override string ToString() => $"Id: {Id}, Text: {Text}, MatchId: {MatchId}, PlayerId: {PlayerId}";
     }
 }
