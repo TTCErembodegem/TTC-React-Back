@@ -31,5 +31,14 @@ namespace Ttc.WebApi.Properties {
                 return ((string)(this["JwtSecret"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\wamp\\www\\ttc\\react-redux\\frontend\\build\\public\\img")]
+        public string PublicImageFolder {
+            get {
+                return ((string)(this["PublicImageFolder"]));
+            }
+        }
     }
 }

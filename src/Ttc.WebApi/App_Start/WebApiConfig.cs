@@ -23,6 +23,12 @@ namespace Ttc.WebApi
                 routeTemplate: "api/{controller}/{action}",
                 defaults: new { }
            );
+
+           // config.Routes.MapHttpRoute(
+           //     name: "UploadApi",
+           //     routeTemplate: "api/upload/{action}/{id}",
+           //     defaults: new {}
+           //);
         }
     }
 }
