@@ -139,9 +139,6 @@ namespace Ttc.WebApi.Controllers
         public string Image { get; set; }
         public int PlayerId { get; set; }
 
-        public override string ToString()
-        {
-            return $"Image: {Image}, PlayerId: {PlayerId}";
-        }
+        public override string ToString() => $"Image: {Image}, PlayerId: {PlayerId}";
     }
 }
