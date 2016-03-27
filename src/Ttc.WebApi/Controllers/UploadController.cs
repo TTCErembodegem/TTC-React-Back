@@ -56,20 +56,13 @@ namespace Ttc.WebApi.Controllers
                 var file = provider.FileData.First();
                 string publicFileName = "/img/temp/" + file.LocalFileName.Replace(fullPath, "").Replace("\\", "");
 
+                var localFileName = file.Headers.ContentDisposition.Name.Substring(1);
+                localFileName = localFileName.Substring(0, localFileName.Length - 1);
+                var originalFile = new FileInfo(localFileName);
+                publicFileName = Path.ChangeExtension(file.LocalFileName, originalFile.Extension);
+                File.Move(file.LocalFileName, publicFileName);
+                
                 //string fieldType = provider.FormData.GetValues("uploadType").First();
-                //switch (fieldType)
-                //{
-                //    case "player-image":
-                //        //var newFileInfo = new FileInfo(file.LocalFileName);
-                //        var originalFile = new FileInfo(file.Headers.ContentDisposition.Name);
-                //        var newFilePath = Path.ChangeExtension(file.LocalFileName, originalFile.Extension);
-                //        File.Move(file.LocalFileName, newFilePath);
-                //        break;
-
-                //    //case "temp":
-                //    //default:
-                //}
-
                 //file.Headers.ContentDisposition.Name
                 //provider.FormData.GetValues(key)
 
