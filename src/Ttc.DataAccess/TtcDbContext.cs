@@ -67,7 +67,12 @@ namespace Ttc.DataAccess
                 .HasForeignKey(x => x.ClubId);
         }
 
+        // This is undoubtedly the most ugly c# I've ever written
+#if DEBUG
         public TtcDbContext() : base("ttc")
+#else
+        public TtcDbContext() : base("Ttc.DataAccess.TtcDbContext")
+#endif
         {
             //Configuration.ValidateOnSaveEnabled = false;
             Database.SetInitializer<TtcDbContext>(new CreateDatabaseIfNotExists<TtcDbContext>());
