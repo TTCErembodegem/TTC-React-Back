@@ -33,9 +33,6 @@ namespace Ttc.WebApi.Utilities.Auth
             User = user;
         }
 
-        public override string ToString()
-        {
-            return User.ToString();
-        }
+        public override string ToString() => User.ToString();
     }
 }
