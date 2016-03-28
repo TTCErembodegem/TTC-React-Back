@@ -17,14 +17,14 @@ namespace Ttc.WebApi.Controllers
     public class UploadController : BaseController
     {
         [HttpPost]
-        [Route("Player")]
-        public void UploadPlayerImage([FromBody]UploadPlayerImageDto data)
+        [Route("Image")]
+        public void UploadImage([FromBody]UploadImageDto data)
         {
-            var file = GetServerPlayerImageFile(data.PlayerId);
+            var file = GetServerPlayerImageFile(data.Type, data.DataId);
             if (file.Exists)
             {
                 var backupFile = GetServerImagePath(ImageFolder.Backup) + "\\";
-                backupFile += "ply_" + data.PlayerId + "_" + Path.GetRandomFileName() + ".png";
+                backupFile += data.Type.Replace("-", "_") + "_" + data.DataId + "_" + Path.GetRandomFileName() + ".png";
                 File.Move(file.FullName, backupFile);
             }
             
@@ -39,7 +39,7 @@ namespace Ttc.WebApi.Controllers
 
         [HttpPost]
         [Route("Temp")]
-        public async Task<HttpResponseMessage> UploadFile()
+        public async Task<HttpResponseMessage> UploadTempFile()
         {
             if (!Request.Content.IsMimeMultipartContent())
             {
@@ -76,10 +76,18 @@ namespace Ttc.WebApi.Controllers
         }
 
         #region Private FileSystem stuff
-        private static FileInfo GetServerPlayerImageFile(int playerId)
+        private static FileInfo GetServerPlayerImageFile(string type, int playerId)
         {
             var path = GetServerImagePath(ImageFolder.Players);
-            path += "\\" + playerId + ".png";
+            if (type == "player-photo")
+            {
+                path += "\\" + playerId + ".png";
+            }
+            else
+            {
+                path += "\\" + playerId + "_avatar.png";
+            }
+            
             return new FileInfo(path);
         }
 
@@ -131,17 +139,18 @@ namespace Ttc.WebApi.Controllers
         #endregion
     }
 
-    public class UploadPlayerImageDto
+    public class UploadImageDto
     {
         /// <summary>
         /// Base64 encoded
         /// </summary>
         public string Image { get; set; }
-        public int PlayerId { get; set; }
+        public int DataId { get; set; }
+        public string Type { get; set; }
 
         public override string ToString()
         {
-            return $"Image: {Image}, PlayerId: {PlayerId}";
+            return $"Image: {Image}, Id: {DataId}";
         }
     }
 }
