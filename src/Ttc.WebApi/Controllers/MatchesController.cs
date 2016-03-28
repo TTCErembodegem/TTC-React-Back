@@ -116,6 +116,14 @@ namespace Ttc.WebApi.Controllers
         }
 
         [HttpPost]
+        [Route("DeleteComment")]
+        public Match DeleteComment([FromBody]IdDto comment)
+        {
+            var result = _service.DeleteComment(comment.Id);
+            return result;
+        }
+
+        [HttpPost]
         [Route("UpdateScore")]
         public Match UpdateScore([FromBody]MatchScoreDto score)
         {

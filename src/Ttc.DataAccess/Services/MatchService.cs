@@ -216,6 +216,18 @@ namespace Ttc.DataAccess.Services
             }
         }
 
+        public Match DeleteComment(int commentId)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var comment = dbContext.MatchComments.Single(x => x.Id == commentId);
+                dbContext.MatchComments.Remove(comment);
+                dbContext.SaveChanges();
+
+                return GetMatch(dbContext, comment.MatchId);
+            }
+        }
+
         public Match UpdateScore(int matchId, MatchScore score)
         {
             using (var dbContext = new TtcDbContext())
