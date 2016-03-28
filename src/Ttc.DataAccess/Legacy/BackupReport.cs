@@ -17,9 +17,6 @@ namespace Ttc.DataAccess.Backup
             PlayerId = playerId;
         }
 
-        public override string ToString()
-        {
-            return $"FrenoyMatchId: {FrenoyMatchId}, Description: {Description}, PlayerId: {PlayerId}";
-        }
+        public override string ToString() => $"FrenoyMatchId: {FrenoyMatchId}, Description: {Description}, PlayerId: {PlayerId}";
     }
 }
