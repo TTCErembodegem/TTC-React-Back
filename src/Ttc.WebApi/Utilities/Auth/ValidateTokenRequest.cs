@@ -4,9 +4,6 @@
     {
         public string Token { get; set; }
 
-        public override string ToString()
-        {
-            return $"Token: {Token}";
-        }
+        public override string ToString() => $"Token: {Token}";
     }
 }
