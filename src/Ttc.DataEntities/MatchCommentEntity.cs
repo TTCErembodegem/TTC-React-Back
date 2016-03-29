@@ -14,6 +14,8 @@ namespace Ttc.DataEntities
         public DateTime PostedOn { get; set; }
         public string Text { get; set; }
         public bool Hidden { get; set; }
+        [MaxLength(100)]
+        public string ImageUrl { get; set; }
 
         [ForeignKey("MatchId")]
         public MatchEntity Match { get; set; }

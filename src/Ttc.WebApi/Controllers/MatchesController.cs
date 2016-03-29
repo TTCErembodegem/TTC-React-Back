@@ -109,9 +109,9 @@ namespace Ttc.WebApi.Controllers
 
         [HttpPost]
         [Route("Comment")]
-        public Match Comment([FromBody]MatchReport report)
+        public Match Comment([FromBody]MatchComment comment)
         {
-            var result = _service.UpdateReport(report, false);
+            var result = _service.AddComment(comment);
             return result;
         }
 

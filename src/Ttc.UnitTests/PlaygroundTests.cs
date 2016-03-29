@@ -29,7 +29,7 @@ namespace Ttc.UnitTests
         {
             var config = new Dictionary<string, string>
             {
-                ["jan@gmail.com"] = "random-password",
+                //["jan.bontinck@gmail.com"] = "secret",
             };
 
             var here = @"Beste,

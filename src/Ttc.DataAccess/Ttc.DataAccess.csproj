@@ -204,6 +204,14 @@
     <Compile Include="Migrations\201603260418361_HiddenMatchComments.Designer.cs">
       <DependentUpon>201603260418361_HiddenMatchComments.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603280202599_MatchCommentWithImage.cs" />
+    <Compile Include="Migrations\201603280202599_MatchCommentWithImage.Designer.cs">
+      <DependentUpon>201603280202599_MatchCommentWithImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603280225279_MatchCommentWithImage2.cs" />
+    <Compile Include="Migrations\201603280225279_MatchCommentWithImage2.Designer.cs">
+      <DependentUpon>201603280225279_MatchCommentWithImage2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\ServiceExtensions.cs" />
     <Compile Include="Services\ClubService.cs" />
@@ -330,6 +338,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603260418361_HiddenMatchComments.resx">
       <DependentUpon>201603260418361_HiddenMatchComments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603280202599_MatchCommentWithImage.resx">
+      <DependentUpon>201603280202599_MatchCommentWithImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603280225279_MatchCommentWithImage2.resx">
+      <DependentUpon>201603280225279_MatchCommentWithImage2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

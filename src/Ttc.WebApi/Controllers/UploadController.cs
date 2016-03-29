@@ -38,7 +38,6 @@ namespace Ttc.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("Temp")]
         public async Task<HttpResponseMessage> UploadTempFile()
         {
             if (!Request.Content.IsMimeMultipartContent())
@@ -61,9 +60,15 @@ namespace Ttc.WebApi.Controllers
                 string localFileNameWithExt = Path.ChangeExtension(file.LocalFileName, originalFile.Extension);
                 File.Move(file.LocalFileName, localFileNameWithExt);
 
-                //string fieldType = provider.FormData.GetValues("uploadType").First();
-                //file.Headers.ContentDisposition.Name
-                //provider.FormData.GetValues(key)
+                string fieldType = provider.FormData.GetValues("uploadType").First();
+                if (fieldType == "match")
+                {
+                    var matchPath = GetServerImagePath(ImageFolder.Match);
+                    var fn = new FileInfo(localFileNameWithExt);
+                    string matchName = matchPath + "\\" + fn.Name;
+                    File.Move(localFileNameWithExt, matchName);
+                    return Request.CreateResponse(HttpStatusCode.OK, new { fileName = "/img/matches/" + fn.Name });
+                }
 
                 string publicFileName = "/img/temp/" + localFileNameWithExt.Replace(fullPath, "").Replace("\\", "");
 
@@ -117,6 +122,10 @@ namespace Ttc.WebApi.Controllers
                     fullPath = root + "\\backup";
                     break;
 
+                case ImageFolder.Match:
+                    fullPath = root + "\\matches";
+                    break;
+
                 case ImageFolder.Players:
                 default:
                     fullPath = root + "\\players";
@@ -134,7 +143,8 @@ namespace Ttc.WebApi.Controllers
         {
             Temp,
             Players,
-            Backup
+            Backup,
+            Match
         }
         #endregion
     }

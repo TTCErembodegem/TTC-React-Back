@@ -70,8 +70,7 @@ namespace Ttc.DataAccess.App_Start
         #region Matches
         private static void ReportMapping()
         {
-            Mapper.CreateMap<MatchCommentEntity, MatchReport>()
-                .ForMember(d => d.Text, o => o.MapFrom(src => src.Text))
+            Mapper.CreateMap<MatchCommentEntity, MatchComment>()
                 .ReverseMap()
                 ;
 

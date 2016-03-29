@@ -60,14 +60,14 @@ namespace Ttc.Model.Matches
         public ICollection<MatchPlayer> Players { get; set; }
         public ICollection<MatchGame> Games { get; set; }
         [TtcConfidential("MATCH-COMMENTS")]
-        public ICollection<MatchReport> Comments { get; set; }
+        public ICollection<MatchComment> Comments { get; set; }
         #endregion
 
         public Match()
         {
             Players = new List<MatchPlayer>();
             Games = new List<MatchGame>();
-            Comments = new List<MatchReport>();
+            Comments = new List<MatchComment>();
             ScoreType = MatchOutcome.NotYetPlayed;
             Score = new MatchScore();
         }

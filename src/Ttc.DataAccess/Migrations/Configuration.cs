@@ -23,6 +23,11 @@ namespace Ttc.DataAccess.Migrations
 
         public static void Seed(TtcDbContext context, bool clearMatches, bool syncTeamPlayers)
         {
+            //UPDATE speler SET email="guyjacobs7@gmail.com" where id=28;
+            //UPDATE speler set email="etienne.cornu@telenet.be" where id=30;
+            //UPDATE speler set email="hugo.redant@telenet.be" where id=79;
+
+
             if (clearMatches)
             {
                 context.Database.ExecuteSqlCommand("DELETE FROM matchplayer");

@@ -131,6 +131,23 @@ namespace Ttc.DataAccess.Services
         #endregion
 
         #region Putters
+        public Match UpdateScore(int matchId, MatchScore score)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var match = dbContext.Matches
+                    .WithIncludes()
+                    .Single(x => x.Id == matchId);
+
+                match.AwayScore = score.Out;
+                match.HomeScore = score.Home;
+                dbContext.SaveChanges();
+
+                return GetMatch(dbContext, match.Id);
+            }
+        }
+
+        #region Players
         public Match ToggleMatchPlayer(MatchPlayer matchPlayer)
         {
             using (var dbContext = new TtcDbContext())
@@ -153,35 +170,49 @@ namespace Ttc.DataAccess.Services
             var newMatch = GetMatch(matchPlayer.MatchId);
             return newMatch;
         }
+        #endregion
 
-        public Match UpdateReport(MatchReport report, bool isMainReport = true)
+        #region Report & Comments
+        public Match UpdateReport(MatchReport report)
         {
             using (var dbContext = new TtcDbContext())
             {
-                if (isMainReport)
-                {
-                    var existingMatch = dbContext.Matches.First(x => x.Id == report.MatchId);
-                    existingMatch.ReportPlayerId = report.PlayerId;
-                    existingMatch.Description = report.Text;
-                }
-                else
-                {
-                    dbContext.MatchComments.Add(new MatchCommentEntity
-                    {
-                        PostedOn = TtcDbContext.GetCurrentBelgianDateTime(),
-                        PlayerId = report.PlayerId,
-                        MatchId = report.MatchId,
-                        Text = report.Text,
-                        Hidden = report.Hidden
-                    });
-                }
-                
+                var existingMatch = dbContext.Matches.First(x => x.Id == report.MatchId);
+                existingMatch.ReportPlayerId = report.PlayerId;
+                existingMatch.Description = report.Text;
                 dbContext.SaveChanges();
             }
             var newMatch = GetMatch(report.MatchId);
             return newMatch;
         }
 
+        public Match AddComment(MatchComment comment)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var entity = Mapper.Map<MatchCommentEntity>(comment);
+                entity.PostedOn = TtcDbContext.GetCurrentBelgianDateTime();
+                dbContext.MatchComments.Add(entity);
+                dbContext.SaveChanges();
+            }
+            var newMatch = GetMatch(comment.MatchId);
+            return newMatch;
+        }
+
+        public Match DeleteComment(int commentId)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var comment = dbContext.MatchComments.Single(x => x.Id == commentId);
+                dbContext.MatchComments.Remove(comment);
+                dbContext.SaveChanges();
+
+                return GetMatch(dbContext, comment.MatchId);
+            }
+        }
+        #endregion
+
+        #region Frenoy Sync
         public OtherMatch FrenoyOtherMatchSync(int matchId)
         {
             using (var dbContext = new TtcDbContext())
@@ -191,6 +222,15 @@ namespace Ttc.DataAccess.Services
                     .WithIncludes()
                     .Single(x => x.Id == matchId);
                 return Mapper.Map<MatchEntity, OtherMatch>(match);
+            }
+        }
+
+        public Match FrenoyMatchSync(int matchId)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                FrenoyMatchSyncCore(dbContext, matchId);
+                return GetMatch(dbContext, matchId);
             }
         }
 
@@ -206,43 +246,7 @@ namespace Ttc.DataAccess.Services
                 frenoySync.SyncMatchDetails(match);
             }
         }
-
-        public Match FrenoyMatchSync(int matchId)
-        {
-            using (var dbContext = new TtcDbContext())
-            {
-                FrenoyMatchSyncCore(dbContext, matchId);
-                return GetMatch(dbContext, matchId);
-            }
-        }
-
-        public Match DeleteComment(int commentId)
-        {
-            using (var dbContext = new TtcDbContext())
-            {
-                var comment = dbContext.MatchComments.Single(x => x.Id == commentId);
-                dbContext.MatchComments.Remove(comment);
-                dbContext.SaveChanges();
-
-                return GetMatch(dbContext, comment.MatchId);
-            }
-        }
-
-        public Match UpdateScore(int matchId, MatchScore score)
-        {
-            using (var dbContext = new TtcDbContext())
-            {
-                var match = dbContext.Matches
-                    .WithIncludes()
-                    .Single(x => x.Id == matchId);
-
-                match.AwayScore = score.Out;
-                match.HomeScore = score.Home;
-                dbContext.SaveChanges();
-
-                return GetMatch(dbContext, match.Id);
-            }
-        }
+        #endregion
         #endregion
     }
 }
