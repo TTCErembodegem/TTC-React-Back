@@ -10,9 +10,6 @@ namespace Ttc.DataAccess.Backup
         public string DivisionLinkId { get; set; }
         public string TeamCode { get; set; }
 
-        public override string ToString()
-        {
-            return $"PlayerId: {PlayerId}, DivisionLinkId: {DivisionLinkId}, TeamCode: {TeamCode}";
-        }
+        public override string ToString() => $"PlayerId: {PlayerId}, DivisionLinkId: {DivisionLinkId}, TeamCode: {TeamCode}";
     }
 }

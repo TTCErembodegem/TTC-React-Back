@@ -158,9 +158,6 @@ namespace Ttc.WebApi.Controllers
         public int DataId { get; set; }
         public string Type { get; set; }
 
-        public override string ToString()
-        {
-            return $"Image: {Image}, Id: {DataId}";
-        }
+        public override string ToString() => $"Image: {Image}, Id: {DataId}";
     }
 }
