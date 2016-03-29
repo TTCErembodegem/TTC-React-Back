@@ -212,6 +212,10 @@
     <Compile Include="Migrations\201603280225279_MatchCommentWithImage2.Designer.cs">
       <DependentUpon>201603280225279_MatchCommentWithImage2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603291429245_IncorrectPlayerInfos.cs" />
+    <Compile Include="Migrations\201603291429245_IncorrectPlayerInfos.Designer.cs">
+      <DependentUpon>201603291429245_IncorrectPlayerInfos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\ServiceExtensions.cs" />
     <Compile Include="Services\ClubService.cs" />
@@ -344,6 +348,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603280225279_MatchCommentWithImage2.resx">
       <DependentUpon>201603280225279_MatchCommentWithImage2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603291429245_IncorrectPlayerInfos.resx">
+      <DependentUpon>201603291429245_IncorrectPlayerInfos.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
