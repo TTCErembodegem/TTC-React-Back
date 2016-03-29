@@ -64,7 +64,7 @@ namespace Ttc.DataAccess.Services
                     .WithIncludes()
                     .Where(match => (match.AwayClubId == opponent.ClubId && match.AwayTeamCode == opponent.TeamCode) || (match.HomeClubId == opponent.ClubId && match.HomeTeamCode == opponent.TeamCode))
                     .Where(match => match.FrenoyDivisionId == team.FrenoyDivisionId)
-                    .Where(match => match.Date <= now)
+                    //.Where(match => match.Date <= now) // Return all matches for easy linking to heenronde/terugronde
                     .ToList();
 
                 // No comments for OpponentMatches
