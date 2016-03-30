@@ -6,8 +6,6 @@ namespace Ttc.Model.Players
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Email { get; set; }
-        public string GSM { get; set; }
         public string Alias { get; set; }
         public bool Active { get; set; }
 
