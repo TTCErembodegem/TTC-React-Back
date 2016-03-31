@@ -180,5 +180,22 @@ namespace Ttc.DataAccess.Services
             var newMatch = GetPlayer(playerStyle.PlayerId);
             return newMatch;
         }
+
+        public Player UpdatePlayer(PlayerContact player)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var existingSpeler = dbContext.Players.FirstOrDefault(x => x.Id == player.PlayerId);
+                if (existingSpeler == null)
+                {
+                    return null;
+                }
+                existingSpeler.Gsm = player.GSM;
+                existingSpeler.Email = player.Email;
+                dbContext.SaveChanges();
+            }
+            var newPlayer = GetPlayer(player.PlayerId);
+            return newPlayer;
+        }
     }
 }
