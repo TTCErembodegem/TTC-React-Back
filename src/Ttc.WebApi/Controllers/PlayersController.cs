@@ -43,5 +43,13 @@ namespace Ttc.WebApi.Controllers
             var result = _service.UpdateStyle(playerStyle);
             return result;
         }
+
+        [HttpPost]
+        [Route("UpdatePlayer")]
+        public Player UpdatePlayer([FromBody] PlayerContact player)
+        {
+            var result = _service.UpdatePlayer(player);
+            return result;
+        }
     }
 }
