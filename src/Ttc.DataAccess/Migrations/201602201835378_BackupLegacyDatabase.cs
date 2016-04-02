@@ -8,7 +8,7 @@ namespace Ttc.DataAccess.Migrations
         public override void Up()
         {
             CreateTable(
-                "dbo.backupreport",
+                "backupreport",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
@@ -19,7 +19,7 @@ namespace Ttc.DataAccess.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "dbo.backupteamplayer",
+                "backupteamplayer",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
@@ -33,8 +33,8 @@ namespace Ttc.DataAccess.Migrations
         
         public override void Down()
         {
-            DropTable("dbo.backupteamplayer");
-            DropTable("dbo.backupreport");
+            DropTable("backupteamplayer");
+            DropTable("backupreport");
         }
     }
 }
