@@ -52,6 +52,7 @@
     <Compile Include="Matches\MatchReport.cs" />
     <Compile Include="Matches\MatchScore.cs" />
     <Compile Include="Matches\WalkOver.cs" />
+    <Compile Include="Players\PlayerContact.cs" />
     <Compile Include="Teams\Team.cs" />
     <Compile Include="Teams\FrenoyTeamLinks.cs" />
     <Compile Include="Matches\Match.cs" />
