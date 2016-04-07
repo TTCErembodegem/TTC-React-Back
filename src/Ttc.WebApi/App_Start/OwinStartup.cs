@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+using log4net;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
@@ -17,6 +18,10 @@ namespace Ttc.WebApi
     {
         public void Configuration(IAppBuilder app)
         {
+            log4net.Config.XmlConfigurator.Configure();
+            var logger = LogManager.GetLogger(typeof(OwinStartup));
+            logger.Info("Starting up...");
+
             var container = IoCInitializer.Initialize();
             app.Use(async (context, next) => {
                 using (container.BeginExecutionContextScope())
