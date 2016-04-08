@@ -15,7 +15,7 @@ namespace Ttc.WebApi.Utilities.Auth
         {
             if (actionContext.Request.Headers.Authorization == null)
             {
-                return true; // TODO: only true for sockets
+                return true; // TODO: IMPORTANT SECURITY!! only true for sockets
             }
 
             var token = actionContext.Request.Headers.Authorization.Parameter;
