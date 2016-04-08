@@ -220,37 +220,39 @@ namespace Ttc.DataAccess.App_Start
             }
         }
 
-        private static MatchOutcome GetScoreType(MatchEntity kalendar)
+        private static MatchOutcome GetScoreType(MatchEntity match)
         {
-            if (kalendar.Date > DateTime.Now || (kalendar.AwayScore == 0 && kalendar.HomeScore == 0) || (kalendar.AwayScore == null && kalendar.HomeScore == null))
+            if (match.Date.Date >= DateTime.Now.Date)
             {
-                if (Constants.HasMatchStarted(kalendar.Date))
+                var now = DateTime.Now;
+                var yesterday = now.Subtract(TimeSpan.FromDays(1));
+                if ((match.Date.Date == now.Date && now.Hour >= match.Date.Hour - 10) || (match.Date.Date == yesterday.Date && now.Hour < match.Date.Hour - 10))
                 {
                     return MatchOutcome.BeingPlayed;
                 }
                 return MatchOutcome.NotYetPlayed;
             }
             
-            if (kalendar.WalkOver)
+            if (match.WalkOver)
             {
                 return MatchOutcome.WalkOver;
             }
-            if (!kalendar.HomeScore.HasValue || !kalendar.AwayScore.HasValue)
+            if (!match.HomeScore.HasValue || !match.AwayScore.HasValue)
             {
                 return MatchOutcome.NotYetPlayed;
             }
-            if (kalendar.HomeScore.Value == kalendar.AwayScore.Value && kalendar.HomeScore.Value != 0)
+            if (match.HomeScore.Value == match.AwayScore.Value)
             {
                 return MatchOutcome.Draw;
             }
 
-            if (kalendar.IsHomeMatch.HasValue && kalendar.IsHomeMatch.Value)
+            if (match.IsHomeMatch.HasValue && match.IsHomeMatch.Value)
             {
-                return kalendar.HomeScore.Value < kalendar.AwayScore.Value ? MatchOutcome.Lost : MatchOutcome.Won;
+                return match.HomeScore.Value < match.AwayScore.Value ? MatchOutcome.Lost : MatchOutcome.Won;
             }
             else
             {
-                return kalendar.HomeScore.Value < kalendar.AwayScore.Value ? MatchOutcome.Won: MatchOutcome.Lost;
+                return match.HomeScore.Value < match.AwayScore.Value ? MatchOutcome.Won: MatchOutcome.Lost;
             }
         }
         #endregion

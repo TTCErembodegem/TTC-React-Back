@@ -10,6 +10,7 @@ namespace Ttc.WebApi.Utilities
     {
         public void BroadcastSnackbar(string message)
         {
+            // TODO: broadcast to all but the sender (both methods)
             Clients.All.broadcastSnackbar(message);
         }
 

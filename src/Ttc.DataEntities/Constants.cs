@@ -14,12 +14,6 @@ namespace Ttc.DataEntities
         public const int JornPlayerId = 36;
         public const int WouterPlayerId = 20;
 
-        /// <summary>
-        /// A match is considered started this time before the official start time
-        /// </summary>
-        private static readonly TimeSpan MatchStarts = new TimeSpan(0, 30, 0);
-        public static bool HasMatchStarted(DateTime date) => date - DateTime.Now < MatchStarts;
-
         #region Competition
         public const string Sporta = "Sporta";
         public const string Vttl = "Vttl";
