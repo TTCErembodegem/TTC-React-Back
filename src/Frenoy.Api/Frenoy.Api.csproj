@@ -67,6 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FrenoyPlayersApi.cs" />
     <Compile Include="FrenoyTeamsApi.cs" />
     <Compile Include="FrenoyMatchesApi.cs" />
     <Compile Include="FrenoyApiBase.cs" />
