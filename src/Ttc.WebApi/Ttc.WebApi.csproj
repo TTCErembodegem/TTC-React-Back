@@ -207,8 +207,9 @@
     <Content Include="packages.config" />
     <None Include="Properties\PublishProfiles\ttc-prd-azure - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\ttc-prd-azure - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\Ttc-tst-azure.pubxml" />
     <None Include="Properties\PublishProfiles\local-filesystem.pubxml" />
+    <None Include="Properties\PublishProfiles\ttc-tst-webapp - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\ttc-tst-webapp - Web Deploy.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
