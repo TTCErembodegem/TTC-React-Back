@@ -180,39 +180,45 @@ namespace Frenoy.Api
                 matchEntity.AwayTeamId = teamId;
             }
 
-            if (frenoyMatch.Score != null)
-            {
-                bool isForfeit = frenoyMatch.Score.ToLowerInvariant().Contains("ff") || frenoyMatch.Score.ToLowerInvariant().Contains("af");
-                if (!isForfeit)
-                {
-                    // Uitslag
-                    matchEntity.HomeScore = int.Parse(frenoyMatch.Score.Substring(0, frenoyMatch.Score.IndexOf("-")));
-                    matchEntity.AwayScore = int.Parse(frenoyMatch.Score.Substring(frenoyMatch.Score.IndexOf("-") + 1));
-                    matchEntity.WalkOver = false;
-                }
-                else
-                {
-                    matchEntity.WalkOver = true;
-                }
-            }
-
             return matchEntity;
         }
 
         private void SyncMatchDetails(MatchEntity matchEntity, TeamMatchEntryType frenoyMatch)
         {
-            if (!matchEntity.IsSyncedWithFrenoy && frenoyMatch.MatchDetails != null && frenoyMatch.MatchDetails.DetailsCreated)
+            if (!matchEntity.IsSyncedWithFrenoy)
             {
-                matchEntity.IsSyncedWithFrenoy = true;
+                if (frenoyMatch.Score != null)
+                {
+                    bool isForfeit = frenoyMatch.Score.ToLowerInvariant().Contains("ff") || frenoyMatch.Score.ToLowerInvariant().Contains("af");
+                    if (!isForfeit)
+                    {
+                        // Uitslag
+                        matchEntity.HomeScore = int.Parse(frenoyMatch.Score.Substring(0, frenoyMatch.Score.IndexOf("-")));
+                        matchEntity.AwayScore = int.Parse(frenoyMatch.Score.Substring(frenoyMatch.Score.IndexOf("-") + 1));
+                        matchEntity.WalkOver = false;
+                    }
+                    else
+                    {
+                        matchEntity.WalkOver = true;
+                    }
+                }
 
-                // Spelers
-                AddMatchPlayers(frenoyMatch.MatchDetails.HomePlayers.Players, matchEntity, true);
-                AddMatchPlayers(frenoyMatch.MatchDetails.AwayPlayers.Players, matchEntity, false);
-                AssertMatchPlayers(matchEntity);
+                if (frenoyMatch.MatchDetails != null && frenoyMatch.MatchDetails.DetailsCreated)
+                {
+                    AddMatchPlayers(frenoyMatch.MatchDetails.HomePlayers.Players, matchEntity, true);
+                    AddMatchPlayers(frenoyMatch.MatchDetails.AwayPlayers.Players, matchEntity, false);
+                    //AssertMatchPlayers(matchEntity);
 
-                AddMatchGames(frenoyMatch, matchEntity);
+                    AddMatchGames(frenoyMatch, matchEntity);
 
-                RemoveExistingMatchPlayersAndGames(matchEntity);
+                    RemoveExistingMatchPlayersAndGames(matchEntity);
+                }
+
+                if (frenoyMatch.Score != null && frenoyMatch.MatchDetails != null && frenoyMatch.MatchDetails.DetailsCreated)
+                {
+                    matchEntity.IsSyncedWithFrenoy = true;
+                }
+
                 CommitChanges();
             }
         }
