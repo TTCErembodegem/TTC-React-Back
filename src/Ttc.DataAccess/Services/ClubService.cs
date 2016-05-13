@@ -3,10 +3,13 @@ using System.Linq;
 using AutoMapper;
 using Ttc.DataEntities;
 using System.Data.Entity;
+using MySql.Data.MySqlClient;
+using Ttc.DataAccess.Utilities;
 using Ttc.Model.Clubs;
 
 namespace Ttc.DataAccess.Services
 {
+    [MaxMysqlConnectionExceptionHandlerAspect]
     public class ClubService
     {
         public IEnumerable<Club> GetActiveClubs()

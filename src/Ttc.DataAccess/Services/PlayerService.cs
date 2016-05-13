@@ -7,9 +7,12 @@ using Ttc.DataEntities;
 using Ttc.Model;
 using Ttc.Model.Players;
 using System.IO;
+using MySql.Data.MySqlClient;
+using Ttc.DataAccess.Utilities;
 
 namespace Ttc.DataAccess.Services
 {
+    [MaxMysqlConnectionExceptionHandlerAspect]
     public class PlayerService
     {
         public ICollection<Player> GetActiveOwnClub()

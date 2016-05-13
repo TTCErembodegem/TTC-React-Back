@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using AutoMapper;
 using Frenoy.Api;
+using MySql.Data.MySqlClient;
+using Ttc.DataAccess.Utilities;
 using Ttc.DataEntities;
 using Ttc.Model.Matches;
 using Ttc.Model.Players;
@@ -11,6 +14,7 @@ using Ttc.Model.Teams;
 
 namespace Ttc.DataAccess.Services
 {
+    [MaxMysqlConnectionExceptionHandlerAspect]
     public class MatchService
     {
         #region Getters

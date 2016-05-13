@@ -4,7 +4,9 @@ using System.Linq;
 using System.Data.Entity;
 using Frenoy.Api;
 using Frenoy.Api.FrenoySporta;
+using MySql.Data.MySqlClient;
 using Omu.ValueInjecter;
+using Ttc.DataAccess.Utilities;
 using Ttc.Model.Teams;
 using Mapper = AutoMapper.Mapper;
 using Ttc.DataEntities;
@@ -12,6 +14,7 @@ using Ttc.Model.Players;
 
 namespace Ttc.DataAccess.Services
 {
+    [MaxMysqlConnectionExceptionHandlerAspect]
     public class TeamService
     {
         private readonly static TimeSpan FrenoyTeamRankingExpiration = TimeSpan.FromHours(1);
