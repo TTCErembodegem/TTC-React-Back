@@ -69,7 +69,18 @@ namespace Ttc.WebApi.Controllers
             var result = _service.GetLastOpponentMatches(teamId, opponent);
             return result;
         }
+
+        [HttpGet]
+        [Route("GetMatchesForTeam")]
+        [AllowAnonymous]
+        public IEnumerable<Match> GetMatchesForTeam(int teamId)
+        {
+            var result = _service.GetMatchesForTeam(teamId);
+            return result;
+        }
         #endregion
+
+
 
         #region Puts
         [HttpPost]
