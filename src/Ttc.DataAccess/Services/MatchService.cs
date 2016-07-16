@@ -109,6 +109,22 @@ namespace Ttc.DataAccess.Services
                 return Map(firstRoundMatch);
             }
         }
+
+        public ICollection<Match> GetMatchesForTeam(int teamId)
+        {
+
+            using (var dbContext = new TtcDbContext())
+            {
+                var now = DateTime.Now;
+                var matchEntities = dbContext.Matches
+                    .WithIncludes()
+                    .Where(match => match.AwayTeamId == teamId || match.HomeTeamId == teamId)
+                    .ToList();
+
+                var result = Mapper.Map<IList<MatchEntity>, IList<Match>>(matchEntities);
+                return result;
+            }
+        }
         #endregion
 
         #region Boilderplate code
