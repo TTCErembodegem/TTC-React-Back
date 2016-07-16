@@ -112,10 +112,8 @@ namespace Ttc.DataAccess.Services
 
         public ICollection<Match> GetMatchesForTeam(int teamId)
         {
-
             using (var dbContext = new TtcDbContext())
             {
-                var now = DateTime.Now;
                 var matchEntities = dbContext.Matches
                     .WithIncludes()
                     .Where(match => match.AwayTeamId == teamId || match.HomeTeamId == teamId)
