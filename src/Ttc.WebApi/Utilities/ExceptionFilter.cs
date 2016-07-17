@@ -15,13 +15,46 @@ namespace Ttc.WebApi.Utilities
 
         public override void OnException(HttpActionExecutedContext context)
         {
-            Logger.Error(context.Exception.ToString());
-
-            context.Response = new HttpResponseMessage(HttpStatusCode.NotFound)
+            if (TooManyConnections(context.Exception))
             {
-                Content = new StringContent(context.Exception.ToString()),
-                ReasonPhrase = "Something went terribly wrong!"
-            };
+                context.Response = new HttpResponseMessage(HttpStatusCode.RequestTimeout)
+                {
+                    Content = new StringContent(TooManyConnectionsExMessage),
+                    ReasonPhrase = TooManyConnectionsExMessage
+                };
+            }
+            else
+            {
+                Logger.Error(context.Exception.ToString());
+
+                context.Response = new HttpResponseMessage(HttpStatusCode.Accepted)
+                {
+                    Content = new StringContent(context.Exception.ToString()),
+                    ReasonPhrase = "Something went terribly wrong!"
+                };
+            }
+        }
+
+        private const string TooManyConnectionsExMessage = "Too many connections";
+        private bool TooManyConnections(Exception ex)
+        {
+            string fullErrorName = ex.GetType().FullName;
+            if (fullErrorName == "System.Data.Entity.Core.EntityException")
+            {
+                if (ex.InnerException != null) 
+                {
+                    if (ex.InnerException.Message == TooManyConnectionsExMessage)
+                    {
+                        return true;
+                    }
+
+                    if (ex.InnerException.InnerException != null && ex.InnerException.InnerException.Message == TooManyConnectionsExMessage)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }
