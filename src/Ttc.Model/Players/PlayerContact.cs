@@ -12,6 +12,8 @@ namespace Ttc.Model.Players
         public int PlayerId { get; set; }
         public string Email { get; set; }
         public string GSM { get; set; }
+        public string Address { get; set; }
+        public string City { get; set; }
         #endregion
 
         #region Constructor
@@ -20,14 +22,16 @@ namespace Ttc.Model.Players
 
         }
 
-        public PlayerContact(int playerId, string eMail, string gsm)
+        public PlayerContact(int playerId, string eMail, string gsm, string address, string city)
         {
             PlayerId = playerId;
             Email = eMail;
             GSM = gsm;
+            Address = address;
+            City = city;
         }
         #endregion
 
-        public override string ToString() => $"PlayerId={PlayerId}, EMail={Email}, Mobile={GSM}";
+        public override string ToString() => $"PlayerId={PlayerId}, EMail={Email}, Mobile={GSM}, Address={Address}, City={City}";
     }
 }
