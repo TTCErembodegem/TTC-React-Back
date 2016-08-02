@@ -192,6 +192,8 @@ namespace Ttc.DataAccess.Services
                 }
                 existingSpeler.Gsm = player.GSM;
                 existingSpeler.Email = player.Email;
+                existingSpeler.Adres = player.Address;
+                existingSpeler.Gemeente = player.City;
                 dbContext.SaveChanges();
             }
             var newPlayer = GetPlayer(player.PlayerId);
