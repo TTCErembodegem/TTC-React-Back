@@ -1,17 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Data.Entity;
+using System.Drawing;
 using AutoMapper;
 using Ttc.DataEntities;
 using Ttc.Model;
 using Ttc.Model.Players;
 using System.IO;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using Ttc.DataAccess.Utilities;
 
 namespace Ttc.DataAccess.Services
 {
     public class PlayerService
     {
+        #region Player
         public ICollection<Player> GetActiveOwnClub()
         {
             using (var dbContext = new TtcDbContext())
@@ -34,6 +40,58 @@ namespace Ttc.DataAccess.Services
             }
         }
 
+        public Player UpdateStyle(PlayerStyle playerStyle)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var existingSpeler = dbContext.Players.FirstOrDefault(x => x.Id == playerStyle.PlayerId);
+                if (existingSpeler == null)
+                {
+                    return null;
+                }
+
+                existingSpeler.Stijl = playerStyle.Name;
+                existingSpeler.BesteSlag = playerStyle.BestStroke;
+                dbContext.SaveChanges();
+            }
+            var newMatch = GetPlayer(playerStyle.PlayerId);
+            return newMatch;
+        }
+
+        public Player UpdatePlayer(PlayerContact player)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var existingSpeler = dbContext.Players.FirstOrDefault(x => x.Id == player.PlayerId);
+                if (existingSpeler == null)
+                {
+                    return null;
+                }
+                existingSpeler.Gsm = player.GSM;
+                existingSpeler.Email = player.Email;
+                existingSpeler.Adres = player.Address;
+                existingSpeler.Gemeente = player.City;
+                dbContext.SaveChanges();
+            }
+            var newPlayer = GetPlayer(player.PlayerId);
+            return newPlayer;
+        }
+
+        public byte[] GetExcelExport()
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var activePlayers = dbContext.Players
+                    .Where(x => x.Gestopt == null)
+                    .Where(x => x.ClubIdSporta == Constants.OwnClubId || x.ClubIdVttl == Constants.OwnClubId).ToArray();
+
+                var exceller = new PlayerExcelCreator(activePlayers);
+                return exceller.Create();
+            }
+        }
+        #endregion
+
+        #region User
         public User Login(UserCredentials user)
         {
             using (var dbContext = new TtcDbContext())
@@ -153,8 +211,6 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        #region New Password Helpers
-
         private static string GenerateNewPassword()
         {
             string path = Path.GetRandomFileName();
@@ -162,42 +218,5 @@ namespace Ttc.DataAccess.Services
             return path;
         }
         #endregion
-
-        public Player UpdateStyle(PlayerStyle playerStyle)
-        {
-            using (var dbContext = new TtcDbContext())
-            {
-                var existingSpeler = dbContext.Players.FirstOrDefault(x => x.Id == playerStyle.PlayerId);
-                if (existingSpeler == null)
-                {
-                    return null;
-                }
-
-                existingSpeler.Stijl = playerStyle.Name;
-                existingSpeler.BesteSlag = playerStyle.BestStroke;
-                dbContext.SaveChanges();
-            }
-            var newMatch = GetPlayer(playerStyle.PlayerId);
-            return newMatch;
-        }
-
-        public Player UpdatePlayer(PlayerContact player)
-        {
-            using (var dbContext = new TtcDbContext())
-            {
-                var existingSpeler = dbContext.Players.FirstOrDefault(x => x.Id == player.PlayerId);
-                if (existingSpeler == null)
-                {
-                    return null;
-                }
-                existingSpeler.Gsm = player.GSM;
-                existingSpeler.Email = player.Email;
-                existingSpeler.Adres = player.Address;
-                existingSpeler.Gemeente = player.City;
-                dbContext.SaveChanges();
-            }
-            var newPlayer = GetPlayer(player.PlayerId);
-            return newPlayer;
-        }
     }
 }

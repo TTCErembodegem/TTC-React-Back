@@ -1,5 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web.Http;
 using Ttc.DataAccess.Services;
 using Ttc.Model.Players;
@@ -50,6 +55,14 @@ namespace Ttc.WebApi.Controllers
         {
             var result = _service.UpdatePlayer(player);
             return result;
+        }
+    
+        [HttpGet]
+        [Route("ExcelExport")]
+        public string GetExcelExport()
+        {
+            var excel = _service.GetExcelExport();
+            return Convert.ToBase64String(excel);
         }
     }
 }

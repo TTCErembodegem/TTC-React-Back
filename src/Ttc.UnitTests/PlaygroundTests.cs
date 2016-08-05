@@ -25,6 +25,13 @@ namespace Ttc.UnitTests
     public class PlaygroundTests
     {
         //[Test]
+        public void PlayerExcelExport()
+        {
+            var service = new PlayerService();
+            service.GetExcelExport();
+        }
+
+        //[Test]
         public void SendToProductionEmails()
         {
             var config = new Dictionary<string, string>
@@ -68,7 +75,7 @@ Wouter & Jorn";
             }
         }
 
-        [Test]
+        //[Test]
         public void ToProductionEmails()
         {
             using (var context = new TtcDbContext())
@@ -111,7 +118,7 @@ Wouter & Jorn";
             }
         }
 
-        [Test]
+        //[Test]
         public void FillTeamPlayers()
         {
             var settings = FrenoySettings.VttlSettings;
@@ -140,7 +147,7 @@ Wouter & Jorn";
             }
         }
 
-        [Test]
+        //[Test]
         public void TeamMapping()
         {
             using (var dbContext = new TtcDbContext())
@@ -153,7 +160,7 @@ Wouter & Jorn";
             }
         }
 
-        [Test]
+        //[Test]
         public void CalendarMapping()
         {
             using (var dbContext = new TtcDbContext())
@@ -170,7 +177,7 @@ Wouter & Jorn";
             }
         }
 
-        [Test]
+        //[Test]
         public void TeamMapping2()
         {
             using (var dbContext = new TtcDbContext())
@@ -185,7 +192,7 @@ Wouter & Jorn";
             }
         }
 
-        [Test]
+        //[Test]
         public void ClubMapping()
         {
             using (var dbContext = new TtcDbContext())
@@ -199,7 +206,7 @@ Wouter & Jorn";
             }
         }
 
-        [Test]
+        //[Test]
         public void SpelerToPlayerMapping()
         {
             using (var dbContext = new TtcDbContext())
