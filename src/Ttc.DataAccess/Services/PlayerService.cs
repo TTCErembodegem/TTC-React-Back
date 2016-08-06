@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Data.Entity;
@@ -9,6 +10,8 @@ using Ttc.DataEntities;
 using Ttc.Model;
 using Ttc.Model.Players;
 using System.IO;
+using System.Net.Mail;
+using System.Threading.Tasks;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using Ttc.DataAccess.Utilities;
@@ -144,25 +147,25 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        public User NewPassword(PasswordCredentials userNewCredentials)
+        public string RequestNewPassword(NewPasswordRequest request)
         {
-            if (userNewCredentials.PlayerId == 0)
+            if (request.PlayerId == 0)
             {
                 return null;
             }
 
             using (var dbContext = new TtcDbContext())
             {
-                var emailForPlayer = dbContext.Players.Single(x => x.Id == userNewCredentials.PlayerId).Email;
-                if (!string.IsNullOrEmpty(emailForPlayer))
+                var player = dbContext.Players.SingleOrDefault(x => x.Id == request.PlayerId && x.Email == request.Email);
+                if (player != null)
                 {
                     string newPassword = GenerateNewPassword();
                     dbContext.Database.ExecuteSqlCommand(
                         $"UPDATE {PlayerEntity.TableName} SET paswoord=MD5({{1}}) WHERE id={{0}}",
-                        userNewCredentials.PlayerId,
+                        request.PlayerId,
                         newPassword);
 
-                    return GetUser(userNewCredentials.PlayerId);
+                    return newPassword;
                 }
             }
             return null;

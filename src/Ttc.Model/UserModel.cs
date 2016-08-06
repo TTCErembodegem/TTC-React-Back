@@ -35,4 +35,12 @@ namespace Ttc.Model
 
         public override string ToString() => $"PlayerId: {PlayerId}, OldPassword: {OldPassword}, NewPassword: {NewPassword}";
     }
+
+    public class NewPasswordRequest
+    {
+        public int PlayerId { get; set; }
+        public string Email { get; set; }
+
+        public override string ToString() => $"PlayerId={PlayerId}, Email={Email}";
+    }
 }

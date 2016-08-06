@@ -6,9 +6,6 @@ using Ttc.DataEntities.Core;
 
 namespace Ttc.DataAccess
 {
-    /// <remarks>
-    /// Not(yet?) mapped: DbSet Parameter
-    /// </remarks>
     [DbConfigurationType(typeof(MySql.Data.Entity.MySqlEFConfiguration))]
     internal class TtcDbContext : DbContext, ITtcDbContext
     {
@@ -25,6 +22,7 @@ namespace Ttc.DataAccess
         public DbSet<MatchGameEntity> MatchGames { get; set; }
         public DbSet<MatchCommentEntity> MatchComments { get; set; }
 
+        public DbSet<ParameterEntity> Parameters { get; set; }
         public DbSet<Backup.BackupReport> BackupReports { get; set; }
         public DbSet<Backup.BackupTeamPlayer> BackupTeamPlayers { get; set; }
 

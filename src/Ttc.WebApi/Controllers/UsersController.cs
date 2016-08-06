@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using JWT;
 using Newtonsoft.Json;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using Ttc.DataAccess.Services;
 using Ttc.Model;
 using Ttc.WebApi.Utilities;
@@ -17,10 +20,12 @@ namespace Ttc.WebApi.Controllers
     {
         #region Constructor
         private readonly PlayerService _service;
+        private readonly ConfigService _configService;
 
-        public UsersController(PlayerService service)
+        public UsersController(PlayerService service, ConfigService configService)
         {
             _service = service;
+            _configService = configService;
         }
         #endregion
 
@@ -49,19 +54,28 @@ namespace Ttc.WebApi.Controllers
             return player;
         }
 
-        // TODO: request email with new password
-        //[HttpPost]
-        //[Route("NewPassword")]
-        //[AllowAnonymous]
-        //public User NewPassword([FromBody]PasswordCredentials userNewPassword)
-        //{
-        //    var player = _service.NewPassword(userNewPassword);
-        //    if (player != null)
-        //    {
-        //        player.Token = TtcAuthorizationFilterAttribute.CreateToken(player);
-        //    }
-        //    return player;
-        //}
+        [HttpPost]
+        [Route("RequestNewPassword")]
+        [AllowAnonymous]
+        public void RequestNewPassword([FromBody]NewPasswordRequest request)
+        {
+            var newPassword = _service.RequestNewPassword(request);
+            var emailConfig = _configService.GetEmailConfig();
+            CreateNewPasswordRequestEmail(request.Email, newPassword, emailConfig).Wait();
+        }
+
+        private async Task CreateNewPasswordRequestEmail(string email, string newPassword, EmailConfig config)
+        {
+            dynamic sg = new SendGridAPIClient(config.SendGridApiKey);
+            Email from = new Email(config.EmailFrom);
+            Email to = new Email(email);
+
+            string subject = "Nieuw paswoord TTC Erembodegem";
+            Content content = new Content("text/plain", "Je nieuw paswoord is: " + newPassword);
+            Mail mail = new Mail(from, subject, to, content);
+
+            dynamic response = await sg.client.mail.send.post(requestBody: mail.Get());
+        }
 
         [HttpPost]
         [Route("ValidateToken")]

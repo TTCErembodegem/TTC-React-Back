@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Ttc.DataEntities</RootNamespace>
     <AssemblyName>Ttc.DataEntities</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -54,6 +54,7 @@
     <Compile Include="ClubEntity.cs" />
     <Compile Include="ClubLokaal.cs" />
     <Compile Include="MatchCommentEntity.cs" />
+    <Compile Include="ParameterEntity.cs" />
     <Compile Include="TeamOpponentEntity.cs" />
     <Compile Include="TeamPlayerEntity.cs" />
     <Compile Include="Constants.cs" />

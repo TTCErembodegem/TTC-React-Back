@@ -28,10 +28,17 @@ namespace Ttc.DataAccess.App_Start
         #region Teams
         private static void TeamMapping()
         {
-            Mapper.CreateMap<TeamPlayerEntity, TeamPlayer>()
-                .ForMember(
-                    dest => dest.Type,
-                    opts => opts.MapFrom(src => src.PlayerType));
+            var config = new MapperConfiguration(cfg => {
+                cfg.CreateMap<TeamPlayerEntity, TeamPlayer>()
+                    .ForMember(
+                        dest => dest.Type,
+                        opts => opts.MapFrom(src => src.PlayerType));
+            });
+
+            //Mapper.CreateMap<TeamPlayerEntity, TeamPlayer>()
+            //    .ForMember(
+            //        dest => dest.Type,
+            //        opts => opts.MapFrom(src => src.PlayerType));
 
             Mapper.CreateMap<TeamEntity, Team>()
                 .ForMember(

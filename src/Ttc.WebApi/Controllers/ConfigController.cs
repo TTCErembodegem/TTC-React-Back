@@ -18,8 +18,8 @@ namespace Ttc.WebApi.Controllers
         }
         #endregion
 
-        [AllowAnonymous]
-        public object Get() => _service.Get();
+        //[AllowAnonymous]
+        //public object Get() => _service.Get();
 
         [HttpPost]
         [Route("Log")]
