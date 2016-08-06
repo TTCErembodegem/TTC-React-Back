@@ -251,6 +251,7 @@
       <DependentUpon>201608062139123_CreateParameterTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\ServiceExtensions.cs" />
     <Compile Include="Services\ClubService.cs" />
     <Compile Include="Services\ConfigService.cs" />

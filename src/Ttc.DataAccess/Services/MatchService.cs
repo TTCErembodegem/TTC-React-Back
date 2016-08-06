@@ -11,7 +11,7 @@ using Ttc.Model.Teams;
 
 namespace Ttc.DataAccess.Services
 {
-    public class MatchService
+    public class MatchService : BaseService
     {
         #region Getters
         public ICollection<Match> GetMatches()

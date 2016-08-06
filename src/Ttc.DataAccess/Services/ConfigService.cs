@@ -16,7 +16,7 @@ namespace Ttc.DataAccess.Services
         public override string ToString() => $"{EmailFrom}, ${SendGridApiKey}";
     }
 
-    public class ConfigService
+    public class ConfigService : BaseService
     {
         public EmailConfig GetEmailConfig()
         {

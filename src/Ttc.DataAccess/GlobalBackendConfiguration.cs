@@ -1,5 +1,5 @@
-﻿using SimpleInjector;
-using Ttc.DataAccess.App_Start;
+﻿using AutoMapper;
+using SimpleInjector;
 using Ttc.DataAccess.Utilities;
 
 namespace Ttc.DataAccess
@@ -9,7 +9,10 @@ namespace Ttc.DataAccess
     /// </summary>
     public static class GlobalBackendConfiguration
     {
-        public static void ConfigureAutoMapper() => AutoMapperConfig.Configure(new KlassementValueConverter());
+        public static void ConfigureAutoMapper()
+        {
+            AutoMapperConfig.Configure(new KlassementValueConverter());
+        }
 
         public static void ConfigureIoC(Container container)
         {

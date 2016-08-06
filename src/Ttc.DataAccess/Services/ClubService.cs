@@ -7,7 +7,7 @@ using Ttc.Model.Clubs;
 
 namespace Ttc.DataAccess.Services
 {
-    public class ClubService
+    public class ClubService : BaseService
     {
         public IEnumerable<Club> GetActiveClubs()
         {

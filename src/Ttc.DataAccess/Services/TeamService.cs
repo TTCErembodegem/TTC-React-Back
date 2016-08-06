@@ -12,7 +12,7 @@ using Ttc.Model.Players;
 
 namespace Ttc.DataAccess.Services
 {
-    public class TeamService
+    public class TeamService : BaseService
     {
         private readonly static TimeSpan FrenoyTeamRankingExpiration = TimeSpan.FromHours(1);
 

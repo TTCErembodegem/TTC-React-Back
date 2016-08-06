@@ -3,90 +3,84 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using AutoMapper;
-using Ttc.DataAccess.Services;
-using Ttc.DataEntities;
 using Ttc.DataAccess.Utilities;
-using Ttc.Model;
+using Ttc.DataEntities;
 using Ttc.Model.Clubs;
 using Ttc.Model.Matches;
 using Ttc.Model.Players;
 using Ttc.Model.Teams;
 
-namespace Ttc.DataAccess.App_Start
+namespace Ttc.DataAccess
 {
     internal static class AutoMapperConfig
     {
+        internal static MapperConfiguration Factory;
+
         public static void Configure(KlassementValueConverter klassementToValueConverter)
         {
-            PlayerMapping(klassementToValueConverter);
-            ClubMapping();
-            MatchMapping();
-            TeamMapping();
-            ReportMapping();
+            Factory = new MapperConfiguration(cfg =>
+            {
+                PlayerMapping(cfg, klassementToValueConverter);
+                ClubMapping(cfg);
+                MatchMapping(cfg);
+                TeamMapping(cfg);
+                ReportMapping(cfg);
+            });
         }
 
         #region Teams
-        private static void TeamMapping()
+        private static void TeamMapping(IMapperConfiguration cfg)
         {
-            var config = new MapperConfiguration(cfg => {
-                cfg.CreateMap<TeamPlayerEntity, TeamPlayer>()
-                    .ForMember(
-                        dest => dest.Type,
-                        opts => opts.MapFrom(src => src.PlayerType));
-            });
+            cfg.CreateMap<TeamPlayerEntity, TeamPlayer>()
+                .ForMember(
+                    dest => dest.Type,
+                    opts => opts.MapFrom(src => src.PlayerType));
 
-            //Mapper.CreateMap<TeamPlayerEntity, TeamPlayer>()
-            //    .ForMember(
-            //        dest => dest.Type,
-            //        opts => opts.MapFrom(src => src.PlayerType));
-
-            Mapper.CreateMap<TeamEntity, Team>()
-                .ForMember(
-                    dest => dest.ClubId,
-                    opts => opts.MapFrom(src => Constants.OwnClubId))
-                .ForMember(
-                    dest => dest.Competition,
-                    opts => opts.MapFrom(src => Constants.NormalizeCompetition(src.Competition)))
-                .ForMember(
-                    dest => dest.DivisionName,
-                    opts => opts.MapFrom(src => src.ReeksNummer + src.ReeksCode))
-                .ForMember(
-                    dest => dest.Frenoy,
-                    opts => opts.MapFrom(src => new FrenoyTeamLinks
-                    {
-                        DivisionId = src.FrenoyDivisionId,
-                        LinkId = src.LinkId,
-                        TeamId = src.FrenoyTeamId
-                    }))
-                .ForMember(
-                    dest => dest.Players,
-                    opts => opts.MapFrom(src => src.Players))
-                .ForMember(
-                    dest => dest.Opponents,
-                    opts => opts.MapFrom(src => MapAllTeams(src)))
-                ;
+            cfg.CreateMap<TeamEntity, Team>()
+            .ForMember(
+                dest => dest.ClubId,
+                opts => opts.MapFrom(src => Constants.OwnClubId))
+            .ForMember(
+                dest => dest.Competition,
+                opts => opts.MapFrom(src => Constants.NormalizeCompetition(src.Competition)))
+            .ForMember(
+                dest => dest.DivisionName,
+                opts => opts.MapFrom(src => src.ReeksNummer + src.ReeksCode))
+            .ForMember(
+                dest => dest.Frenoy,
+                opts => opts.MapFrom(src => new FrenoyTeamLinks
+                {
+                    DivisionId = src.FrenoyDivisionId,
+                    LinkId = src.LinkId,
+                    TeamId = src.FrenoyTeamId
+                }))
+            .ForMember(
+                dest => dest.Players,
+                opts => opts.MapFrom(src => src.Players))
+            .ForMember(
+                dest => dest.Opponents,
+                opts => opts.MapFrom(src => MapAllTeams(src)))
+            ;
         }
 
         private static ICollection<OpposingTeam> MapAllTeams(TeamEntity src)
-        => src.Opponents.Select(opponent => new OpposingTeam
         {
-            ClubId = opponent.ClubId,
-            TeamCode = opponent.TeamCode
-        }).ToArray();
+            return src.Opponents.Select(opponent => new OpposingTeam
+            {
+                ClubId = opponent.ClubId,
+                TeamCode = opponent.TeamCode
+            }).ToArray();
+        }
+
         #endregion
 
         #region Matches
-        private static void ReportMapping()
+        private static void ReportMapping(IMapperConfiguration cfg)
         {
-            Mapper.CreateMap<MatchCommentEntity, MatchComment>()
-                .ReverseMap()
-                ;
+            cfg.CreateMap<MatchCommentEntity, MatchComment>().ReverseMap();
+            cfg.CreateMap<MatchPlayerEntity, MatchPlayer>().ReverseMap();
 
-            Mapper.CreateMap<MatchPlayerEntity, MatchPlayer>()
-                .ReverseMap()
-                ;
-        
-            Mapper.CreateMap<MatchGameEntity, MatchGame>()
+            cfg.CreateMap<MatchGameEntity, MatchGame>()
                 .ForMember(d => d.Outcome, o => o.MapFrom(src => src.WalkOver == WalkOver.None ? MatchOutcome.NotYetPlayed : MatchOutcome.WalkOver))
                 .ForMember(
                     dest => dest.OutPlayerSets,
@@ -98,9 +92,9 @@ namespace Ttc.DataAccess.App_Start
                 ;
         }
 
-        private static void MatchMapping()
+        private static void MatchMapping(IMapperConfiguration cfg)
         {
-            Mapper.CreateMap<MatchEntity, OtherMatch>()
+            cfg.CreateMap<MatchEntity, OtherMatch>()
                 .ForMember(
                     dest => dest.Home,
                     opts => opts.MapFrom(src => new OpposingTeam
@@ -134,7 +128,7 @@ namespace Ttc.DataAccess.App_Start
                     SetIndividualMatchesOutcome(match.Games, null);
                 });
 
-            Mapper.CreateMap<MatchEntity, Match>()
+            cfg.CreateMap<MatchEntity, Match>()
                 .ForMember(
                     dest => dest.TeamId,
                     opts => opts.MapFrom(src => src.HomeTeamId.HasValue ? src.HomeTeamId : src.AwayTeamId))
@@ -147,8 +141,8 @@ namespace Ttc.DataAccess.App_Start
                     }))
                 .ForMember(
                     dest => dest.IsPlayed,
-                    opts => opts.MapFrom(src => 
-                        GetScoreType(src) != MatchOutcome.NotYetPlayed && 
+                    opts => opts.MapFrom(src =>
+                        GetScoreType(src) != MatchOutcome.NotYetPlayed &&
                         GetScoreType(src) != MatchOutcome.BeingPlayed))
                 .ForMember(
                     dest => dest.ScoreType,
@@ -239,7 +233,7 @@ namespace Ttc.DataAccess.App_Start
             {
                 return MatchOutcome.NotYetPlayed;
             }
-            
+
             if (match.WalkOver)
             {
                 return MatchOutcome.WalkOver;
@@ -259,15 +253,15 @@ namespace Ttc.DataAccess.App_Start
             }
             else
             {
-                return match.HomeScore.Value < match.AwayScore.Value ? MatchOutcome.Won: MatchOutcome.Lost;
+                return match.HomeScore.Value < match.AwayScore.Value ? MatchOutcome.Won : MatchOutcome.Lost;
             }
         }
         #endregion
 
         #region Clubs
-        private static void ClubMapping()
+        private static void ClubMapping(IMapperConfiguration cfg)
         {
-            Mapper.CreateMap<ClubEntity, Club>()
+            cfg.CreateMap<ClubEntity, Club>()
                 .ForMember(
                     dest => dest.Name,
                     opts => opts.MapFrom(src => src.Naam))
@@ -322,7 +316,8 @@ namespace Ttc.DataAccess.App_Start
         }
 
         private static ClubLocation CreateClubLocation(ClubLokaal location)
-        =>  new ClubLocation
+        {
+            return new ClubLocation
             {
                 Id = location.Id,
                 Description = location.Lokaal,
@@ -331,13 +326,14 @@ namespace Ttc.DataAccess.App_Start
                 City = location.Gemeente,
                 Mobile = location.Telefoon
             };
+        }
 
         #endregion
 
         #region Players
-        private static void PlayerMapping(KlassementValueConverter klassementToValueConverter)
+        private static void PlayerMapping(IMapperConfiguration cfg, KlassementValueConverter klassementToValueConverter)
         {
-            Mapper.CreateMap<PlayerEntity, Player>()
+            cfg.CreateMap<PlayerEntity, Player>()
                 .ForMember(
                     dest => dest.Name,
                     opts => opts.MapFrom(src => src.Naam))
@@ -373,14 +369,18 @@ namespace Ttc.DataAccess.App_Start
         }
 
         private static PlayerCompetition CreateSportaPlayer(KlassementValueConverter converter, int clubId, int uniqueIndex, string frenoyLink, string ranking, int position, int rankingIndex)
-            => new PlayerCompetition(
+        {
+            return new PlayerCompetition(
                 Competition.Sporta,
                 clubId, uniqueIndex, frenoyLink, ranking, position, rankingIndex, converter.Sporta(ranking));
+        }
 
         private static PlayerCompetition CreateVttlPlayer(KlassementValueConverter converter, int clubId, int uniqueIndex, string frenoyLink, string ranking, int position, int rankingIndex)
-            => new PlayerCompetition(
+        {
+            return new PlayerCompetition(
                 Competition.Vttl,
                 clubId, uniqueIndex, frenoyLink, ranking, position, rankingIndex, converter.Vttl(ranking));
+        }
 
         #endregion
     }

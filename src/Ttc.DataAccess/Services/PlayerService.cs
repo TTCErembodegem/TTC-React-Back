@@ -18,7 +18,7 @@ using Ttc.DataAccess.Utilities;
 
 namespace Ttc.DataAccess.Services
 {
-    public class PlayerService
+    public class PlayerService : BaseService
     {
         #region Player
         public ICollection<Player> GetOwnClub()
