@@ -16,12 +16,6 @@ namespace Frenoy.Syncer
             {
                 try
                 {
-                    //var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
-                    //vttlPlayers.StopAllPlayers();
-                    //vttlPlayers.SyncPlayers();
-                    //var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
-                    //sportaPlayers.SyncPlayers();
-
                     Configuration.Seed(context, false);
 
                     //var vttl = new FrenoyMatchesApi(context, Competition.Vttl);
