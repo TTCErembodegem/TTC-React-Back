@@ -46,15 +46,15 @@ namespace Ttc.WebApi.Controllers
             return result;
         }
 
-        [HttpGet]
-        [AllowAnonymous]
-        [Route("GetFirstRoundMatch")]
-        public Match GetFirstRoundMatch(int matchId)
-        {
-            var result = _service.GetFirstRoundMatch(matchId);
-            CleanSensitiveData(result);
-            return result;
-        }
+        //[HttpGet]
+        //[AllowAnonymous]
+        //[Route("GetFirstRoundMatch")]
+        //public Match GetFirstRoundMatch(int matchId)
+        //{
+        //    var result = _service.GetFirstRoundMatch(matchId);
+        //    CleanSensitiveData(result);
+        //    return result;
+        //}
 
         [HttpGet]
         [Route("GetLastOpponentMatches")]

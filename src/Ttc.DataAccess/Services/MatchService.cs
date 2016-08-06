@@ -16,18 +16,13 @@ namespace Ttc.DataAccess.Services
         #region Getters
         public ICollection<Match> GetRelevantMatches()
         {
-            // TODO: hoofdpagina = jouw volgende matchen. jouw team. en jouw speler details
             using (var dbContext = new TtcDbContext())
             {
-                var dateBegin = DateTime.Now.AddDays(-10);
-                var dateEnd = DateTime.Now.AddDays(20);
-
                 var matchEntities = dbContext.Matches
                     .WithIncludes()
                     //.Where(x => x.Id == 802)
                     .Where(x => x.HomeClubId == Constants.OwnClubId || x.AwayClubId == Constants.OwnClubId)
-                    .Where(x => x.Date >= dateBegin)
-                    .Where(x => x.Date <= dateEnd)
+                    .Where(x => x.FrenoySeason == Constants.FrenoySeason)
                     .ToList();
 
                 var matchIds = matchEntities.Select(x => x.Id).ToArray();
@@ -74,41 +69,41 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        public Match GetFirstRoundMatch(int matchId)
-        {
-            using (var dbContext = new TtcDbContext())
-            {
-                var matchEntities = dbContext.Matches.Single(x => x.Id == matchId);
-                if (!matchEntities.IsHomeMatch.HasValue)
-                {
-                    return null;
-                }
+        //public Match GetFirstRoundMatch(int matchId)
+        //{
+        //    using (var dbContext = new TtcDbContext())
+        //    {
+        //        var matchEntities = dbContext.Matches.Single(x => x.Id == matchId);
+        //        if (!matchEntities.IsHomeMatch.HasValue)
+        //        {
+        //            return null;
+        //        }
 
-                MatchEntity firstRoundMatch;
-                if (matchEntities.IsHomeMatch.Value)
-                {
-                    firstRoundMatch = dbContext.Matches
-                        .WithIncludes()
-                        .Where(x => x.HomeTeamCode == matchEntities.AwayTeamCode)
-                        .Where(x => x.HomeClubId == matchEntities.AwayClubId)
-                        .Where(x => x.AwayTeamId == matchEntities.HomeTeamId)
-                        .SingleOrDefault(x => x.Date < matchEntities.Date);
-                }
-                else
-                {
-                    firstRoundMatch = dbContext.Matches
-                        .WithIncludes()
-                        .Where(x => x.AwayTeamCode == matchEntities.HomeTeamCode)
-                        .Where(x => x.AwayClubId == matchEntities.HomeClubId)
-                        .Where(x => x.HomeTeamId == matchEntities.AwayTeamId)
-                        .SingleOrDefault(x => x.Date < matchEntities.Date);
-                }
+        //        MatchEntity firstRoundMatch;
+        //        if (matchEntities.IsHomeMatch.Value)
+        //        {
+        //            firstRoundMatch = dbContext.Matches
+        //                .WithIncludes()
+        //                .Where(x => x.HomeTeamCode == matchEntities.AwayTeamCode)
+        //                .Where(x => x.HomeClubId == matchEntities.AwayClubId)
+        //                .Where(x => x.AwayTeamId == matchEntities.HomeTeamId)
+        //                .SingleOrDefault(x => x.Date < matchEntities.Date);
+        //        }
+        //        else
+        //        {
+        //            firstRoundMatch = dbContext.Matches
+        //                .WithIncludes()
+        //                .Where(x => x.AwayTeamCode == matchEntities.HomeTeamCode)
+        //                .Where(x => x.AwayClubId == matchEntities.HomeClubId)
+        //                .Where(x => x.HomeTeamId == matchEntities.AwayTeamId)
+        //                .SingleOrDefault(x => x.Date < matchEntities.Date);
+        //        }
 
-                // TODO: comments not fetched here
+        //        // TODO: comments not fetched here
 
-                return Map(firstRoundMatch);
-            }
-        }
+        //        return Map(firstRoundMatch);
+        //    }
+        //}
 
         public ICollection<Match> GetMatchesForTeam(int teamId)
         {
@@ -130,7 +125,10 @@ namespace Ttc.DataAccess.Services
         {
             var match = dbContext.Matches
                     .WithIncludes()
-                    .Single(x => x.Id == matchId);
+                    .SingleOrDefault(x => x.Id == matchId);
+
+            if (match == null)
+                return null;
 
             var comments = dbContext.MatchComments.Where(x => x.MatchId == matchId).ToArray();
             match.Comments = comments;
