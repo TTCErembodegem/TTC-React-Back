@@ -87,11 +87,8 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
-                var activePlayers = dbContext.Players
-                    .Where(x => x.Gestopt == null)
-                    .Where(x => x.ClubIdSporta == Constants.OwnClubId || x.ClubIdVttl == Constants.OwnClubId).ToArray();
-
-                var exceller = new PlayerExcelCreator(activePlayers);
+                var activePlayers = dbContext.Players.Where(x => x.Gestopt == null);
+                var exceller = new PlayerExcelCreator(activePlayers.ToArray());
                 return exceller.Create();
             }
         }
