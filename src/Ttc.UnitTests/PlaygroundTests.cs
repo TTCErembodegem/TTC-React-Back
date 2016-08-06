@@ -119,35 +119,6 @@ Wouter & Jorn";
         }
 
         //[Test]
-        public void FillTeamPlayers()
-        {
-            var settings = FrenoySettings.VttlSettings;
-            var comp = Competition.Vttl;
-
-            using (var dbContext = new TtcDbContext())
-            {
-                foreach (KeyValuePair<string, string[]> dict in settings.Players)
-                {
-                    TeamEntity team = dbContext.Teams
-                        .Where(x => x.Year == settings.Year)
-                        .Single(x => x.Competition == comp.ToString() && x.TeamCode == dict.Key);
-
-                    foreach (string player in dict.Value)
-                    {
-                        var newPlayer = new TeamPlayerEntity
-                        {
-                            TeamId = team.Id,
-                            PlayerType = TeamPlayerType.Standard,
-                            PlayerId = dbContext.Players.Single(x => x.NaamKort == player).Id
-                        };
-                        dbContext.TeamPlayers.Add(newPlayer);
-                    }
-                }
-                dbContext.SaveChanges();
-            }
-        }
-
-        //[Test]
         public void TeamMapping()
         {
             using (var dbContext = new TtcDbContext())

@@ -14,40 +14,70 @@ namespace Frenoy.Syncer
         {
             using (var context = new TtcDbContext())
             {
-                Configuration.Seed(context, true, true);
-
-                bool endOfSeason = !context.Matches.Any(match => match.Date > DateTime.Now);
-                if (endOfSeason)
+                try
                 {
-                    var passedMatches = context.Matches
-                        .Where(x => x.Date < DateTime.Today)
-                        .OrderByDescending(x => x.Date)
-                        .Take(42);
+                    //var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
+                    //vttlPlayers.StopAllPlayers();
+                    //vttlPlayers.SyncPlayers();
+                    //var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
+                    //sportaPlayers.SyncPlayers();
 
-                    var timeToAdd = DateTime.Today - passedMatches.First().Date;
-                    foreach (var match in passedMatches.Take(20))
-                    {
-                        match.Date = match.Date.Add(timeToAdd);
-                    }
+                    Configuration.Seed(context, false);
 
-                    var rnd = new Random();
-                    foreach (var match in passedMatches.Take(20))
-                    {
-                        match.Date = DateTime.Today.Add(TimeSpan.FromDays(rnd.Next(1, 20))).AddHours(rnd.Next(10, 20));
-                        match.Description = "";
-                        match.AwayScore = null;
-                        match.HomeScore = null;
-                        //match.IsSyncedWithFrenoy = true;
-                        match.WalkOver = false;
+                    //var vttl = new FrenoyMatchesApi(context, Competition.Vttl);
+                    //vttl.SyncTeamsAndMatches();
+                    //var sporta = new FrenoyMatchesApi(context, Competition.Sporta);
+                    //sporta.SyncTeamsAndMatches();
 
-                        context.MatchComments.RemoveRange(match.Comments.ToArray());
-                        context.MatchGames.RemoveRange(match.Games.ToArray());
-                        context.MatchPlayers.RemoveRange(match.Players.ToArray());
-                    }
+                    //ChangeMatchDates(context);
+
+                    context.SaveChanges();
                 }
-
-                context.SaveChanges();
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    Console.ReadKey();
+                }
             }
         }
+
+        #region End of season tampering
+        /// <summary>
+        /// If there is no real life data between seasons,
+        /// change some match dates to around now for testing purposes
+        /// </summary>
+        private void ChangeMatchDates(TtcDbContext context)
+        {
+            bool endOfSeason = !context.Matches.Any(match => match.Date > DateTime.Now);
+            if (endOfSeason)
+            {
+                var passedMatches = context.Matches
+                    .Where(x => x.Date < DateTime.Today)
+                    .OrderByDescending(x => x.Date)
+                    .Take(42);
+
+                var timeToAdd = DateTime.Today - passedMatches.First().Date;
+                foreach (var match in passedMatches.Take(20))
+                {
+                    match.Date = match.Date.Add(timeToAdd);
+                }
+
+                var rnd = new Random();
+                foreach (var match in passedMatches.Take(20))
+                {
+                    match.Date = DateTime.Today.Add(TimeSpan.FromDays(rnd.Next(1, 20))).AddHours(rnd.Next(10, 20));
+                    match.Description = "";
+                    match.AwayScore = null;
+                    match.HomeScore = null;
+                    //match.IsSyncedWithFrenoy = true;
+                    match.WalkOver = false;
+
+                    context.MatchComments.RemoveRange(match.Comments.ToArray());
+                    context.MatchGames.RemoveRange(match.Games.ToArray());
+                    context.MatchPlayers.RemoveRange(match.Players.ToArray());
+                }
+            }
+        }
+        #endregion
     }
 }

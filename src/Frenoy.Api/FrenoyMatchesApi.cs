@@ -124,9 +124,9 @@ namespace Frenoy.Api
         #region Match Creation
         private void SyncMatches(int teamId, int frenoyDivisionId, GetMatchesResponse matches, bool alsoSyncMatchDetails = true)
         {
-            foreach (TeamMatchEntryType frenoyMatch in matches.TeamMatchesEntries.Where(x => x.HomeTeam.Trim() != "Vrij" && x.AwayTeam.Trim() != "Vrij"))
+            foreach (TeamMatchEntryType frenoyMatch in matches.TeamMatchesEntries.Where(x => !x.HomeTeam.Trim().StartsWith("Vrij") && !x.AwayTeam.Trim().StartsWith("Vrij")))
             {
-                Debug.Assert(frenoyMatch.DateSpecified);
+                Debug.Assert(frenoyMatch.DateSpecified, "Probably need to filter this one out?");
                 Debug.Assert(frenoyMatch.TimeSpecified);
 
                 // Kalender entries
@@ -459,24 +459,6 @@ namespace Frenoy.Api
                 TeamCode = ExtractTeamCodeFromFrenoyName(frenoyTeam.Team)
             };
             return opponent;
-        }
-        #endregion
-
-        #region Debug & Tech Stuff
-        [Conditional("DEBUG")]
-        private void CheckPlayers()
-        {
-            foreach (string player in _settings.Players.Values.SelectMany(x => x))
-            {
-                try
-                {
-                    GetSpelerId(player);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("No player with NaamKort " + player, ex);
-                }
-            }
         }
         #endregion
     }

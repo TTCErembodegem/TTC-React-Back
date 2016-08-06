@@ -17,10 +17,8 @@ namespace Ttc.DataEntities
         #region Competition
         public const string Sporta = "Sporta";
         public const string Vttl = "Vttl";
-        /// <summary>
-        /// Don't change this to 2016; Calculate it instead!
-        /// </summary>
-        public const int CurrentSeason = 2015;
+        public const int CurrentSeason = 2016;
+        public const int FrenoySeason = CurrentSeason - 2000 + 1;
 
         private static bool IsVttl(string value) => string.Equals(value.Trim(), Vttl, StringComparison.InvariantCultureIgnoreCase);
 

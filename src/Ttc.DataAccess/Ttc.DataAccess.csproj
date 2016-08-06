@@ -225,6 +225,10 @@
     <Compile Include="Migrations\201603291429245_IncorrectPlayerInfos.Designer.cs">
       <DependentUpon>201603291429245_IncorrectPlayerInfos.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201608060352409_Season17Load.cs" />
+    <Compile Include="Migrations\201608060352409_Season17Load.Designer.cs">
+      <DependentUpon>201608060352409_Season17Load.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\ServiceExtensions.cs" />
     <Compile Include="Services\ClubService.cs" />
@@ -366,6 +370,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603291429245_IncorrectPlayerInfos.resx">
       <DependentUpon>201603291429245_IncorrectPlayerInfos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608060352409_Season17Load.resx">
+      <DependentUpon>201608060352409_Season17Load.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\PlayerExcelExportResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
