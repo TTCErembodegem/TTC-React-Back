@@ -147,6 +147,24 @@ namespace Ttc.DataAccess.Services
             }
         }
 
+        public string SetNewPassword(PasswordCredentials request)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var player = dbContext.Players.SingleOrDefault(x => x.Id == request.PlayerId);
+                if (player != null)
+                {
+                    dbContext.Database.ExecuteSqlCommand(
+                        $"UPDATE {PlayerEntity.TableName} SET paswoord=MD5({{1}}) WHERE id={{0}}",
+                        request.PlayerId,
+                        request.NewPassword);
+
+                    return player.Email;
+                }
+                return null;
+            }
+        }
+
         public string RequestNewPassword(NewPasswordRequest request)
         {
             if (request.PlayerId == 0)

@@ -10,6 +10,7 @@ using SendGrid;
 using SendGrid.Helpers.Mail;
 using Ttc.DataAccess.Services;
 using Ttc.Model;
+using Ttc.Model.Players;
 using Ttc.WebApi.Utilities;
 using Ttc.WebApi.Utilities.Auth;
 
@@ -62,6 +63,16 @@ namespace Ttc.WebApi.Controllers
             var newPassword = _service.RequestNewPassword(request);
             var emailConfig = _configService.GetEmailConfig();
             CreateNewPasswordRequestEmail(request.Email, newPassword, emailConfig).Wait();
+        }
+
+        [HttpPost]
+        [Route("SetNewPassword")]
+        [AllowAnonymous]
+        public void SetNewPassword([FromBody]PasswordCredentials request)
+        {
+            string playerEmail = _service.SetNewPassword(request);
+            var emailConfig = _configService.GetEmailConfig();
+            CreateNewPasswordRequestEmail(playerEmail, request.NewPassword, emailConfig).Wait();
         }
 
         private async Task CreateNewPasswordRequestEmail(string email, string newPassword, EmailConfig config)
