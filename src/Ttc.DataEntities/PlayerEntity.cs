@@ -8,7 +8,13 @@ namespace Ttc.DataEntities
     public enum PlayerToegang
     {
         Player = 1,
+        /// <summary>
+        /// Dirk DS, ...
+        /// </summary>
         Board = 7,
+        /// <summary>
+        /// Jorn en ik
+        /// </summary>
         Dev = 8,
         /// <summary>
         /// Algemeen toegankelijke computer in het clublokaal

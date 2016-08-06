@@ -18,16 +18,12 @@ namespace Ttc.DataAccess.Services
     public class PlayerService
     {
         #region Player
-        public ICollection<Player> GetActiveOwnClub()
+        public ICollection<Player> GetOwnClub()
         {
             using (var dbContext = new TtcDbContext())
             {
-                var activeOwnClubPlayers = dbContext.Players
-                    .ToArray()
-                    .Where(x => !x.IsGestopt && x.IsFromOwnClub())
-                    .ToList();
-
-                var result = Mapper.Map<IList<PlayerEntity>, IList<Player>>(activeOwnClubPlayers);
+                var players = dbContext.Players.ToArray();
+                var result = Mapper.Map<IList<PlayerEntity>, IList<Player>>(players);
                 return result;
             }
         }
@@ -58,22 +54,32 @@ namespace Ttc.DataAccess.Services
             return newMatch;
         }
 
-        public Player UpdatePlayer(PlayerContact player)
+        public Player UpdatePlayer(Player player)
         {
             using (var dbContext = new TtcDbContext())
             {
-                var existingSpeler = dbContext.Players.FirstOrDefault(x => x.Id == player.PlayerId);
+                var existingSpeler = dbContext.Players.FirstOrDefault(x => x.Id == player.Id);
                 if (existingSpeler == null)
                 {
                     return null;
                 }
-                existingSpeler.Gsm = player.GSM;
-                existingSpeler.Email = player.Email;
-                existingSpeler.Adres = player.Address;
-                existingSpeler.Gemeente = player.City;
+                existingSpeler.Gsm = player.Contact.Mobile;
+                existingSpeler.Email = player.Contact.Email;
+                existingSpeler.Adres = player.Contact.Address;
+                existingSpeler.Gemeente = player.Contact.City;
+
+                existingSpeler.Stijl = player.Style.Name;
+                existingSpeler.BesteSlag = player.Style.BestStroke;
+
+                existingSpeler.Gestopt = player.QuitYear;
+                existingSpeler.Toegang = (PlayerToegang)Enum.Parse(typeof(PlayerToegang), player.Security);
+
+                existingSpeler.Naam = player.Name;
+                existingSpeler.NaamKort = player.Alias;
+
                 dbContext.SaveChanges();
             }
-            var newPlayer = GetPlayer(player.PlayerId);
+            var newPlayer = GetPlayer(player.Id);
             return newPlayer;
         }
 

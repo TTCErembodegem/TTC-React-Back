@@ -28,7 +28,7 @@ namespace Ttc.WebApi.Controllers
         [AllowAnonymous]
         public IEnumerable<Player> Get()
         {
-            var result = _service.GetActiveOwnClub();
+            var result = _service.GetOwnClub();
             CleanSensitiveData(result);
             return result;
         }
@@ -51,7 +51,7 @@ namespace Ttc.WebApi.Controllers
 
         [HttpPost]
         [Route("UpdatePlayer")]
-        public Player UpdatePlayer([FromBody] PlayerContact player)
+        public Player UpdatePlayer([FromBody]Player player)
         {
             var result = _service.UpdatePlayer(player);
             return result;

@@ -29,11 +29,10 @@ namespace Ttc.WebApi.Controllers
         #endregion
 
         #region Getters
-        [Route("GetRelevantMatches")]
         [AllowAnonymous]
-        public IEnumerable<Match> GetRelevantMatches()
+        public IEnumerable<Match> Get()
         {
-            var result = _service.GetRelevantMatches();
+            var result = _service.GetMatches();
             CleanSensitiveData(result);
             return result;
         }
@@ -45,16 +44,6 @@ namespace Ttc.WebApi.Controllers
             CleanSensitiveData(result);
             return result;
         }
-
-        //[HttpGet]
-        //[AllowAnonymous]
-        //[Route("GetFirstRoundMatch")]
-        //public Match GetFirstRoundMatch(int matchId)
-        //{
-        //    var result = _service.GetFirstRoundMatch(matchId);
-        //    CleanSensitiveData(result);
-        //    return result;
-        //}
 
         [HttpGet]
         [Route("GetLastOpponentMatches")]

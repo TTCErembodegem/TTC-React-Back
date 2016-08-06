@@ -59,7 +59,6 @@
     <Compile Include="Clubs\Club.cs" />
     <Compile Include="Clubs\ClubLocation.cs" />
     <Compile Include="Clubs\ClubManager.cs" />
-    <Compile Include="Contact.cs" />
     <Compile Include="Players\Player.cs" />
     <Compile Include="Players\PlayerCompetition.cs" />
     <Compile Include="Players\PlayerStyle.cs" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using AutoMapper;
+using Ttc.DataAccess.Services;
 using Ttc.DataEntities;
 using Ttc.DataAccess.Utilities;
 using Ttc.Model;
@@ -340,11 +341,17 @@ namespace Ttc.DataAccess.App_Start
                     dest => dest.Active,
                     opts => opts.MapFrom(src => !src.IsGestopt))
                 .ForMember(
+                    dest => dest.QuitYear,
+                    opts => opts.MapFrom(src => src.Gestopt))
+                .ForMember(
+                    dest => dest.Security,
+                    opts => opts.MapFrom(src => src.Toegang.ToString()))
+                .ForMember(
                     dest => dest.Style,
                     opts => opts.MapFrom(src => new PlayerStyle(src.Id, src.Stijl, src.BesteSlag)))
                 .ForMember(
                     dest => dest.Contact,
-                    opts => opts.MapFrom(src => new Contact(src.Adres, src.Gemeente, src.Gsm, src.Email)))
+                    opts => opts.MapFrom(src => new PlayerContact(src.Id, src.Email, src.Gsm, src.Adres, src.Gemeente)))
                 .ForMember(
                     dest => dest.Vttl,
                     opts => opts.MapFrom(src => src.ClubIdVttl.HasValue ?

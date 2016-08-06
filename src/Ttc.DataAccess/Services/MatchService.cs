@@ -14,7 +14,7 @@ namespace Ttc.DataAccess.Services
     public class MatchService
     {
         #region Getters
-        public ICollection<Match> GetRelevantMatches()
+        public ICollection<Match> GetMatches()
         {
             using (var dbContext = new TtcDbContext())
             {

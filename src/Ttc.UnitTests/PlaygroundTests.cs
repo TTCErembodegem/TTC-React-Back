@@ -139,7 +139,7 @@ Wouter & Jorn";
                 AutoMapperConfig.Configure(new KlassementValueConverter());
 
                 var serv = new MatchService();
-                var result = serv.GetRelevantMatches();
+                var result = serv.GetMatches();
                 var pastMatch = result.First();
                 //var pastMatch = serv.GetMatch(1597);
                 Assert.That(pastMatch.Players.Count, Is.Not.EqualTo(0), "Players not loaded");
