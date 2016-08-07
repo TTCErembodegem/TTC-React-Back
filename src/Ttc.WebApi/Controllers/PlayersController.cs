@@ -56,7 +56,7 @@ namespace Ttc.WebApi.Controllers
             var result = _service.UpdatePlayer(player);
             return result;
         }
-    
+
         [HttpGet]
         [Route("ExcelExport")]
         public string GetExcelExport()

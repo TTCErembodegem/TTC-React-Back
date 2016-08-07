@@ -133,5 +133,36 @@ namespace Ttc.DataAccess.Services
             }
         }
         #endregion
+
+        public Team ToggleTeamPlayer(TeamToggleRequest req)
+        {
+            using (var db = new TtcDbContext())
+            {
+                var team = db.Teams.Include(x => x.Players).Single(x => x.Id == req.TeamId);
+                var exPlayer = team.Players.SingleOrDefault(x => x.PlayerId == req.PlayerId);
+                if (exPlayer == null)
+                {
+                    team.Players.Add(new TeamPlayerEntity
+                    {
+                        PlayerId = req.PlayerId,
+                        TeamId = req.TeamId
+                    });
+                }
+                else
+                {
+                    db.Entry(exPlayer).State = EntityState.Deleted;
+                }
+                db.SaveChanges();
+                return GetTeam(req.TeamId, false);
+            }
+        }
+    }
+
+    public class TeamToggleRequest
+    {
+        public int TeamId { get; set; }
+        public int PlayerId { get; set; }
+
+        public override string ToString() => $"TeamId: {TeamId}, PlayerId: {PlayerId}";
     }
 }

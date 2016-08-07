@@ -28,5 +28,13 @@ namespace Ttc.WebApi.Controllers
         [AllowAnonymous]
         [Route("Ranking")]
         public Team Ranking(int teamId) => _service.GetTeam(teamId, true);
+
+        [HttpPost]
+        [Route("ToggleTeamPlayer")]
+        public Team ToggleTeamPlayer([FromBody]TeamToggleRequest req)
+        {
+            var result = _service.ToggleTeamPlayer(req);
+            return result;
+        }
     }
 }
