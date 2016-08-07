@@ -64,26 +64,37 @@ namespace Ttc.DataAccess.Services
                 var existingSpeler = dbContext.Players.FirstOrDefault(x => x.Id == player.Id);
                 if (existingSpeler == null)
                 {
-                    return null;
+                    existingSpeler = new PlayerEntity();
+                    MapPlayer(player, existingSpeler);
+                    dbContext.Players.Add(existingSpeler);
                 }
-                existingSpeler.Gsm = player.Contact.Mobile;
-                existingSpeler.Email = player.Contact.Email;
-                existingSpeler.Adres = player.Contact.Address;
-                existingSpeler.Gemeente = player.Contact.City;
-
-                existingSpeler.Stijl = player.Style.Name;
-                existingSpeler.BesteSlag = player.Style.BestStroke;
-
-                existingSpeler.Gestopt = player.QuitYear;
-                existingSpeler.Toegang = (PlayerToegang)Enum.Parse(typeof(PlayerToegang), player.Security);
-
-                existingSpeler.Naam = player.Name;
-                existingSpeler.NaamKort = player.Alias;
-
+                else
+                {
+                    MapPlayer(player, existingSpeler);
+                }
+                
                 dbContext.SaveChanges();
+                player.Id = existingSpeler.Id;
             }
             var newPlayer = GetPlayer(player.Id);
             return newPlayer;
+        }
+
+        private static void MapPlayer(Player player, PlayerEntity existingSpeler)
+        {
+            existingSpeler.Gsm = player.Contact.Mobile;
+            existingSpeler.Email = player.Contact.Email;
+            existingSpeler.Adres = player.Contact.Address;
+            existingSpeler.Gemeente = player.Contact.City;
+
+            existingSpeler.Stijl = player.Style.Name;
+            existingSpeler.BesteSlag = player.Style.BestStroke;
+
+            existingSpeler.Gestopt = player.QuitYear;
+            existingSpeler.Toegang = (PlayerToegang) Enum.Parse(typeof (PlayerToegang), player.Security);
+
+            existingSpeler.Naam = player.Name;
+            existingSpeler.NaamKort = player.Alias;
         }
 
         public byte[] GetExcelExport()
