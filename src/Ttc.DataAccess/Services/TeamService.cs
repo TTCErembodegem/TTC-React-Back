@@ -145,7 +145,8 @@ namespace Ttc.DataAccess.Services
                     team.Players.Add(new TeamPlayerEntity
                     {
                         PlayerId = req.PlayerId,
-                        TeamId = req.TeamId
+                        TeamId = req.TeamId,
+                        PlayerType = (TeamPlayerType)Enum.Parse(typeof(TeamPlayerType), req.Role)
                     });
                 }
                 else
@@ -162,7 +163,8 @@ namespace Ttc.DataAccess.Services
     {
         public int TeamId { get; set; }
         public int PlayerId { get; set; }
+        public string Role { get; set; }
 
-        public override string ToString() => $"TeamId: {TeamId}, PlayerId: {PlayerId}";
+        public override string ToString() => $"TeamId={TeamId}, PlayerId={PlayerId}, Role={Role}";
     }
 }
