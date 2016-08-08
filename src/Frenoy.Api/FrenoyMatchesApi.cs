@@ -306,7 +306,8 @@ namespace Frenoy.Api
                     Home = thuisSpeler,
                     Name = GetSpelerNaam(frenoyVerslagSpeler),
                     Position = int.Parse(frenoyVerslagSpeler.Position),
-                    UniqueIndex = int.Parse(frenoyVerslagSpeler.UniqueIndex)
+                    UniqueIndex = int.Parse(frenoyVerslagSpeler.UniqueIndex),
+                    Status = "Play"
                 };
                 if (frenoyVerslagSpeler.VictoryCount != null)
                 {
