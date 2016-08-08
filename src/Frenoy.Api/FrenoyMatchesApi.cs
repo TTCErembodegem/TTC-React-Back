@@ -135,7 +135,7 @@ namespace Frenoy.Api
                 Debug.Assert(frenoyMatch.TimeSpecified);
 
                 // Kalender entries
-                MatchEntity matchEntity = _db.Matches.SingleOrDefault(x => x.FrenoyMatchId == frenoyMatch.MatchId);
+                MatchEntity matchEntity = _db.Matches.SingleOrDefault(x => x.FrenoyMatchId == frenoyMatch.MatchId && x.FrenoySeason == Constants.FrenoySeason);
                 if (matchEntity == null)
                 {
                     matchEntity = CreateMatch(teamId, frenoyDivisionId, frenoyMatch);
