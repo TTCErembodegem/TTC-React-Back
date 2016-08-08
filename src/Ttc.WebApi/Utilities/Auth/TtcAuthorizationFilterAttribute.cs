@@ -5,6 +5,7 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using JWT;
 using Newtonsoft.Json;
+using Ttc.DataAccess.Services;
 using Ttc.Model;
 
 namespace Ttc.WebApi.Utilities.Auth
@@ -51,6 +52,20 @@ namespace Ttc.WebApi.Utilities.Auth
             string apikey = WebApi.Properties.Settings.Default.JwtSecret;
             var token = JsonWebToken.Encode(payload, apikey, JwtHashAlgorithm.HS256);
             return token;
+        }
+
+        public static bool IsValidToken(string token)
+        {
+            try
+            {
+                string apikey = WebApi.Properties.Settings.Default.JwtSecret;
+                JsonConvert.DeserializeObject(JsonWebToken.Decode(token, apikey));
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
 
         public static User ValidateToken(string token)

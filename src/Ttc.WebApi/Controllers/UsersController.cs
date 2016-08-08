@@ -91,6 +91,17 @@ namespace Ttc.WebApi.Controllers
         [HttpPost]
         [Route("ValidateToken")]
         [AllowAnonymous]
-        public User ValidateToken([FromBody]ValidateTokenRequest token) => TtcAuthorizationFilterAttribute.ValidateToken(token.Token);
+        public User ValidateToken([FromBody]ValidateTokenRequest token)
+        {
+            var validated = TtcAuthorizationFilterAttribute.ValidateToken(token.Token);
+            if (validated == null)
+            {
+                return null;
+            }
+
+            var userModel = _service.GetUser(validated.PlayerId);
+            userModel.Token = TtcAuthorizationFilterAttribute.CreateToken(userModel);
+            return userModel;
+        }
     }
 }

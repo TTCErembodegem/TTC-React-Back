@@ -20,8 +20,7 @@ namespace Ttc.WebApi.Utilities
             }
 
             var token = Request.Headers.Authorization.Parameter;
-            var user = TtcAuthorizationFilterAttribute.ValidateToken(token);
-            return user != null;
+            return TtcAuthorizationFilterAttribute.IsValidToken(token);
         }
 
         protected void CleanSensitiveData(IEnumerable<object> data)

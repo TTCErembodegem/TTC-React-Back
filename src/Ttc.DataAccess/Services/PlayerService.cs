@@ -210,10 +210,9 @@ namespace Ttc.DataAccess.Services
 
         private static User GetUser(TtcDbContext dbContext, int playerId)
         {
-            int currentYear = TtcDbContext.CurrentYear;
             var teams = dbContext.Teams
                 .Include(x => x.Players)
-                .Where(x => x.Year == currentYear)
+                .Where(x => x.Year == Constants.CurrentSeason)
                 .Where(x => x.Players.Any(ply => ply.PlayerId == playerId))
                 .Select(x => x.Id);
 

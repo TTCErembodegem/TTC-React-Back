@@ -35,18 +35,6 @@ namespace Ttc.DataAccess
             return belgianTime;
         }
 
-        /// <summary>
-        /// Get current year season (not frenoy season!)
-        /// </summary>
-        public static int CurrentYear
-        {
-            get
-            {
-                if (DateTime.Now.Month < 9) return DateTime.Now.Year -1;
-                return DateTime.Now.Year;
-            }
-        }
-
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("");
