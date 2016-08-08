@@ -250,6 +250,10 @@
     <Compile Include="Migrations\201608062139123_CreateParameterTable.Designer.cs">
       <DependentUpon>201608062139123_CreateParameterTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201608081545197_PlayerEntityStatus.cs" />
+    <Compile Include="Migrations\201608081545197_PlayerEntityStatus.Designer.cs">
+      <DependentUpon>201608081545197_PlayerEntityStatus.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\ServiceExtensions.cs" />
@@ -401,6 +405,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201608062139123_CreateParameterTable.resx">
       <DependentUpon>201608062139123_CreateParameterTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608081545197_PlayerEntityStatus.resx">
+      <DependentUpon>201608081545197_PlayerEntityStatus.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\PlayerExcelExportResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

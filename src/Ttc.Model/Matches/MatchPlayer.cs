@@ -4,6 +4,8 @@
     {
         public int Id { get; set; }
         public int MatchId { get; set; }
+        public string Status { get; set; }
+
         public int Position { get; set; }
         public string Name { get; set; }
         public string Ranking { get; set; }
@@ -17,6 +19,6 @@
         public int PlayerId { get; set; }
         public string Alias { get; set; }
 
-        public override string ToString() =>  $"{Position} {Name} ({Ranking}), Won={Won}";
+        public override string ToString() =>  $"MatchId={MatchId}, Ply={Position} {Name} ({Ranking}), Won={Won}, Status={Status}";
     }
 }

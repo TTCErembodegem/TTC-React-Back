@@ -9,11 +9,6 @@ using Ttc.WebApi.Utilities;
 
 namespace Ttc.WebApi.Controllers
 {
-    public class IdDto
-    {
-        public int Id { get; set; } // oh boy
-    }
-
     [RoutePrefix("api/matches")]
     public class MatchesController : BaseController
     {
@@ -145,5 +140,11 @@ namespace Ttc.WebApi.Controllers
         public int Out { get; set; }
 
         public override string ToString() => $"MatchId: {MatchId}, Home: {Home}, Out: {Out}";
+    }
+
+    public class IdDto
+    {
+        public int Id { get; set; } // oh boy
+        public override string ToString() => Id.ToString();
     }
 }

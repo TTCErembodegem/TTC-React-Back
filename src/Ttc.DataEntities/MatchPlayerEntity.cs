@@ -18,6 +18,8 @@ namespace Ttc.DataEntities
         public PlayerEntity Player { get; set; }
         public int PlayerId { get; set; }
 
+        public string Status { get; set; }
+
         /// <summary>
         /// Aantal gewonnen matchen.
         /// Null => Forfeit
@@ -34,6 +36,6 @@ namespace Ttc.DataEntities
         public string Ranking { get; set; }
         public int UniqueIndex { get; set; }
 
-        public override string ToString() => $"MatchId={MatchId}, NAme={Name}, Won={Won}, Home={Home}, Position={Position}";
+        public override string ToString() => $"MatchId={MatchId}, Name={Name}, Won={Won}, Home={Home}, Status={Status}";
     }
 }

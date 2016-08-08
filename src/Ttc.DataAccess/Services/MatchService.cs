@@ -170,7 +170,14 @@ namespace Ttc.DataAccess.Services
 
                 if (existingSpeler != null)
                 {
-                    dbContext.MatchPlayers.Remove(existingSpeler);
+                    if (existingSpeler.Status == matchPlayer.Status)
+                    {
+                        dbContext.MatchPlayers.Remove(existingSpeler);
+                    }
+                    else
+                    {
+                        existingSpeler.Status = matchPlayer.Status;
+                    }
                 }
                 else
                 {
