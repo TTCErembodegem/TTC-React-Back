@@ -151,6 +151,15 @@ namespace Ttc.DataAccess.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Waarde.
+        /// </summary>
+        internal static string PlayerRankingValue {
+            get {
+                return ResourceManager.GetString("PlayerRankingValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ledenlijst.
         /// </summary>
         internal static string SheetAllPlayers {

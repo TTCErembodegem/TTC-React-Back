@@ -147,6 +147,9 @@
   <data name="PlayerRanking" xml:space="preserve">
     <value>Klassement</value>
   </data>
+  <data name="PlayerRankingValue" xml:space="preserve">
+    <value>Waarde</value>
+  </data>
   <data name="SheetAllPlayers" xml:space="preserve">
     <value>Ledenlijst</value>
   </data>
