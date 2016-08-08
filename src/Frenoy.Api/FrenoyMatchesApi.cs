@@ -70,22 +70,27 @@ namespace Frenoy.Api
                     CommitChanges();
                 }
 
-                // Create the matches=kalender table in the new  division=reeks
-                GetMatchesResponse matches = _frenoy.GetMatches(new GetMatchesRequest
-                {
-                    Club = _settings.FrenoyClub,
-                    Season = _settings.FrenoySeason.ToString(),
-                    DivisionId = teamEntity.FrenoyDivisionId.ToString(),
-                    Team = teamEntity.TeamCode,
-                    WithDetailsSpecified = false,
-                    WithDetails = false,
-                });
-                SyncMatches(teamEntity.Id, teamEntity.FrenoyDivisionId, matches, false);
+                SyncTeamMatches(teamEntity);
             }
         }
         #endregion
 
         #region Public API
+        public void SyncTeamMatches(TeamEntity team)
+        {
+            // Create the matches=kalender table in the new  division=reeks
+            GetMatchesResponse matches = _frenoy.GetMatches(new GetMatchesRequest
+            {
+                Club = _settings.FrenoyClub,
+                Season = _settings.FrenoySeason.ToString(),
+                DivisionId = team.FrenoyDivisionId.ToString(),
+                Team = team.TeamCode,
+                WithDetailsSpecified = false,
+                WithDetails = false,
+            });
+            SyncMatches(team.Id, team.FrenoyDivisionId, matches, false);
+        }
+
         public void SyncMatchDetails(MatchEntity matchEntity)
         {
             if (ShouldAttemptMatchSync(matchEntity.Id))
@@ -135,6 +140,11 @@ namespace Frenoy.Api
                 {
                     matchEntity = CreateMatch(teamId, frenoyDivisionId, frenoyMatch);
                     _db.Matches.Add(matchEntity);
+                    CommitChanges();
+                }
+                else
+                {
+                    matchEntity.Date = frenoyMatch.Date + new TimeSpan(frenoyMatch.Time.Hour, frenoyMatch.Time.Minute, 0);
                     CommitChanges();
                 }
 

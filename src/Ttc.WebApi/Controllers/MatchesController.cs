@@ -53,15 +53,6 @@ namespace Ttc.WebApi.Controllers
             var result = _service.GetLastOpponentMatches(teamId, opponent);
             return result;
         }
-
-        [HttpGet]
-        [Route("GetMatchesForTeam")]
-        [AllowAnonymous]
-        public IEnumerable<Match> GetMatchesForTeam(int teamId)
-        {
-            var result = _service.GetMatchesForTeam(teamId);
-            return result;
-        }
         #endregion
 
 
@@ -75,6 +66,13 @@ namespace Ttc.WebApi.Controllers
             var result = _service.FrenoyMatchSync(matchId.Id);
             CleanSensitiveData(result);
             return result;
+        }
+
+        [HttpPost]
+        [Route("FrenoyTeamSync")]
+        public void FrenoyTeamSync([FromBody]IdDto teamId)
+        {
+            _service.FrenoyTeamSync(teamId.Id);
         }
 
         [HttpPost]

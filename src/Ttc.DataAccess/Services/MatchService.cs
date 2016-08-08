@@ -68,56 +68,6 @@ namespace Ttc.DataAccess.Services
                 return result;
             }
         }
-
-        //public Match GetFirstRoundMatch(int matchId)
-        //{
-        //    using (var dbContext = new TtcDbContext())
-        //    {
-        //        var matchEntities = dbContext.Matches.Single(x => x.Id == matchId);
-        //        if (!matchEntities.IsHomeMatch.HasValue)
-        //        {
-        //            return null;
-        //        }
-
-        //        MatchEntity firstRoundMatch;
-        //        if (matchEntities.IsHomeMatch.Value)
-        //        {
-        //            firstRoundMatch = dbContext.Matches
-        //                .WithIncludes()
-        //                .Where(x => x.HomeTeamCode == matchEntities.AwayTeamCode)
-        //                .Where(x => x.HomeClubId == matchEntities.AwayClubId)
-        //                .Where(x => x.AwayTeamId == matchEntities.HomeTeamId)
-        //                .SingleOrDefault(x => x.Date < matchEntities.Date);
-        //        }
-        //        else
-        //        {
-        //            firstRoundMatch = dbContext.Matches
-        //                .WithIncludes()
-        //                .Where(x => x.AwayTeamCode == matchEntities.HomeTeamCode)
-        //                .Where(x => x.AwayClubId == matchEntities.HomeClubId)
-        //                .Where(x => x.HomeTeamId == matchEntities.AwayTeamId)
-        //                .SingleOrDefault(x => x.Date < matchEntities.Date);
-        //        }
-
-        //        // TODO: comments not fetched here
-
-        //        return Map(firstRoundMatch);
-        //    }
-        //}
-
-        public ICollection<Match> GetMatchesForTeam(int teamId)
-        {
-            using (var dbContext = new TtcDbContext())
-            {
-                var matchEntities = dbContext.Matches
-                    .WithIncludes()
-                    .Where(match => match.AwayTeamId == teamId || match.HomeTeamId == teamId)
-                    .ToList();
-
-                var result = Mapper.Map<IList<MatchEntity>, IList<Match>>(matchEntities);
-                return result;
-            }
-        }
         #endregion
 
         #region Boilderplate code
@@ -250,6 +200,16 @@ namespace Ttc.DataAccess.Services
             {
                 FrenoyMatchSyncCore(dbContext, matchId);
                 return GetMatch(dbContext, matchId);
+            }
+        }
+
+        public void FrenoyTeamSync(int teamId)
+        {
+            using (var db = new TtcDbContext())
+            {
+                var team = db.Teams.Single(x => x.Id == teamId);
+                var frenoySync = new FrenoyMatchesApi(db, Constants.NormalizeCompetition(team.Competition));
+                frenoySync.SyncTeamMatches(team);
             }
         }
 
