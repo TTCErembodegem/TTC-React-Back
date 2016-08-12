@@ -82,7 +82,7 @@ namespace Frenoy.Api
             GetMatchesResponse matches = _frenoy.GetMatches(new GetMatchesRequest
             {
                 Club = _settings.FrenoyClub,
-                Season = _settings.FrenoySeason.ToString(),
+                Season = _settings.FrenoySeason.ToString(), // TODO: replace with team.Year - 1999
                 DivisionId = team.FrenoyDivisionId.ToString(),
                 Team = team.TeamCode,
                 WithDetailsSpecified = false,
@@ -98,7 +98,6 @@ namespace Frenoy.Api
                 GetMatchesResponse matches = _frenoy.GetMatches(new GetMatchesRequest
                 {
                     DivisionId = matchEntity.FrenoyDivisionId.ToString(),
-                    Season = _settings.FrenoySeason.ToString(),
                     WithDetailsSpecified = true,
                     WithDetails = true,
                     MatchId = matchEntity.FrenoyMatchId
@@ -106,6 +105,41 @@ namespace Frenoy.Api
                 Debug.Assert(matches.MatchCount == "1");
                 SyncMatchDetails(matchEntity, matches.TeamMatchesEntries[0]);
             }
+        }
+
+        public int? SyncLastYearOpponentMatches(TeamEntity team, OpposingTeam opponent)
+        {
+            const int prevFrenoySeason = Constants.FrenoySeason - 1;
+            string frenoyOpponentClub = GetFrenoyClubdId(opponent.ClubId);
+
+            var opponentTeams = _frenoy.GetClubTeams(new GetClubTeamsRequest
+            {
+                Club = frenoyOpponentClub,
+                Season = prevFrenoySeason.ToString()
+            });
+
+            var lastYearTeam = opponentTeams.TeamEntries.SingleOrDefault(x => x.Team == opponent.TeamCode && x.DivisionCategory == Constants.FrenoyTeamCategory);
+            if (lastYearTeam != null)
+            {
+                int lastYearDivisionId = int.Parse(lastYearTeam.DivisionId);
+                var ourTeam = _db.Teams.SingleOrDefault(x => x.Year == Constants.CurrentSeason - 1 && x.FrenoyDivisionId == lastYearDivisionId && x.Competition == _settings.Competition.ToString());
+                if (ShouldAttemptOpponentMatchSync(opponent, team.Id, prevFrenoySeason))
+                {
+                    GetMatchesResponse matches = _frenoy.GetMatches(new GetMatchesRequest
+                    {
+                        Club = frenoyOpponentClub,
+                        Season = prevFrenoySeason.ToString(),
+                        Team = opponent.TeamCode,
+                        WithDetailsSpecified = false,
+                        WithDetails = false,
+                        DivisionId = lastYearTeam.DivisionId
+                    });
+                    SyncMatches(ourTeam?.Id, lastYearDivisionId, matches, false, prevFrenoySeason);
+                }
+
+                return lastYearDivisionId;
+            }
+            return null;
         }
 
         public void SyncLastOpponentMatches(TeamEntity team, OpposingTeam opponent)
@@ -127,7 +161,7 @@ namespace Frenoy.Api
         #endregion
 
         #region Match Creation
-        private void SyncMatches(int teamId, int frenoyDivisionId, GetMatchesResponse matches, bool alsoSyncMatchDetails = true)
+        private void SyncMatches(int? teamId, int frenoyDivisionId, GetMatchesResponse matches, bool alsoSyncMatchDetails = true, int frenoySeason = Constants.FrenoySeason)
         {
             foreach (TeamMatchEntryType frenoyMatch in matches.TeamMatchesEntries.Where(x => !x.HomeTeam.Trim().StartsWith("Vrij") && !x.AwayTeam.Trim().StartsWith("Vrij")))
             {
@@ -135,10 +169,10 @@ namespace Frenoy.Api
                 Debug.Assert(frenoyMatch.TimeSpecified);
 
                 // Kalender entries
-                MatchEntity matchEntity = _db.Matches.SingleOrDefault(x => x.FrenoyMatchId == frenoyMatch.MatchId && x.FrenoySeason == Constants.FrenoySeason);
+                MatchEntity matchEntity = _db.Matches.SingleOrDefault(x => x.FrenoyMatchId == frenoyMatch.MatchId && x.FrenoySeason == frenoySeason);
                 if (matchEntity == null)
                 {
-                    matchEntity = CreateMatch(teamId, frenoyDivisionId, frenoyMatch);
+                    matchEntity = CreateMatch(teamId, frenoyDivisionId, frenoyMatch, frenoySeason);
                     _db.Matches.Add(matchEntity);
                     CommitChanges();
                 }
@@ -155,7 +189,7 @@ namespace Frenoy.Api
             }
         }
 
-        private MatchEntity CreateMatch(int teamId, int frenoyDivisionId, TeamMatchEntryType frenoyMatch)
+        private MatchEntity CreateMatch(int? teamId, int frenoyDivisionId, TeamMatchEntryType frenoyMatch, int frenoySeason = Constants.FrenoySeason)
         {
             var matchEntity = new MatchEntity
             {
@@ -166,28 +200,23 @@ namespace Frenoy.Api
                 AwayClubId = GetClubId(frenoyMatch.AwayClub),
                 AwayTeamCode = ExtractTeamCodeFromFrenoyName(frenoyMatch.AwayTeam),
                 Week = int.Parse(frenoyMatch.WeekName),
-                FrenoySeason = _settings.FrenoySeason,
+                FrenoySeason = frenoySeason,
                 FrenoyDivisionId = frenoyDivisionId,
                 Competition = _settings.Competition,
             };
 
-            //int weekName;
-            //if (int.TryParse(frenoyMatch.WeekName, out weekName))
-            //{
-            //    kalender.Week = weekName;
-            //}
-
             //TODO: we zaten hier for the derby problem
-            // delete match id 563
             // do not pass teamId here but find out what the Team is based on HomeClubId and HomeTeamCode
-
-            if (matchEntity.HomeClubId == Constants.OwnClubId)
+            if (teamId.HasValue)
             {
-                matchEntity.HomeTeamId = teamId;
-            }
-            else if (matchEntity.AwayClubId == Constants.OwnClubId)
-            {
-                matchEntity.AwayTeamId = teamId;
+                if (matchEntity.HomeClubId == Constants.OwnClubId)
+                {
+                    matchEntity.HomeTeamId = teamId;
+                }
+                else if (matchEntity.AwayClubId == Constants.OwnClubId)
+                {
+                    matchEntity.AwayTeamId = teamId;
+                }
             }
 
             return matchEntity;
@@ -379,9 +408,9 @@ namespace Frenoy.Api
 
         private static readonly Dictionary<string, DateTime> FrenoyOpponentCache = new Dictionary<string, DateTime>();
         private static readonly object FrenoyOpponentLock = new object();
-        private static bool ShouldAttemptOpponentMatchSync(OpposingTeam team, int teamId)
+        private static bool ShouldAttemptOpponentMatchSync(OpposingTeam team, int teamId, int season = Constants.FrenoySeason)
         {
-            string hash = team.TeamCode + team.ClubId + '-' + teamId;
+            string hash = season + team.TeamCode + team.ClubId + '-' + teamId;
             lock (FrenoyOpponentLock)
             {
                 if (!FrenoyOpponentCache.ContainsKey(hash))

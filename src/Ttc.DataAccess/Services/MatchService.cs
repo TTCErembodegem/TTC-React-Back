@@ -50,23 +50,50 @@ namespace Ttc.DataAccess.Services
             using (var dbContext = new TtcDbContext())
             {
                 var team = dbContext.Teams.Single(x => x.Id == teamId);
-
                 var frenoy = new FrenoyMatchesApi(dbContext, Constants.NormalizeCompetition(team.Competition));
-                frenoy.SyncLastOpponentMatches(team, opponent);
 
-                var now = DateTime.Now;
-                var matchEntities = dbContext.Matches
-                    .WithIncludes()
-                    .Where(match => (match.AwayClubId == opponent.ClubId && match.AwayTeamCode == opponent.TeamCode) || (match.HomeClubId == opponent.ClubId && match.HomeTeamCode == opponent.TeamCode))
-                    .Where(match => match.FrenoyDivisionId == team.FrenoyDivisionId)
-                    //.Where(match => match.Date <= now) // Return all matches for easy linking to heenronde/terugronde
-                    .ToList();
+                var firstMatch = dbContext.Matches.Where(x => x.FrenoySeason == Constants.FrenoySeason).Min(x => x.Date);
+                if (DateTime.Now > firstMatch)
+                {
+                    frenoy.SyncLastOpponentMatches(team, opponent);
 
-                // No comments for OpponentMatches
+                    var matchEntities = dbContext.Matches
+                        .WithIncludes()
+                        .Where(match => (match.AwayClubId == opponent.ClubId && match.AwayTeamCode == opponent.TeamCode) || (match.HomeClubId == opponent.ClubId && match.HomeTeamCode == opponent.TeamCode))
+                        .Where(match => match.FrenoyDivisionId == team.FrenoyDivisionId)
+                        .ToList();
 
-                var result = Mapper.Map<IList<MatchEntity>, IList<OtherMatch>>(matchEntities);
-                return result;
+                    // No comments for OpponentMatches
+
+                    var result = Mapper.Map<IList<MatchEntity>, IList<OtherMatch>>(matchEntities);
+                    return result;
+                }
+                else
+                {
+                    // Pre season: Fetch last year matches instead
+                    int? divisionId = frenoy.SyncLastYearOpponentMatches(team, opponent);
+                    if (divisionId.HasValue)
+                    {
+                        var matchEntities = dbContext.Matches
+                            .WithIncludes()
+                            .Where(match => (match.AwayClubId == opponent.ClubId && match.AwayTeamCode == opponent.TeamCode) || (match.HomeClubId == opponent.ClubId && match.HomeTeamCode == opponent.TeamCode))
+                            .Where(match => match.FrenoyDivisionId == divisionId.Value)
+                            .ToList();
+
+                        // No comments for OpponentMatches
+
+                        // HACK: hack om vorig jaar matchen te tonen in de frontend zonder te moeten berekenen wat hun "last year division id" is
+                        foreach (var match in matchEntities)
+                        {
+                            match.FrenoyDivisionId = team.FrenoyDivisionId;
+                        }
+
+                        var result = Mapper.Map<IList<MatchEntity>, IList<OtherMatch>>(matchEntities);
+                        return result;
+                    }
+                }
             }
+            return null;
         }
         #endregion
 

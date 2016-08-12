@@ -19,8 +19,7 @@ namespace Ttc.DataEntities
         [MaxLength(20)]
         public string FrenoyMatchId { get; set; }
 
-        // TODO: not yet send to the frontend
-        public int FrenoyDivisionId { get; set; } // TODO: can be used in frontend to determine if getOpponentMatches already happened
+        public int FrenoyDivisionId { get; set; }
         /// <summary>
         /// 2015-2016 = 16
         /// </summary>
