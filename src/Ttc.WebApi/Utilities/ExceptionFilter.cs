@@ -36,19 +36,22 @@ namespace Ttc.WebApi.Utilities
         }
 
         private const string TooManyConnectionsExMessage = "Too many connections";
-        private bool TooManyConnections(Exception ex)
+        private const string OtherExMessage = "has exceeded the 'max_user_connections' resource";
+        private static bool TooManyConnections(Exception ex)
         {
+            Func<string, bool> isTooManyConnections = msg => msg == TooManyConnectionsExMessage || msg.Contains(OtherExMessage);
+
             string fullErrorName = ex.GetType().FullName;
             if (fullErrorName == "System.Data.Entity.Core.EntityException")
             {
                 if (ex.InnerException != null) 
                 {
-                    if (ex.InnerException.Message == TooManyConnectionsExMessage)
+                    if (isTooManyConnections(ex.InnerException.Message))
                     {
                         return true;
                     }
 
-                    if (ex.InnerException.InnerException != null && ex.InnerException.InnerException.Message == TooManyConnectionsExMessage)
+                    if (ex.InnerException.InnerException != null && isTooManyConnections(ex.InnerException.InnerException.Message))
                     {
                         return true;
                     }
