@@ -102,7 +102,7 @@ namespace Ttc.WebApi.Controllers
 #if DEBUG
             root = Properties.Settings.Default.PublicImageFolder;
 #else
-            root  = HttpContext.Current.Server.MapPath("~/" + Properties.Settings.Default.PublicImageFolder);
+            root  = HttpContext.Current.Server.MapPath("~/img");
 #endif
 
             var fullPath = GetServerImagePath(root, folder);
