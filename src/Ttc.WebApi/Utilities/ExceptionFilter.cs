@@ -37,6 +37,21 @@ namespace Ttc.WebApi.Utilities
 
         private const string TooManyConnectionsExMessage = "Too many connections";
         private const string OtherExMessage = "has exceeded the 'max_user_connections' resource";
+
+        //ERROR System.Web.Http.Filters.ExceptionFilterAttribute [(null)] – System.Data.Entity.Core.EntityException: The underlying provider failed on Open. 
+        // ---> MySql.Data.MySqlClient.MySqlException: error connecting: Timeout expired.  The timeout period elapsed prior to obtaining a connection from the pool.  
+        // This may have occurred because all pooled connections were in use and max pool size was reached.
+
+        // ERROR System.Web.Http.Filters.ExceptionFilterAttribute [(null)] – System.Data.Entity.Core.EntityCommandExecutionException: An error occurred while executing the 
+        // command definition. See the inner exception for details. 
+        // ---> MySql.Data.MySqlClient.MySqlException: Fatal error encountered during command execution. 
+        // ---> MySql.Data.MySqlClient.MySqlException: Fatal error encountered attempting to read the resultset. 
+        // ---> MySql.Data.MySqlClient.MySqlException: Reading from the stream has failed. 
+        // ---> System.IO.IOException: The read operation failed, see inner exception. 
+        // ---> System.TimeoutException: Unable to read data from the transport connection: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. 
+        // ---> System.IO.IOException:   Unable to read data from the transport connection: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. 
+        // ---> System.Net.Sockets.SocketException:                                         A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+
         private static bool TooManyConnections(Exception ex)
         {
             Func<string, bool> isTooManyConnections = msg => msg == TooManyConnectionsExMessage || msg.Contains(OtherExMessage);
