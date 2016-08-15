@@ -4,6 +4,7 @@ using System.Linq;
 using Frenoy.Api;
 using Ttc.DataAccess;
 using Ttc.DataAccess.Migrations;
+using Ttc.DataEntities;
 using Ttc.Model.Players;
 
 namespace Frenoy.Syncer
@@ -19,8 +20,8 @@ namespace Frenoy.Syncer
                     //var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
                     //vttlPlayers.StopAllPlayers();
                     //vttlPlayers.SyncPlayers();
-                    var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
-                    sportaPlayers.SyncPlayers();
+                    //var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
+                    //sportaPlayers.SyncPlayers();
 
 
                     //Configuration.Seed(context, false);
@@ -30,7 +31,7 @@ namespace Frenoy.Syncer
                     //var sporta = new FrenoyMatchesApi(context, Competition.Sporta);
                     //sporta.SyncTeamsAndMatches();
 
-                    //ChangeMatchDates(context);
+                    ChangeMatchDates(context);
 
                     context.SaveChanges();
                 }
@@ -47,13 +48,14 @@ namespace Frenoy.Syncer
         /// If there is no real life data between seasons,
         /// change some match dates to around now for testing purposes
         /// </summary>
-        private void ChangeMatchDates(TtcDbContext context)
+        private static void ChangeMatchDates(TtcDbContext context)
         {
             bool endOfSeason = !context.Matches.Any(match => match.Date > DateTime.Now);
-            if (endOfSeason)
+            if (true || endOfSeason)
             {
                 var passedMatches = context.Matches
-                    .Where(x => x.Date < DateTime.Today)
+                    .Where(x => x.FrenoySeason == Constants.FrenoySeason)
+                    //.Where(x => x.Date < DateTime.Today)
                     .OrderByDescending(x => x.Date)
                     .Take(42);
 
