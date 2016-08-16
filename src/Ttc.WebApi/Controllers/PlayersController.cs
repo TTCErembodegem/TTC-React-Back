@@ -57,6 +57,13 @@ namespace Ttc.WebApi.Controllers
             return result;
         }
 
+        [HttpPost]
+        [Route("FrenoySync")]
+        public void FrenoySync()
+        {
+            _service.FrenoySync();
+        }
+
         [HttpGet]
         [Route("ExcelExport")]
         public string GetExcelExport()

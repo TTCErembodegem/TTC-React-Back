@@ -18,11 +18,14 @@ namespace Frenoy.Api
 
         }
 
-        public void StopAllPlayers()
+        public void StopAllPlayers(bool alsoSetGestopt)
         {
             foreach (var dbPlayer in _db.Players.Where(x => x.ClubIdVttl == Constants.OwnClubId || x.ClubIdSporta == Constants.OwnClubId))
             {
-                dbPlayer.Gestopt = Constants.CurrentSeason - 1;
+                if (alsoSetGestopt)
+                {
+                    dbPlayer.Gestopt = Constants.CurrentSeason - 1;
+                }
                 dbPlayer.ClubIdSporta = null;
                 dbPlayer.ClubIdVttl = null;
             }

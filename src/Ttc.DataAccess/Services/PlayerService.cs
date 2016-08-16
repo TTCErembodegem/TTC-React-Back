@@ -12,6 +12,7 @@ using Ttc.Model.Players;
 using System.IO;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Frenoy.Api;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using Ttc.DataAccess.Utilities;
@@ -252,5 +253,17 @@ namespace Ttc.DataAccess.Services
             return path;
         }
         #endregion
+
+        public void FrenoySync()
+        {
+            using (var context = new TtcDbContext())
+            {
+                var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
+                vttlPlayers.StopAllPlayers(false);
+                vttlPlayers.SyncPlayers();
+                var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
+                sportaPlayers.SyncPlayers();
+            }
+        }
     }
 }

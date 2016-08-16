@@ -34,7 +34,7 @@ namespace Ttc.DataAccess.Migrations
             if (!context.Matches.Any(x => x.FrenoySeason == Constants.FrenoySeason))
             {
                 var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
-                vttlPlayers.StopAllPlayers();
+                vttlPlayers.StopAllPlayers(true);
                 vttlPlayers.SyncPlayers();
                 var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
                 sportaPlayers.SyncPlayers();
