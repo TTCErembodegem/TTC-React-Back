@@ -51,6 +51,7 @@
     <Compile Include="Matches\MatchPlayer.cs" />
     <Compile Include="Matches\MatchReport.cs" />
     <Compile Include="Matches\MatchScore.cs" />
+    <Compile Include="Matches\PlayerMatchStatus.cs" />
     <Compile Include="Matches\WalkOver.cs" />
     <Compile Include="Players\PlayerContact.cs" />
     <Compile Include="Teams\Team.cs" />

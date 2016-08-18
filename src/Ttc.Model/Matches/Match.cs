@@ -41,6 +41,7 @@ namespace Ttc.Model.Matches
         public int Week { get; set; }
         public string Competition { get; set; }
         public int FrenoyDivisionId { get; set; }
+        public string Block { get; set; }
 
         public int TeamId { get; set; }
         /// <summary>

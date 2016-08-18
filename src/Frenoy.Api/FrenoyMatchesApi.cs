@@ -342,7 +342,7 @@ namespace Frenoy.Api
                     Name = GetSpelerNaam(frenoyVerslagSpeler),
                     Position = int.Parse(frenoyVerslagSpeler.Position),
                     UniqueIndex = int.Parse(frenoyVerslagSpeler.UniqueIndex),
-                    Status = "Play"
+                    Status = PlayerMatchStatus.Major
                 };
                 if (frenoyVerslagSpeler.VictoryCount != null)
                 {

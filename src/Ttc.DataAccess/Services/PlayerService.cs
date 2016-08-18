@@ -240,6 +240,8 @@ namespace Ttc.DataAccess.Services
                 case PlayerToegang.Board:
                     return new[] { "CAN_MANAGETEAM", "CAN_EDITALLREPORTS", "IS_ADMIN" };
 
+                // No PlayerToegang.Captain: This happens automatically when assigned Captain to a Team
+
                 case PlayerToegang.Player:
                 default:
                     return new string[] { };

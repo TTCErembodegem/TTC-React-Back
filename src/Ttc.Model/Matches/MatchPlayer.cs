@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public int MatchId { get; set; }
         public string Status { get; set; }
+        public string StatusNote { get; set; }
 
         public int Position { get; set; }
         public string Name { get; set; }

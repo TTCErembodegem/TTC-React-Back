@@ -141,20 +141,15 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
-                var existingSpeler = dbContext.MatchPlayers
+                var existingPlayer = dbContext.MatchPlayers
                     .Include(x => x.Match)
-                    .FirstOrDefault(x => x.MatchId == matchPlayer.MatchId && x.PlayerId == matchPlayer.PlayerId);
+                    .Where(x => x.MatchId == matchPlayer.MatchId && x.PlayerId == matchPlayer.PlayerId)
+                    .FirstOrDefault(x => x.Status != PlayerMatchStatus.Captain && x.Status != PlayerMatchStatus.Major);
 
-                if (existingSpeler != null)
+                if (existingPlayer != null)
                 {
-                    if (existingSpeler.Status == matchPlayer.Status)
-                    {
-                        dbContext.MatchPlayers.Remove(existingSpeler);
-                    }
-                    else
-                    {
-                        existingSpeler.Status = matchPlayer.Status;
-                    }
+                    existingPlayer.Status = matchPlayer.Status;
+                    existingPlayer.StatusNote = matchPlayer.StatusNote;
                 }
                 else
                 {
@@ -164,6 +159,40 @@ namespace Ttc.DataAccess.Services
                 dbContext.SaveChanges();
             }
             var newMatch = GetMatch(matchPlayer.MatchId);
+            return newMatch;
+        }
+
+        public Match EditMatchPlayers(int matchId, int[] playerIds, string newStatus, bool blockAlso)
+        {
+            using (var db = new TtcDbContext())
+            {
+                var match = db.Matches.Single(x => x.Id == matchId);
+                match.Block = blockAlso ? newStatus : null;
+                var existingPlayers = db.MatchPlayers
+                    .Where(x => x.MatchId == matchId)
+                    .Where(x => x.Status == newStatus)
+                    .ToArray();
+                db.MatchPlayers.RemoveRange(existingPlayers);
+
+                for (int i = 0; i < playerIds.Length; i++)
+                {
+                    var player = db.Players.Find(playerIds[i]);
+                    var newMatchPlayer = new MatchPlayerEntity
+                    {
+                        Id = i * -1,
+                        MatchId = matchId,
+                        PlayerId = player.Id,
+                        Name = player.NaamKort,
+                        Status = newStatus,
+                        Ranking = match.Competition == Competition.Vttl ? player.KlassementVttl : player.KlassementSporta,
+                        Home = true,
+                        Position = i
+                    };
+                    db.MatchPlayers.Add(newMatchPlayer);
+                }
+                db.SaveChanges();
+            }
+            var newMatch = GetMatch(matchId);
             return newMatch;
         }
         #endregion

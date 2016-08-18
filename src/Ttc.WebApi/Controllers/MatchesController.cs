@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Web.Http;
 using Ttc.DataAccess.Services;
@@ -93,6 +94,14 @@ namespace Ttc.WebApi.Controllers
         }
 
         [HttpPost]
+        [Route("EditMatchPlayers")]
+        public Match EditMatchPlayers([FromBody]MatchPlayersDto dto)
+        {
+            var result = _service.EditMatchPlayers(dto.MatchId, dto.PlayerIds, dto.NewStatus, dto.BlockAlso);
+            return result;
+        }
+
+        [HttpPost]
         [Route("Report")]
         public Match Report([FromBody]MatchReport report)
         {
@@ -144,5 +153,18 @@ namespace Ttc.WebApi.Controllers
     {
         public int Id { get; set; } // oh boy
         public override string ToString() => Id.ToString();
+    }
+
+    public class MatchPlayersDto
+    {
+        public bool BlockAlso { get; set; }
+        public int MatchId { get; set; }
+        public string NewStatus { get; set; }
+        public int[] PlayerIds { get; set; }
+
+        public override string ToString()
+        {
+            return $"MatchId={MatchId}, Block={BlockAlso}, Status={NewStatus}, Players={string.Join(",", PlayerIds)}";
+        }
     }
 }

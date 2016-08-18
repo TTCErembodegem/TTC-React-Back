@@ -18,6 +18,8 @@ namespace Ttc.DataEntities
         public int Week { get; set; }
         [MaxLength(20)]
         public string FrenoyMatchId { get; set; }
+        [MaxLength(200)]
+        public string Block { get; set; }
 
         public int FrenoyDivisionId { get; set; }
         /// <summary>

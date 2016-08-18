@@ -254,6 +254,14 @@
     <Compile Include="Migrations\201608081545197_PlayerEntityStatus.Designer.cs">
       <DependentUpon>201608081545197_PlayerEntityStatus.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201608172147138_MatchPlayerCustomStatusNote.cs" />
+    <Compile Include="Migrations\201608172147138_MatchPlayerCustomStatusNote.Designer.cs">
+      <DependentUpon>201608172147138_MatchPlayerCustomStatusNote.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608182140266_BlockMatchField.cs" />
+    <Compile Include="Migrations\201608182140266_BlockMatchField.Designer.cs">
+      <DependentUpon>201608182140266_BlockMatchField.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\ServiceExtensions.cs" />
@@ -408,6 +416,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201608081545197_PlayerEntityStatus.resx">
       <DependentUpon>201608081545197_PlayerEntityStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608172147138_MatchPlayerCustomStatusNote.resx">
+      <DependentUpon>201608172147138_MatchPlayerCustomStatusNote.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608182140266_BlockMatchField.resx">
+      <DependentUpon>201608182140266_BlockMatchField.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\PlayerExcelExportResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
