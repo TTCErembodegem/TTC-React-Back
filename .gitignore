@@ -216,3 +216,4 @@ SiteTTCErembodegem/src/SiteTTCErembodegem/wwwroot/lib/
 
 # TTC stuff
 PublishProfiles
+src/Ttc.WebApi/logs/
