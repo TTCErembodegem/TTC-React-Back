@@ -185,7 +185,7 @@ namespace Ttc.DataAccess.Services
                         Name = player.NaamKort,
                         Status = newStatus,
                         Ranking = match.Competition == Competition.Vttl ? player.KlassementVttl : player.KlassementSporta,
-                        Home = true,
+                        Home = match.IsHomeMatch.Value,
                         Position = i
                     };
                     db.MatchPlayers.Add(newMatchPlayer);
