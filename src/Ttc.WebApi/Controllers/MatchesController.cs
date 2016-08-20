@@ -94,6 +94,14 @@ namespace Ttc.WebApi.Controllers
         }
 
         [HttpPost]
+        [Route("SetMyFormation")]
+        public Match SetMyFormation([FromBody]MatchPlayer player)
+        {
+            var result = _service.SetMyFormation(player);
+            return result;
+        }
+
+        [HttpPost]
         [Route("EditMatchPlayers")]
         public Match EditMatchPlayers([FromBody]MatchPlayersDto dto)
         {

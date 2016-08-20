@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using AutoMapper;
 using Frenoy.Api;
@@ -137,7 +138,7 @@ namespace Ttc.DataAccess.Services
         }
 
         #region Players
-        public Match ToggleMatchPlayer(MatchPlayer matchPlayer)
+        public Match SetMyFormation(MatchPlayer matchPlayer)
         {
             using (var dbContext = new TtcDbContext())
             {
@@ -162,8 +163,41 @@ namespace Ttc.DataAccess.Services
             return newMatch;
         }
 
+        /// <summary>
+        /// Toggle Captain/Major player by any player of the team on the day of the match
+        /// </summary>
+        public Match ToggleMatchPlayer(MatchPlayer matchPlayer)
+        {
+            Debug.Assert(matchPlayer.Status == "Captain" || matchPlayer.Status == "Major");
+            using (var dbContext = new TtcDbContext())
+            {
+                var match = dbContext.Matches.Find(matchPlayer.MatchId);
+                var existingPlayer = dbContext.MatchPlayers
+                    .Where(x => x.MatchId == matchPlayer.MatchId && x.PlayerId == matchPlayer.PlayerId)
+                    .FirstOrDefault(x => x.Status == matchPlayer.Status);
+
+                match.Block = matchPlayer.Status;
+                if (existingPlayer != null)
+                {
+                    dbContext.MatchPlayers.Remove(existingPlayer);
+                }
+                else
+                {
+                    dbContext.MatchPlayers.Add(Mapper.Map<MatchPlayer, MatchPlayerEntity>(matchPlayer));
+                }
+                dbContext.SaveChanges();
+            }
+            var newMatch = GetMatch(matchPlayer.MatchId);
+            return newMatch;
+        }
+
+        /// <summary>
+        /// Set all players for the match to Captain/Major
+        /// </summary>
+        /// <param name="blockAlso">Also block the match to the newStatus level</param>
         public Match EditMatchPlayers(int matchId, int[] playerIds, string newStatus, bool blockAlso)
         {
+            Debug.Assert(newStatus == "Captain" || newStatus == "Major");
             using (var db = new TtcDbContext())
             {
                 var match = db.Matches.Single(x => x.Id == matchId);
