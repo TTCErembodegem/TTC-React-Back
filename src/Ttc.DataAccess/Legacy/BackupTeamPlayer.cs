@@ -2,7 +2,7 @@
 
 namespace Ttc.DataAccess.Backup
 {
-    public class BackupTeamPlayer
+    internal class BackupTeamPlayer
     {
         [Key]
         public int Id { get; set; }

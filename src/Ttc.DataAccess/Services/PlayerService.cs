@@ -103,7 +103,7 @@ namespace Ttc.DataAccess.Services
             using (var dbContext = new TtcDbContext())
             {
                 var activePlayers = dbContext.Players.Where(x => x.Gestopt == null);
-                var exceller = new PlayerExcelCreator(activePlayers.ToArray());
+                var exceller = new PlayersExcelCreator(activePlayers.ToArray());
                 return exceller.Create();
             }
         }

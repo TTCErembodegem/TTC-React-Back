@@ -2,7 +2,7 @@
 
 namespace Ttc.DataAccess.Backup
 {
-    public class BackupReport
+    internal class BackupReport
     {
         [Key]
         public int Id { get; set; }

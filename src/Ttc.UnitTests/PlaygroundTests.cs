@@ -23,11 +23,17 @@ namespace Ttc.UnitTests
     [TestFixture]
     public class PlaygroundTests
     {
-        //[Test]
+        [Test]
         public void PlayerExcelExport()
         {
-            var service = new PlayerService();
-            service.GetExcelExport();
+            //var players = new PlayerService();
+            //players.GetExcelExport();
+
+
+            var service = new TeamService();
+            var package = service.GetExcelExport();
+
+            File.WriteAllBytes(@"c:\temp\ttc-excels\testy-" + DateTime.Now.ToString("yyyy-M-d HH.mm.ss") + ".xlsx", package);
         }
 
         //[Test]

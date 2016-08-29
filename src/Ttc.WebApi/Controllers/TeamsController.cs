@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web.Http;
 using Ttc.DataAccess.Services;
 using Ttc.Model.Teams;
@@ -35,6 +36,14 @@ namespace Ttc.WebApi.Controllers
         {
             var result = _service.ToggleTeamPlayer(req);
             return result;
+        }
+
+        [HttpGet]
+        [Route("ExcelExport")]
+        public string GetExcelExport()
+        {
+            var excel = _service.GetExcelExport();
+            return Convert.ToBase64String(excel);
         }
     }
 }

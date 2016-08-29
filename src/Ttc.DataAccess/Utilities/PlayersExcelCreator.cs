@@ -9,11 +9,11 @@ using Ttc.DataEntities;
 
 namespace Ttc.DataAccess.Utilities
 {
-    public class PlayerExcelCreator
+    internal class PlayersExcelCreator
     {
         private readonly ICollection<PlayerEntity> _players;
 
-        public PlayerExcelCreator(ICollection<PlayerEntity> players)
+        public PlayersExcelCreator(ICollection<PlayerEntity> players)
         {
             _players = players;
         }
@@ -23,24 +23,24 @@ namespace Ttc.DataAccess.Utilities
             //using (var package = new ExcelPackage(new FileInfo(@"c:\temp\ttc-excels\testy-" + DateTime.Now.ToString("yyyy-M-d HH.mm.ss") + ".xlsx")))
             using (var package = new ExcelPackage())
             {
-                var allPlayerSheet = package.Workbook.Worksheets.Add(PlayerExcelExportResources.SheetAllPlayers);
-                SetHeader(
+                var allPlayerSheet = package.Workbook.Worksheets.Add(ExcelExportResources.SheetAllPlayers);
+                ExcelHelper.SetHeader(
                     allPlayerSheet,
-                    PlayerExcelExportResources.PlayerName,
-                    PlayerExcelExportResources.PlayerAddress,
-                    PlayerExcelExportResources.PlayerCity,
-                    PlayerExcelExportResources.PlayerPhone,
-                    PlayerExcelExportResources.PlayerEmail
+                    ExcelExportResources.PlayerName,
+                    ExcelExportResources.PlayerAddress,
+                    ExcelExportResources.PlayerCity,
+                    ExcelExportResources.PlayerPhone,
+                    ExcelExportResources.PlayerEmail
                 );
 
                 SetPlayersSheet(allPlayerSheet);
                 allPlayerSheet.Cells.AutoFitColumns();
                 allPlayerSheet.Column(5).Width = 50;
 
-                var vttlSheet = package.Workbook.Worksheets.Add(PlayerExcelExportResources.SheetVttl);
+                var vttlSheet = package.Workbook.Worksheets.Add(ExcelExportResources.SheetVttl);
                 SetVttlSheet(vttlSheet);
 
-                var sportaSheet = package.Workbook.Worksheets.Add(PlayerExcelExportResources.SheetSporta);
+                var sportaSheet = package.Workbook.Worksheets.Add(ExcelExportResources.SheetSporta);
                 SetSportaSheet(sportaSheet);
 
                 //package.Save(); // save to file
@@ -51,14 +51,14 @@ namespace Ttc.DataAccess.Utilities
 
         private void SetSportaSheet(ExcelWorksheet worksheet)
         {
-            SetHeader(
+            ExcelHelper.SetHeader(
                 worksheet,
-                PlayerExcelExportResources.CompetitionVolgnummer,
-                PlayerExcelExportResources.CompetitionIndex,
-                PlayerExcelExportResources.CompetitionLidnummer,
-                PlayerExcelExportResources.PlayerName,
-                PlayerExcelExportResources.PlayerRanking,
-                PlayerExcelExportResources.PlayerRankingValue
+                ExcelExportResources.CompetitionVolgnummer,
+                ExcelExportResources.CompetitionIndex,
+                ExcelExportResources.CompetitionLidnummer,
+                ExcelExportResources.PlayerName,
+                ExcelExportResources.PlayerRanking,
+                ExcelExportResources.PlayerRankingValue
             );
 
             int i = 2;
@@ -79,13 +79,13 @@ namespace Ttc.DataAccess.Utilities
 
         private void SetVttlSheet(ExcelWorksheet worksheet)
         {
-            SetHeader(
+            ExcelHelper.SetHeader(
                 worksheet,
-                PlayerExcelExportResources.CompetitionVolgnummer,
-                PlayerExcelExportResources.CompetitionIndex,
-                PlayerExcelExportResources.CompetitionComputerNumber,
-                PlayerExcelExportResources.PlayerName,
-                PlayerExcelExportResources.PlayerRanking
+                ExcelExportResources.CompetitionVolgnummer,
+                ExcelExportResources.CompetitionIndex,
+                ExcelExportResources.CompetitionComputerNumber,
+                ExcelExportResources.PlayerName,
+                ExcelExportResources.PlayerRanking
             );
 
             int i = 2;
@@ -129,19 +129,6 @@ namespace Ttc.DataAccess.Utilities
                     worksheet.Cells[i, 5].Style.Font.UnderLine = true;
                 }
                 i++;
-            }
-        }
-
-        private static void SetHeader(ExcelWorksheet worksheet, params string[] headers)
-        {
-            for (int i = 0; i < headers.Length; i++)
-            {
-                var cell = worksheet.Cells[1, i + 1];
-                cell.Value = headers[i];
-                cell.Style.Font.Bold = true;
-                cell.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                cell.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(79, 129, 189));
-                cell.Style.Font.Color.SetColor(Color.White);
             }
         }
     }

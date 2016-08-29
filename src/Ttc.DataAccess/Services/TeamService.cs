@@ -4,7 +4,9 @@ using System.Linq;
 using System.Data.Entity;
 using Frenoy.Api;
 using Frenoy.Api.FrenoySporta;
+using OfficeOpenXml;
 using Omu.ValueInjecter;
+using Ttc.DataAccess.Utilities;
 using Ttc.Model.Teams;
 using Mapper = AutoMapper.Mapper;
 using Ttc.DataEntities;
@@ -155,6 +157,33 @@ namespace Ttc.DataAccess.Services
                 }
                 db.SaveChanges();
                 return GetTeam(req.TeamId, false);
+            }
+        }
+
+        public byte[] GetExcelExport()
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var teams = dbContext.Teams
+                    .Include(x => x.Players)
+                    //.Include(x => x.Opponents)
+                    .Where(x => x.Year == Constants.CurrentSeason)
+                    .ToArray();
+
+                var matches = dbContext.Matches
+                    .Include(x => x.HomeTeam)
+                    .Include(x => x.AwayTeam)
+                    .Include(x => x.Players)
+                    .Where(x => x.HomeClubId == Constants.OwnClubId || x.AwayClubId == Constants.OwnClubId)
+                    .Where(x => x.FrenoySeason == Constants.FrenoySeason)
+                    .ToList();
+
+                var players = dbContext.Players.Where(x => x.Gestopt == null).ToArray();
+
+                var clubs = dbContext.Clubs.ToArray();
+
+                var exceller = TeamsExcelCreator.CreateFormation(teams, matches, players, clubs);
+                return exceller.Create();
             }
         }
     }

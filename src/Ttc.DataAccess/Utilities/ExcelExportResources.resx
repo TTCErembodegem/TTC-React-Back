@@ -129,6 +129,24 @@
   <data name="CompetitionVolgnummer" xml:space="preserve">
     <value>Volgnummer</value>
   </data>
+  <data name="MatchDate" xml:space="preserve">
+    <value>Datum</value>
+  </data>
+  <data name="MatchDay" xml:space="preserve">
+    <value>Dag</value>
+  </data>
+  <data name="MatchFrenoyId" xml:space="preserve">
+    <value>Frenoy</value>
+  </data>
+  <data name="MatchHome" xml:space="preserve">
+    <value>Thuis</value>
+  </data>
+  <data name="MatchHour" xml:space="preserve">
+    <value>Uur</value>
+  </data>
+  <data name="MatchOut" xml:space="preserve">
+    <value>Uit</value>
+  </data>
   <data name="PlayerAddress" xml:space="preserve">
     <value>Adres</value>
   </data>

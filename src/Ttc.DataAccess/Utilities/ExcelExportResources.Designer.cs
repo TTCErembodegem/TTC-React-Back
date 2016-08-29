@@ -22,14 +22,14 @@ namespace Ttc.DataAccess.Utilities {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class PlayerExcelExportResources {
+    internal class ExcelExportResources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal PlayerExcelExportResources() {
+        internal ExcelExportResources() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Ttc.DataAccess.Utilities {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Ttc.DataAccess.Utilities.PlayerExcelExportResources", typeof(PlayerExcelExportResources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Ttc.DataAccess.Utilities.ExcelExportResources", typeof(ExcelExportResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -93,6 +93,60 @@ namespace Ttc.DataAccess.Utilities {
         internal static string CompetitionVolgnummer {
             get {
                 return ResourceManager.GetString("CompetitionVolgnummer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Datum.
+        /// </summary>
+        internal static string MatchDate {
+            get {
+                return ResourceManager.GetString("MatchDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dag.
+        /// </summary>
+        internal static string MatchDay {
+            get {
+                return ResourceManager.GetString("MatchDay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Frenoy.
+        /// </summary>
+        internal static string MatchFrenoyId {
+            get {
+                return ResourceManager.GetString("MatchFrenoyId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thuis.
+        /// </summary>
+        internal static string MatchHome {
+            get {
+                return ResourceManager.GetString("MatchHome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uur.
+        /// </summary>
+        internal static string MatchHour {
+            get {
+                return ResourceManager.GetString("MatchHour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uit.
+        /// </summary>
+        internal static string MatchOut {
+            get {
+                return ResourceManager.GetString("MatchOut", resourceCulture);
             }
         }
         

@@ -272,13 +272,15 @@
     <Compile Include="Services\TeamService.cs" />
     <Compile Include="TtcDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\ExcelHelper.cs" />
     <Compile Include="Utilities\KlassementValueConverter.cs" />
-    <Compile Include="Utilities\PlayerExcelCreator.cs" />
-    <Compile Include="Utilities\PlayerExcelExportResources.Designer.cs">
+    <Compile Include="Utilities\PlayersExcelCreator.cs" />
+    <Compile Include="Utilities\ExcelExportResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>PlayerExcelExportResources.resx</DependentUpon>
+      <DependentUpon>ExcelExportResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\TeamsExcelCreator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -423,9 +425,9 @@
     <EmbeddedResource Include="Migrations\201608182140266_BlockMatchField.resx">
       <DependentUpon>201608182140266_BlockMatchField.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Utilities\PlayerExcelExportResources.resx">
+    <EmbeddedResource Include="Utilities\ExcelExportResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>PlayerExcelExportResources.Designer.cs</LastGenOutput>
+      <LastGenOutput>ExcelExportResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
