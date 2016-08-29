@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿using System.Globalization;
+using System.Web.Http;
 using log4net;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
@@ -18,6 +19,9 @@ namespace Ttc.WebApi
     {
         public void Configuration(IAppBuilder app)
         {
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("nl-BE");
+            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("nl-BE");
+
             log4net.Config.XmlConfigurator.Configure();
             var logger = LogManager.GetLogger(typeof(OwinStartup));
             logger.Info("Starting up...");
