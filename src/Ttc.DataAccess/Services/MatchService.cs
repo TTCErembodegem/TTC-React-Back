@@ -201,6 +201,13 @@ namespace Ttc.DataAccess.Services
             using (var db = new TtcDbContext())
             {
                 var match = db.Matches.Single(x => x.Id == matchId);
+
+                int playerForCompetition = match.Competition == Competition.Sporta ? 3 : 4;
+                if (playerForCompetition != playerIds.Length)
+                {
+                    return null;
+                }
+
                 match.Block = blockAlso ? newStatus : null;
                 var existingPlayers = db.MatchPlayers
                     .Where(x => x.MatchId == matchId)
