@@ -27,10 +27,18 @@ namespace Ttc.DataAccess.Utilities
         {
             using (var package = new ExcelPackage())
             {
+                var centerStyle = package.Workbook.Styles.CreateNamedStyle("Center");
+                centerStyle.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                //centerStyle.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                //centerStyle.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                //centerStyle.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                //centerStyle.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+
                 foreach (var team in _model)
                 {
                     var sheet = package.Workbook.Worksheets.Add(team.Team);
-                    var playerToColumnMapping = SetHeader(team, sheet);
+                    int totalColumnCount;
+                    var playerToColumnMapping = SetHeader(team, sheet, out totalColumnCount);
 
                     int rowIndex = 2;
                     foreach (var match in team.Matches)
@@ -41,6 +49,21 @@ namespace Ttc.DataAccess.Utilities
                         sheet.Cells[rowIndex, 4].Value = match.Match.Date.ToString("HH:mm");
                         sheet.Cells[rowIndex, 5].Value = match.Home;
                         sheet.Cells[rowIndex, 6].Value = match.Out;
+
+                        if (match.CaptainDecisions.Any())
+                        {
+                            foreach (var captainDecision in match.CaptainDecisions.Where(x => playerToColumnMapping.ContainsKey(x)))
+                            {
+                                var cellColumn = playerToColumnMapping[captainDecision];
+                                sheet.Cells[rowIndex, cellColumn].Value = "X";
+                                sheet.Cells[rowIndex, cellColumn].StyleName = "Center";
+                                // Doesn't work on LibreOffice, therefor workaround with StyleName="Center"
+                                //sheet.Cells[rowIndex, cellColumn].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                            }
+
+                            string blockName = match.Match.Block == PlayerMatchStatus.Major ? ExcelExportResources.MatchBlockAdminName : ExcelExportResources.MatchBlockCaptainName;
+                            sheet.Cells[rowIndex, totalColumnCount].Value = blockName;
+                        }
 
                         foreach (var playerDecision in match.PlayerDecisions.Where(x => playerToColumnMapping.ContainsKey(x.Key)))
                         {
@@ -78,13 +101,15 @@ namespace Ttc.DataAccess.Utilities
         }
 
         #region Helpers
-        private static Dictionary<string, int> SetHeader(TeamExcelModel team, ExcelWorksheet sheet)
+        private static Dictionary<string, int> SetHeader(TeamExcelModel team, ExcelWorksheet sheet, out int totalHeaderCount)
         {
             var headers = new List<string>() { ExcelExportResources.MatchFrenoyId, ExcelExportResources.MatchDay, ExcelExportResources.MatchDate, ExcelExportResources.MatchHour, ExcelExportResources.MatchHome, ExcelExportResources.MatchOut };
             int baseColumnIndex = headers.Count;
 
             var players = team.Players.OrderBy(x => x.Reserve).ThenBy(x => x.Name).Select((player, index) => new { Name = player.Name, ColumnIndex = index + baseColumnIndex + 1 }).ToArray();
             headers.AddRange(players.Select(x => x.Name));
+            headers.Add(ExcelExportResources.MatchBlock);
+            totalHeaderCount = headers.Count;
             var playerNameToColumnIndex = players.ToDictionary(x => x.Name, x => x.ColumnIndex);
 
             ExcelHelper.SetHeader(sheet, headers.ToArray());
@@ -130,6 +155,16 @@ namespace Ttc.DataAccess.Utilities
                         if (!teamMatch.PlayerDecisions.ContainsKey(matchPlayer.Name))
                         {
                             teamMatch.PlayerDecisions.Add(matchPlayer.Name, matchPlayer.Status);
+                        }
+                    }
+                    if (!string.IsNullOrWhiteSpace(match.Block))
+                    {
+                        foreach (var matchPlayer in match.Players.Where(x => x.Status == match.Block))
+                        {
+                            if (!teamMatch.CaptainDecisions.Contains(matchPlayer.Name))
+                            {
+                                teamMatch.CaptainDecisions.Add(matchPlayer.Name);
+                            }
                         }
                     }
 
@@ -188,6 +223,7 @@ namespace Ttc.DataAccess.Utilities
         /// Values: Play/NotPlay/Maybe/...
         /// </summary>
         public IDictionary<string, string> PlayerDecisions { get; set; }
+        public IList<string> CaptainDecisions { get; set; }
 
         public TeamMatchExcelModel(MatchEntity match, ClubEntity[] clubs)
         {
@@ -195,6 +231,7 @@ namespace Ttc.DataAccess.Utilities
             Home = GetTeamDesc(match.HomeClubId, match.HomeTeamCode, clubs);
             Out = GetTeamDesc(match.AwayClubId, match.AwayTeamCode, clubs);
             PlayerDecisions = new Dictionary<string, string>();
+            CaptainDecisions = new List<string>();
         }
 
         private string GetTeamDesc(int clubId, string teamCode, ClubEntity[] clubs)

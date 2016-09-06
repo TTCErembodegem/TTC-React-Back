@@ -129,6 +129,15 @@
   <data name="CompetitionVolgnummer" xml:space="preserve">
     <value>Volgnummer</value>
   </data>
+  <data name="MatchBlock" xml:space="preserve">
+    <value>Block</value>
+  </data>
+  <data name="MatchBlockAdminName" xml:space="preserve">
+    <value>Jelle</value>
+  </data>
+  <data name="MatchBlockCaptainName" xml:space="preserve">
+    <value>Kapitein</value>
+  </data>
   <data name="MatchDate" xml:space="preserve">
     <value>Datum</value>
   </data>

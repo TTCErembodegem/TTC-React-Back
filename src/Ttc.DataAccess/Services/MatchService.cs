@@ -168,7 +168,7 @@ namespace Ttc.DataAccess.Services
         /// </summary>
         public Match ToggleMatchPlayer(MatchPlayer matchPlayer)
         {
-            Debug.Assert(matchPlayer.Status == "Captain" || matchPlayer.Status == "Major");
+            Debug.Assert(matchPlayer.Status == PlayerMatchStatus.Captain || matchPlayer.Status == PlayerMatchStatus.Major);
             using (var dbContext = new TtcDbContext())
             {
                 var match = dbContext.Matches.Find(matchPlayer.MatchId);
@@ -197,7 +197,7 @@ namespace Ttc.DataAccess.Services
         /// <param name="blockAlso">Also block the match to the newStatus level</param>
         public Match EditMatchPlayers(int matchId, int[] playerIds, string newStatus, bool blockAlso)
         {
-            Debug.Assert(newStatus == "Captain" || newStatus == "Major");
+            Debug.Assert(newStatus == PlayerMatchStatus.Captain || newStatus == PlayerMatchStatus.Major);
             using (var db = new TtcDbContext())
             {
                 var match = db.Matches.Single(x => x.Id == matchId);

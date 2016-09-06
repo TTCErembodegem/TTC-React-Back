@@ -97,6 +97,33 @@ namespace Ttc.DataAccess.Utilities {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Block.
+        /// </summary>
+        internal static string MatchBlock {
+            get {
+                return ResourceManager.GetString("MatchBlock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jelle.
+        /// </summary>
+        internal static string MatchBlockAdminName {
+            get {
+                return ResourceManager.GetString("MatchBlockAdminName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kapitein.
+        /// </summary>
+        internal static string MatchBlockCaptainName {
+            get {
+                return ResourceManager.GetString("MatchBlockCaptainName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Datum.
         /// </summary>
         internal static string MatchDate {
