@@ -262,6 +262,10 @@
     <Compile Include="Migrations\201608182140266_BlockMatchField.Designer.cs">
       <DependentUpon>201608182140266_BlockMatchField.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609232046188_ClubManagerTypes.cs" />
+    <Compile Include="Migrations\201609232046188_ClubManagerTypes.Designer.cs">
+      <DependentUpon>201609232046188_ClubManagerTypes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\ServiceExtensions.cs" />
@@ -424,6 +428,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201608182140266_BlockMatchField.resx">
       <DependentUpon>201608182140266_BlockMatchField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609232046188_ClubManagerTypes.resx">
+      <DependentUpon>201609232046188_ClubManagerTypes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ExcelExportResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

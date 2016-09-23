@@ -272,27 +272,11 @@ namespace Ttc.DataAccess
                     dest => dest.Shower,
                     opts => opts.MapFrom(src => src.Douche == 1))
                 .ForMember(
-                    dest => dest.Managers,
-                    opts => opts.MapFrom(src => CreateClubManagers(src.Contacten)))
-                .ForMember(
                     dest => dest.MainLocation,
                     opts => opts.MapFrom(src => CreateMainClubLocation(src.Lokalen)))
                 .ForMember(
                     dest => dest.AlternativeLocations,
                     opts => opts.MapFrom(src => CreateSecundaryClubLocations(src.Lokalen)));
-        }
-
-        private static ICollection<ClubManager> CreateClubManagers(ICollection<ClubContact> contacten)
-        {
-            if (!contacten.Any())
-            {
-                return new Collection<ClubManager>();
-            }
-            return contacten.OrderBy(x => x.Sortering).Select(x => new ClubManager
-            {
-                PlayerId = x.SpelerId,
-                Description = x.Omschrijving
-            }).ToList();
         }
 
         private static ICollection<ClubLocation> CreateSecundaryClubLocations(ICollection<ClubLokaal> lokalen)
