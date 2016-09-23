@@ -72,6 +72,18 @@ namespace Ttc.WebApi.Utilities
                     }
                 }
             }
+
+            var exceptions = new List<Exception> {ex};
+            while (ex.InnerException != null)
+            {
+                exceptions.Add(ex.InnerException);
+                ex = ex.InnerException;
+            }
+            if (exceptions.Any(e => e is TimeoutException))
+            {
+                return true;
+            }
+
             return false;
         }
     }
