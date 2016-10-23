@@ -177,30 +177,6 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        public string RequestNewPassword(NewPasswordRequest request)
-        {
-            if (request.PlayerId == 0)
-            {
-                return null;
-            }
-
-            using (var dbContext = new TtcDbContext())
-            {
-                var player = dbContext.Players.SingleOrDefault(x => x.Id == request.PlayerId && x.Email == request.Email);
-                if (player != null)
-                {
-                    string newPassword = GenerateNewPassword();
-                    dbContext.Database.ExecuteSqlCommand(
-                        $"UPDATE {PlayerEntity.TableName} SET paswoord=MD5({{1}}) WHERE id={{0}}",
-                        request.PlayerId,
-                        newPassword);
-
-                    return newPassword;
-                }
-            }
-            return null;
-        }
-
         public User GetUser(int playerId)
         {
             using (var dbContext = new TtcDbContext())
@@ -265,6 +241,44 @@ namespace Ttc.DataAccess.Services
                 vttlPlayers.SyncPlayers();
                 var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
                 sportaPlayers.SyncPlayers();
+            }
+        }
+
+        public Guid EmailMatchesPlayer(string email, int playerId)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var player = dbContext.Players.SingleOrDefault(x => x.Id == playerId && x.Email.ToLower() == email.ToLower());
+                if (player == null)
+                {
+                    throw new Exception("Email komt niet overeen voor " + playerId);
+                }
+
+                var passwordReset = new PlayerPasswordResetEntity(playerId);
+                dbContext.PlayerPasswordResets.Add(passwordReset);
+                dbContext.SaveChanges();
+
+                return passwordReset.Guid;
+            }
+        }
+
+        public void SetNewPasswordFromGuid(Guid guid, int playerId, string password)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var now = DateTime.UtcNow;
+                var resetInfo = dbContext.PlayerPasswordResets.FirstOrDefault(x => x.Guid == guid && x.PlayerId == playerId && x.ExpiresOn > now);
+                if (resetInfo != null)
+                {
+                    dbContext.Database.ExecuteSqlCommand(
+                        $"UPDATE {PlayerEntity.TableName} SET paswoord=MD5({{1}}) WHERE id={{0}}",
+                        playerId,
+                        password);
+                }
+                else
+                {
+                    throw new Exception($"Geen reset link gevonden {guid} voor speler {playerId}");
+                }
             }
         }
     }

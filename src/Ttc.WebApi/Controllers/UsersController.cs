@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using JWT;
 using Newtonsoft.Json;
-using SendGrid;
-using SendGrid.Helpers.Mail;
 using Ttc.DataAccess.Services;
 using Ttc.Model;
 using Ttc.Model.Players;
+using Ttc.WebApi.Emailing;
 using Ttc.WebApi.Utilities;
 using Ttc.WebApi.Utilities.Auth;
 
@@ -56,36 +54,35 @@ namespace Ttc.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("RequestNewPassword")]
+        [Route("SetNewPasswordFromGuid")]
         [AllowAnonymous]
-        public void RequestNewPassword([FromBody]NewPasswordRequest request)
+        public void SetNewPasswordFromGuid([FromBody]NewPasswordRequest request)
         {
-            var newPassword = _service.RequestNewPassword(request);
-            var emailConfig = _configService.GetEmailConfig();
-            CreateNewPasswordRequestEmail(request.Email, newPassword, emailConfig).Wait();
+            _service.SetNewPasswordFromGuid(request.Guid, request.PlayerId, request.Password);
         }
 
         [HttpPost]
-        [Route("SetNewPassword")]
+        [Route("RequestResetPasswordLink")]
         [AllowAnonymous]
-        public void SetNewPassword([FromBody]PasswordCredentials request)
+        public void RequestResetPasswordLink([FromBody]NewPasswordLinkRequest request)
         {
-            string playerEmail = _service.SetNewPassword(request);
+            Guid paswoordResetLinkId = _service.EmailMatchesPlayer(request.Email, request.PlayerId);
+
             var emailConfig = _configService.GetEmailConfig();
-            CreateNewPasswordRequestEmail(playerEmail, request.NewPassword, emailConfig).Wait();
+            var emailer = new NewPasswordRequestEmailer(emailConfig);
+            emailer.Email(request.Email, paswoordResetLinkId);
         }
 
-        private async Task CreateNewPasswordRequestEmail(string email, string newPassword, EmailConfig config)
+        [HttpPost]
+        [Route("AdminSetNewPassword")]
+        public void AdminSetNewPassword([FromBody]PasswordCredentials request)
         {
-            dynamic sg = new SendGridAPIClient(config.SendGridApiKey);
-            Email from = new Email(config.EmailFrom);
-            Email to = new Email(email);
+            string playerEmail = _service.SetNewPassword(request);
 
-            string subject = "Nieuw paswoord TTC Erembodegem";
-            Content content = new Content("text/plain", "Je nieuw paswoord is: " + newPassword);
-            Mail mail = new Mail(from, subject, to, content);
-
-            dynamic response = await sg.client.mail.send.post(requestBody: mail.Get());
+            // TODO: Send email when Admin resets someones password?
+            //var emailConfig = _configService.GetEmailConfig();
+            //var emailer = new PasswordChangedEmailer(emailConfig);
+            //emailer.Email(playerEmail);
         }
 
         [HttpPost]

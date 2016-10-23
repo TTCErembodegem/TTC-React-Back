@@ -10,6 +10,8 @@ namespace Ttc.DataAccess
     internal class TtcDbContext : DbContext, ITtcDbContext
     {
         public DbSet<PlayerEntity> Players { get; set; }
+        public DbSet<PlayerPasswordResetEntity> PlayerPasswordResets { get; set; }
+
         public DbSet<ClubEntity> Clubs { get; set; }
         public DbSet<ClubLokaal> ClubLokalen { get; set; }
         public DbSet<ClubContact> ClubContacten { get; set; }

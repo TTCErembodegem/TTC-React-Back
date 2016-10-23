@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Ttc.Model
 {
@@ -36,11 +37,20 @@ namespace Ttc.Model
         public override string ToString() => $"PlayerId: {PlayerId}, OldPassword: {OldPassword}, NewPassword: {NewPassword}";
     }
 
-    public class NewPasswordRequest
+    public class NewPasswordLinkRequest
     {
         public int PlayerId { get; set; }
         public string Email { get; set; }
 
         public override string ToString() => $"PlayerId={PlayerId}, Email={Email}";
+    }
+
+    public class NewPasswordRequest
+    {
+        public Guid Guid { get; set; }
+        public int PlayerId { get; set; }
+        public string Password { get; set; }
+
+        public override string ToString() => $"PlayerId={PlayerId}, Guid={Guid}";
     }
 }

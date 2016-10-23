@@ -55,6 +55,7 @@
     <Compile Include="ClubLokaal.cs" />
     <Compile Include="MatchCommentEntity.cs" />
     <Compile Include="ParameterEntity.cs" />
+    <Compile Include="PlayerPasswordResetEntity.cs" />
     <Compile Include="TeamOpponentEntity.cs" />
     <Compile Include="TeamPlayerEntity.cs" />
     <Compile Include="Constants.cs" />
