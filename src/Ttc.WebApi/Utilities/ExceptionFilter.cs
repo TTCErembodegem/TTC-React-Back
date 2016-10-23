@@ -27,7 +27,7 @@ namespace Ttc.WebApi.Utilities
             {
                 Logger.Error(context.Exception.ToString());
 
-                context.Response = new HttpResponseMessage(HttpStatusCode.Accepted)
+                context.Response = new HttpResponseMessage(HttpStatusCode.InternalServerError)
                 {
                     Content = new StringContent(context.Exception.ToString()),
                     ReasonPhrase = "Something went terribly wrong!"
