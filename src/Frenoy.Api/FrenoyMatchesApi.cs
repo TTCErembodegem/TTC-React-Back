@@ -224,7 +224,8 @@ namespace Frenoy.Api
             {
                 if (frenoyMatch.Score != null)
                 {
-                    bool isForfeit = frenoyMatch.Score.ToLowerInvariant().Contains("ff") || frenoyMatch.Score.ToLowerInvariant().Contains("af");
+                    string score = frenoyMatch.Score.ToLowerInvariant();
+                    bool isForfeit = score.Contains("ff") || score.Contains("af") || score.Contains("gu");
                     if (!isForfeit)
                     {
                         // Uitslag
