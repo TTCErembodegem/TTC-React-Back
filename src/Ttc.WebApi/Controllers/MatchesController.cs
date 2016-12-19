@@ -137,10 +137,10 @@ namespace Ttc.WebApi.Controllers
         [Route("UpdateScore")]
         public Match UpdateScore([FromBody]MatchScoreDto score)
         {
-            if (score.Home < 0 || score.Out < 0 || score.Home + score.Out > 16)
-            {
-                return null;
-            }
+            if (score.Home < 0) score.Home = 0;
+            else if (score.Home > 15) score.Home = 16;
+            if (score.Out < 0) score.Out = 0;
+            else if (score.Out > 15) score.Out = 16;
 
             var result = _service.UpdateScore(score.MatchId, new MatchScore(score.Home, score.Out));
             return result;
