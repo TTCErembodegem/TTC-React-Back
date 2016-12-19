@@ -14,9 +14,17 @@ namespace Ttc.DataAccess.Services
 {
     public class MatchService : BaseService
     {
+        private static IList<Match> _matches;
+        public static bool MatchesPlaying;
+
         #region Getters
         public ICollection<Match> GetMatches()
         {
+            if (MatchesPlaying)
+            {
+                return _matches;
+            }
+
             using (var dbContext = new TtcDbContext())
             {
                 var matchEntities = dbContext.Matches
@@ -33,7 +41,12 @@ namespace Ttc.DataAccess.Services
                     match.Comments = comments.Where(x => x.MatchId == match.Id).ToArray();
                 }
 
-                var result = Mapper.Map<IList<MatchEntity>, IList<Match>>(matchEntities);                
+                var result = Mapper.Map<IList<MatchEntity>, IList<Match>>(matchEntities);
+                if (result.Any(m => m.ScoreType == MatchOutcome.BeingPlayed))
+                {
+                    _matches = result;
+                    MatchesPlaying = true;
+                }
                 return result;
             }
         }
@@ -111,7 +124,14 @@ namespace Ttc.DataAccess.Services
             var comments = dbContext.MatchComments.Where(x => x.MatchId == matchId).ToArray();
             match.Comments = comments;
 
-            return Map(match);
+            var matchModel = Map(match);
+            if (MatchesPlaying)
+            {
+                var cachedMatch = _matches.Single(x => x.Id == matchModel.Id);
+                int matchIndex = _matches.IndexOf(cachedMatch);
+                _matches[matchIndex] = matchModel;
+            }
+            return matchModel;
         }
 
         private Match Map(MatchEntity matchEntity)

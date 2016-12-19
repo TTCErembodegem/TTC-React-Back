@@ -16,7 +16,7 @@ namespace Ttc.DataAccess.Services
 {
     public class TeamService : BaseService
     {
-        private readonly static TimeSpan FrenoyTeamRankingExpiration = TimeSpan.FromHours(1);
+        private static readonly TimeSpan FrenoyTeamRankingExpiration = TimeSpan.FromHours(1);
 
         public IEnumerable<Team> GetForCurrentYear()
         {
@@ -85,7 +85,7 @@ namespace Ttc.DataAccess.Services
             return ranking;
         }
 
-        #region Cache
+        #region DivisionCache
         private static readonly Dictionary<TeamRankingKey, ICollection<DivisionRanking>> RankingCache = new Dictionary<TeamRankingKey, ICollection<DivisionRanking>>();
         private static readonly object CacheLock = new object();
 

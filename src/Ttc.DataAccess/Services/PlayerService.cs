@@ -21,13 +21,26 @@ namespace Ttc.DataAccess.Services
 {
     public class PlayerService : BaseService
     {
+        private static IList<Player> _players;
+
         #region Player
         public ICollection<Player> GetOwnClub()
         {
-            using (var dbContext = new TtcDbContext())
+            if (MatchService.MatchesPlaying && _players != null)
+            {
+                return _players;
+            }
+
+                using (var dbContext = new TtcDbContext())
             {
                 var players = dbContext.Players.ToArray();
                 var result = Mapper.Map<IList<PlayerEntity>, IList<Player>>(players);
+
+                if (MatchService.MatchesPlaying)
+                {
+                    _players = result;
+                }
+
                 return result;
             }
         }
@@ -36,7 +49,15 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
-                return Mapper.Map<PlayerEntity, Player>(dbContext.Players.SingleOrDefault(x => x.Id == playerId));
+                var newPlayer = Mapper.Map<PlayerEntity, Player>(dbContext.Players.SingleOrDefault(x => x.Id == playerId));
+
+                if (_players != null)
+                {
+                    int cacheIndex = _players.IndexOf(_players.Single(x => x.Id == newPlayer.Id));
+                    _players[cacheIndex] = newPlayer;
+                }
+
+                return newPlayer;
             }
         }
 
@@ -110,12 +131,73 @@ namespace Ttc.DataAccess.Services
         #endregion
 
         #region User
+        public User GetUser(int playerId)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                return GetUser(dbContext, playerId);
+            }
+        }
+
+        private static User GetUser(TtcDbContext dbContext, int playerId)
+        {
+            var teams = dbContext.Teams
+                .Include(x => x.Players)
+                .Where(x => x.Year == Constants.CurrentSeason)
+                .Where(x => x.Players.Any(ply => ply.PlayerId == playerId))
+                .Select(x => x.Id);
+
+            var player = dbContext.Players.Single(ply => ply.Id == playerId);
+            return new User
+            {
+                PlayerId = playerId,
+                Alias = player.NaamKort,
+                Security = GetPlayerSecurity(player.Toegang),
+                Teams = teams.ToList()
+            };
+        }
+
+        private static ICollection<string> GetPlayerSecurity(PlayerToegang toegang)
+        {
+            switch (toegang)
+            {
+                case PlayerToegang.System:
+                    return new[] { "CAN_MANAGETEAM", "CAN_EDITALLREPORTS", "IS_ADMIN", "IS_SYSTEM" };
+
+                case PlayerToegang.Dev:
+                    return new[] { "CAN_MANAGETEAM", "CAN_EDITALLREPORTS", "IS_ADMIN", "IS_DEV" };
+
+                case PlayerToegang.Board:
+                    return new[] { "CAN_MANAGETEAM", "CAN_EDITALLREPORTS", "IS_ADMIN" };
+
+                // No PlayerToegang.Captain: This happens automatically when assigned Captain to a Team
+
+                case PlayerToegang.Player:
+                default:
+                    return new string[] { };
+            }
+        }
+        #endregion
+
+        public void FrenoySync()
+        {
+            using (var context = new TtcDbContext())
+            {
+                var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
+                vttlPlayers.StopAllPlayers(false);
+                vttlPlayers.SyncPlayers();
+                var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
+                sportaPlayers.SyncPlayers();
+            }
+        }
+
+        #region Login & Password
         public User Login(UserCredentials user)
         {
             using (var dbContext = new TtcDbContext())
             {
-                const int SystemPlayerIdFromFrontend = -1;
-                if (user.PlayerId == SystemPlayerIdFromFrontend)
+                const int systemPlayerIdFromFrontend = -1;
+                if (user.PlayerId == systemPlayerIdFromFrontend)
                 {
                     user.PlayerId = dbContext.Players.Single(ply => ply.NaamKort == "SYSTEM").Id;
                 }
@@ -177,73 +259,6 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        public User GetUser(int playerId)
-        {
-            using (var dbContext = new TtcDbContext())
-            {
-                return GetUser(dbContext, playerId);
-            }
-        }
-
-        private static User GetUser(TtcDbContext dbContext, int playerId)
-        {
-            var teams = dbContext.Teams
-                .Include(x => x.Players)
-                .Where(x => x.Year == Constants.CurrentSeason)
-                .Where(x => x.Players.Any(ply => ply.PlayerId == playerId))
-                .Select(x => x.Id);
-
-            var player = dbContext.Players.Single(ply => ply.Id == playerId);
-            return new User
-            {
-                PlayerId = playerId,
-                Alias = player.NaamKort,
-                Security = GetPlayerSecurity(player.Toegang),
-                Teams = teams.ToList()
-            };
-        }
-
-        private static ICollection<string> GetPlayerSecurity(PlayerToegang toegang)
-        {
-            switch (toegang)
-            {
-                case PlayerToegang.System:
-                    return new[] { "CAN_MANAGETEAM", "CAN_EDITALLREPORTS", "IS_ADMIN", "IS_SYSTEM" };
-
-                case PlayerToegang.Dev:
-                    return new[] { "CAN_MANAGETEAM", "CAN_EDITALLREPORTS", "IS_ADMIN", "IS_DEV" };
-
-                case PlayerToegang.Board:
-                    return new[] { "CAN_MANAGETEAM", "CAN_EDITALLREPORTS", "IS_ADMIN" };
-
-                // No PlayerToegang.Captain: This happens automatically when assigned Captain to a Team
-
-                case PlayerToegang.Player:
-                default:
-                    return new string[] { };
-            }
-        }
-
-        private static string GenerateNewPassword()
-        {
-            string path = Path.GetRandomFileName();
-            path = path.Replace(".", "");
-            return path;
-        }
-        #endregion
-
-        public void FrenoySync()
-        {
-            using (var context = new TtcDbContext())
-            {
-                var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
-                vttlPlayers.StopAllPlayers(false);
-                vttlPlayers.SyncPlayers();
-                var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
-                sportaPlayers.SyncPlayers();
-            }
-        }
-
         public Guid EmailMatchesPlayer(string email, int playerId)
         {
             using (var dbContext = new TtcDbContext())
@@ -281,5 +296,6 @@ namespace Ttc.DataAccess.Services
                 }
             }
         }
+        #endregion
     }
 }

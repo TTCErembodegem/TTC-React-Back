@@ -11,8 +11,15 @@ namespace Ttc.DataAccess.Services
 {
     public class ClubService : BaseService
     {
+        private static IEnumerable<Club> _clubs;
+
         public IEnumerable<Club> GetActiveClubs()
         {
+            if (MatchService.MatchesPlaying && _clubs != null)
+            {
+                return _clubs;
+            }
+
             using (var dbContext = new TtcDbContext())
             {
                 var activeClubs = dbContext.Clubs
@@ -42,6 +49,11 @@ namespace Ttc.DataAccess.Services
                         Contact = new PlayerContact(managerPlayer.Id, managerPlayer.Email, managerPlayer.Gsm, managerPlayer.Adres, managerPlayer.Gemeente),
                         SortOrder = managerInfo.Sortering
                     });
+                }
+
+                if (MatchService.MatchesPlaying)
+                {
+                    _clubs = result;
                 }
 
                 return result;
