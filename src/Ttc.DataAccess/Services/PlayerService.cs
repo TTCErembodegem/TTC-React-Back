@@ -45,8 +45,14 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        public Player GetPlayer(int playerId)
+        public Player GetPlayer(int playerId, bool allowCache = false)
         {
+            if (allowCache && _players != null)
+            {
+                var ply = _players.SingleOrDefault(x => x.Id == playerId);
+                return ply ?? GetPlayer(playerId);
+            }
+
             using (var dbContext = new TtcDbContext())
             {
                 var newPlayer = Mapper.Map<PlayerEntity, Player>(dbContext.Players.SingleOrDefault(x => x.Id == playerId));

@@ -51,8 +51,14 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        public Match GetMatch(int matchId)
+        public Match GetMatch(int matchId, bool allowCache = false)
         {
+            if (allowCache && _matches != null)
+            {
+                var ply = _matches.SingleOrDefault(x => x.Id == matchId);
+                return ply ?? GetMatch(matchId);
+            }
+
             using (var dbContext = new TtcDbContext())
             {
                 return GetMatch(dbContext, matchId);

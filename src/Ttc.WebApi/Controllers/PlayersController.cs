@@ -36,7 +36,7 @@ namespace Ttc.WebApi.Controllers
         [AllowAnonymous]
         public Player Get(int id)
         {
-            var result = _service.GetPlayer(id);
+            var result = _service.GetPlayer(id, true);
             CleanSensitiveData(result);
             return result;
         }

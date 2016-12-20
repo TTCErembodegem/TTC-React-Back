@@ -36,7 +36,7 @@ namespace Ttc.WebApi.Controllers
         [AllowAnonymous]
         public Match Get(int id)
         {
-            var result = _service.GetMatch(id);
+            var result = _service.GetMatch(id, true);
             CleanSensitiveData(result);
             return result;
         }
