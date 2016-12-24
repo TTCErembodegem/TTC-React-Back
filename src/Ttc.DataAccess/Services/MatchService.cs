@@ -221,12 +221,13 @@ namespace Ttc.DataAccess.Services
         /// Set all players for the match to Captain/Major
         /// </summary>
         /// <param name="blockAlso">Also block the match to the newStatus level</param>
-        public Match EditMatchPlayers(int matchId, int[] playerIds, string newStatus, bool blockAlso)
+        public Match EditMatchPlayers(int matchId, int[] playerIds, string newStatus, bool blockAlso, string comment)
         {
             Debug.Assert(newStatus == PlayerMatchStatus.Captain || newStatus == PlayerMatchStatus.Major);
             using (var db = new TtcDbContext())
             {
                 var match = db.Matches.Single(x => x.Id == matchId);
+                match.FormationComment = comment;
                 match.Block = blockAlso ? newStatus : null;
                 var existingPlayers = db.MatchPlayers
                     .Where(x => x.MatchId == matchId)

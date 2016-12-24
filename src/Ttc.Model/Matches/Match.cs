@@ -61,6 +61,8 @@ namespace Ttc.Model.Matches
 
         [TtcConfidential("MATCH")]
         public ICollection<MatchPlayer> Players { get; set; }
+        [TtcConfidential]
+        public string FormationComment { get; set; }
         public ICollection<MatchGame> Games { get; set; }
         [TtcConfidential("MATCH-COMMENTS")]
         public ICollection<MatchComment> Comments { get; set; }

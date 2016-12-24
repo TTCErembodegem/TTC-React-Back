@@ -270,6 +270,10 @@
     <Compile Include="Migrations\201610231853333_UserPasswordResetLinks.Designer.cs">
       <DependentUpon>201610231853333_UserPasswordResetLinks.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612241434105_MatchFormationComment.cs" />
+    <Compile Include="Migrations\201612241434105_MatchFormationComment.Designer.cs">
+      <DependentUpon>201612241434105_MatchFormationComment.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\ServiceExtensions.cs" />
@@ -438,6 +442,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610231853333_UserPasswordResetLinks.resx">
       <DependentUpon>201610231853333_UserPasswordResetLinks.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612241434105_MatchFormationComment.resx">
+      <DependentUpon>201612241434105_MatchFormationComment.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ExcelExportResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

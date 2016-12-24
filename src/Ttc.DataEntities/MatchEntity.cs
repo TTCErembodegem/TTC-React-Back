@@ -48,6 +48,7 @@ namespace Ttc.DataEntities
         public int ReportPlayerId { get; set; }
         public ICollection<MatchGameEntity> Games { get; set; }
         public ICollection<MatchPlayerEntity> Players { get; set; }
+        public string FormationComment { get; set; }
         public ICollection<MatchCommentEntity> Comments { get; set; }
         public string Description { get; set; }
         public int? HomeScore { get; set; }

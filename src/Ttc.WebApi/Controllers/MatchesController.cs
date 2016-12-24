@@ -105,7 +105,7 @@ namespace Ttc.WebApi.Controllers
         [Route("EditMatchPlayers")]
         public Match EditMatchPlayers([FromBody]MatchPlayersDto dto)
         {
-            var result = _service.EditMatchPlayers(dto.MatchId, dto.PlayerIds, dto.NewStatus, dto.BlockAlso);
+            var result = _service.EditMatchPlayers(dto.MatchId, dto.PlayerIds, dto.NewStatus, dto.BlockAlso, dto.Comment);
             return result;
         }
 
@@ -169,6 +169,7 @@ namespace Ttc.WebApi.Controllers
         public int MatchId { get; set; }
         public string NewStatus { get; set; }
         public int[] PlayerIds { get; set; }
+        public string Comment { get; set; }
 
         public override string ToString()
         {
