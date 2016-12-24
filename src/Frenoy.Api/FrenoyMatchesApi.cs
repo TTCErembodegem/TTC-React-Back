@@ -163,11 +163,8 @@ namespace Frenoy.Api
         #region Match Creation
         private void SyncMatches(int? teamId, int frenoyDivisionId, GetMatchesResponse matches, bool alsoSyncMatchDetails = true, int frenoySeason = Constants.FrenoySeason)
         {
-            foreach (TeamMatchEntryType frenoyMatch in matches.TeamMatchesEntries.Where(x => !x.HomeTeam.Trim().StartsWith("Vrij") && !x.AwayTeam.Trim().StartsWith("Vrij")))
+            foreach (TeamMatchEntryType frenoyMatch in matches.TeamMatchesEntries)
             {
-                Debug.Assert(frenoyMatch.DateSpecified, "Probably need to filter this one out?");
-                Debug.Assert(frenoyMatch.TimeSpecified);
-
                 // Kalender entries
                 MatchEntity matchEntity = _db.Matches.SingleOrDefault(x => x.FrenoyMatchId == frenoyMatch.MatchId && x.FrenoySeason == frenoySeason);
                 if (matchEntity == null)
@@ -192,12 +189,22 @@ namespace Frenoy.Api
 
         private void MapMatch(MatchEntity entity, int? teamId, int frenoyDivisionId, TeamMatchEntryType frenoyMatch, int frenoySeason = Constants.FrenoySeason)
         {
+            entity.ShouldBePlayed = !frenoyMatch.HomeTeam.Trim().StartsWith("Vrij") && !frenoyMatch.AwayTeam.Trim().StartsWith("Vrij");
             entity.FrenoyMatchId = frenoyMatch.MatchId;
             entity.Date = frenoyMatch.Date + new TimeSpan(frenoyMatch.Time.Hour, frenoyMatch.Time.Minute, 0);
-            entity.HomeClubId = GetClubId(frenoyMatch.HomeClub);
-            entity.HomeTeamCode = ExtractTeamCodeFromFrenoyName(frenoyMatch.HomeTeam);
-            entity.AwayClubId = GetClubId(frenoyMatch.AwayClub);
-            entity.AwayTeamCode = ExtractTeamCodeFromFrenoyName(frenoyMatch.AwayTeam);
+            if (frenoyMatch.HomeClub != "-")
+            {
+                entity.HomeClubId = GetClubId(frenoyMatch.HomeClub);
+                entity.HomeTeamCode = ExtractTeamCodeFromFrenoyName(frenoyMatch.HomeTeam);
+            }
+
+            Debug.Assert(entity.ShouldBePlayed || frenoyMatch.AwayClub == "-" || frenoyMatch.HomeClub == "-");
+            if (frenoyMatch.AwayClub != "-")
+            {
+                entity.AwayClubId = GetClubId(frenoyMatch.AwayClub);
+                entity.AwayTeamCode = ExtractTeamCodeFromFrenoyName(frenoyMatch.AwayTeam);
+            }
+            
             entity.Week = int.Parse(frenoyMatch.WeekName);
             entity.FrenoySeason = frenoySeason;
             entity.FrenoyDivisionId = frenoyDivisionId;
@@ -220,7 +227,7 @@ namespace Frenoy.Api
 
         private void SyncMatchDetails(MatchEntity matchEntity, TeamMatchEntryType frenoyMatch)
         {
-            if (!matchEntity.IsSyncedWithFrenoy)
+            if (!matchEntity.IsSyncedWithFrenoy && matchEntity.ShouldBePlayed)
             {
                 if (frenoyMatch.Score != null)
                 {

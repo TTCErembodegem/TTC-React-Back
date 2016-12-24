@@ -36,6 +36,7 @@ namespace Ttc.Model.Matches
         #region Kalender Properties
         public int Id { get; set; }
         public DateTime Date { get; set; }
+        public bool ShouldBePlayed { get; set; }
         public string FrenoyMatchId { get; set; }
         public bool IsSyncedWithFrenoy { get; set; }
         public int Week { get; set; }

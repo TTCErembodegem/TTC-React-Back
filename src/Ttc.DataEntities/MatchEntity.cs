@@ -15,6 +15,12 @@ namespace Ttc.DataEntities
         [Index]
         public DateTime Date { get; set; }
 
+        /// <summary>
+        /// Op vrije weken moet er niet gespeeld worden.
+        /// Maar voor de weekopstelling moet er voor vrije ploegen ook een opstelling gebeuren.
+        /// </summary>
+        public bool ShouldBePlayed { get; set; }
+
         public int Week { get; set; }
         [MaxLength(20)]
         public string FrenoyMatchId { get; set; }

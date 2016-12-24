@@ -274,6 +274,10 @@
     <Compile Include="Migrations\201612241434105_MatchFormationComment.Designer.cs">
       <DependentUpon>201612241434105_MatchFormationComment.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612241625590_MatchShouldBePlayed.cs" />
+    <Compile Include="Migrations\201612241625590_MatchShouldBePlayed.Designer.cs">
+      <DependentUpon>201612241625590_MatchShouldBePlayed.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\ServiceExtensions.cs" />
@@ -445,6 +449,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612241434105_MatchFormationComment.resx">
       <DependentUpon>201612241434105_MatchFormationComment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612241625590_MatchShouldBePlayed.resx">
+      <DependentUpon>201612241625590_MatchShouldBePlayed.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ExcelExportResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
