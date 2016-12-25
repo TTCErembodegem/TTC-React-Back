@@ -46,6 +46,11 @@ namespace Ttc.WebApi.Controllers
         [AllowAnonymous]
         public IEnumerable<OtherMatch> GetLastOpponentMatches(int teamId, int clubId, string teamCode)
         {
+            if (clubId == 0)
+            {
+                return null;
+            }
+
             var opponent = new OpposingTeam
             {
                 ClubId = clubId,
