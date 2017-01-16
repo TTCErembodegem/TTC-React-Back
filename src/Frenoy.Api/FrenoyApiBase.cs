@@ -23,9 +23,9 @@ namespace Frenoy.Api
     {
         #region Fields
         const string FrenoyVttlWsdlUrl = "http://api.vttl.be/0.7/?wsdl";
-        const string FrenoySportaWsdlUrl = "http://tafeltennis.sporcrea.be/api/?wsdl";
+        const string FrenoySportaWsdlUrl = "https://ttonline.sporta.be/api/?wsdl";
         const string FrenoyVttlEndpoint = "http://api.vttl.be/0.7/index.php?s=vttl";
-        const string FrenoySportaEndpoint = "http://tafeltennis.sporcrea.be/api/index.php?s=sporcrea";
+        const string FrenoySportaEndpoint = "https://ttonline.sporta.be/api/index.php?s=sporcrea";
 
         protected readonly FrenoySettings _settings;
         protected readonly TabTAPI_PortTypeClient _frenoy;
@@ -54,7 +54,7 @@ namespace Frenoy.Api
                 _thuisClubId = _db.Clubs.Single(x => x.CodeSporta == _settings.FrenoyClub).Id;
 
                 var binding = new BasicHttpBinding("TabTAPI_Binding");
-                binding.Security.Mode = BasicHttpSecurityMode.None;
+                binding.Security.Mode = BasicHttpSecurityMode.Transport;
                 var endpoint = new EndpointAddress(FrenoySportaEndpoint);
                 _frenoy = new TabTAPI_PortTypeClient(binding, endpoint);
             }
