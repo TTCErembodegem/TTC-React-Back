@@ -332,6 +332,13 @@ namespace Frenoy.Api
             }
             else
             {
+                if (frenoyIndividual.HomeSetCount == null || frenoyIndividual.AwaySetCount == null)
+                {
+                    // Some sort of WO?
+                    // Position + Home or AwayPlayerMatchIndex is filled in but all the rest is null?
+                    return;
+                }
+
                 matchResult.HomePlayerSets = int.Parse(frenoyIndividual.HomeSetCount);
                 matchResult.AwayPlayerSets = int.Parse(frenoyIndividual.AwaySetCount);
             }
