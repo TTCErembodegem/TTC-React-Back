@@ -290,6 +290,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ExcelHelper.cs" />
     <Compile Include="Utilities\KlassementValueConverter.cs" />
+    <Compile Include="Utilities\MatchExcelCreator.cs" />
     <Compile Include="Utilities\PlayersExcelCreator.cs" />
     <Compile Include="Utilities\ExcelExportResources.Designer.cs">
       <AutoGen>True</AutoGen>

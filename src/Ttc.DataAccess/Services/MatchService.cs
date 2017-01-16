@@ -344,5 +344,16 @@ namespace Ttc.DataAccess.Services
         }
         #endregion
         #endregion
+
+        public byte[] GetExcelExport(int matchId)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var activePlayers = dbContext.Players.Where(x => x.Gestopt == null);
+                var match = GetMatch(dbContext, matchId);
+                var exceller = new MatchExcelCreator(match, activePlayers.ToArray());
+                return exceller.Create();
+            }
+        }
     }
 }

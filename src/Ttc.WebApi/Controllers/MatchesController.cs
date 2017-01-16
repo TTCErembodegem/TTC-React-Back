@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Web.Http;
@@ -151,6 +152,15 @@ namespace Ttc.WebApi.Controllers
             return result;
         }
         #endregion
+
+
+        [HttpGet]
+        [Route("ExcelScoresheet")]
+        public string GetExcelExport([FromUri] int matchId)
+        {
+            var excel = _service.GetExcelExport(matchId);
+            return Convert.ToBase64String(excel);
+        }
     }
 
     public class MatchScoreDto

@@ -17,6 +17,7 @@ using Ttc.Model.Clubs;
 using Ttc.Model.Matches;
 using Ttc.Model.Players;
 using Ttc.Model.Teams;
+using Ttc.WebApi;
 
 namespace Ttc.UnitTests
 {
@@ -26,12 +27,15 @@ namespace Ttc.UnitTests
         [Test]
         public void PlayerExcelExport()
         {
+            //IoCInitializer.Initialize();
+            AutoMapperConfig.Configure(new KlassementValueConverter());
+
             //var players = new PlayerService();
             //players.GetExcelExport();
 
 
-            var service = new TeamService();
-            var package = service.GetExcelExport();
+            var service = new MatchService();
+            var package = service.GetExcelExport(1246);
 
             File.WriteAllBytes(@"c:\temp\ttc-excels\testy-" + DateTime.Now.ToString("yyyy-M-d HH.mm.ss") + ".xlsx", package);
         }
