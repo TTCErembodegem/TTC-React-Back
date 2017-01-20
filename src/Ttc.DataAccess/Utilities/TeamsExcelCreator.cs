@@ -149,6 +149,12 @@ namespace Ttc.DataAccess.Utilities
 
                 foreach (var match in matches.Where(x => x.FrenoyDivisionId == team.FrenoyDivisionId).OrderBy(x => x.Date))
                 {
+                    if (match.AwayClubId == 0 || match.HomeClubId == 0)
+                    {
+                        // 'vrije' week
+                        continue;
+                    }
+
                     var teamMatch = new TeamMatchExcelModel(match, clubs);
                     foreach (var matchPlayer in match.Players.Where(x => x.Status != PlayerMatchStatus.Captain && x.Status != PlayerMatchStatus.Major))
                     {

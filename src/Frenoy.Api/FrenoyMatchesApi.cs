@@ -349,6 +349,12 @@ namespace Frenoy.Api
         {
             foreach (var frenoyVerslagSpeler in players)
             {
+                if (string.IsNullOrWhiteSpace(frenoyVerslagSpeler.UniqueIndex))
+                {
+                    // Even more forfeited stuff
+                    continue;
+                }
+
                 MatchPlayerEntity matchPlayerEntity = new MatchPlayerEntity
                 {
                     MatchId = match.Id,
