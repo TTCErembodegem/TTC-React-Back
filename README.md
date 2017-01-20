@@ -1,5 +1,7 @@
 # TTC-React-Back
 
+- ploegopstelling > opstelling > je kan gepasseerde matchen ook wijzigen!!!!
+
 WebApi 2 Backend.  
 
 TODO list at: https://github.com/TTCErembodegem/TTC-React-Front/issues
