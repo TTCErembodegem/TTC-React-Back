@@ -8,7 +8,7 @@
         public string BestStroke { get; set; }
         #endregion
 
-        #region Constructor
+        #region Constructors
         public PlayerStyle()
         {
             

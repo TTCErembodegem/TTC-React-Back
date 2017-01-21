@@ -6,6 +6,7 @@ namespace Ttc.Model.Players
 {
     public class Player
     {
+        #region Properties
         public int Id { get; set; }
         public string Name { get; set; }
         public string Alias { get; set; }
@@ -22,6 +23,7 @@ namespace Ttc.Model.Players
 
         public PlayerCompetition Vttl { get; set; }
         public PlayerCompetition Sporta { get; set; }
+        #endregion
 
         public override string ToString() => $"Id={Id}, Alias={Alias}, Active={Active}";
 

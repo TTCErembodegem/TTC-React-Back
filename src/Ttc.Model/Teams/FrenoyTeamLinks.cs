@@ -5,6 +5,7 @@
     /// </summary>
     public class FrenoyTeamLinks
     {
+        #region Properties
         /// <summary>
         /// Frenoy's unique division identifier
         /// </summary>
@@ -21,6 +22,7 @@
         /// ex: 2337-4 = DivisionId-SomeNumber(?)
         /// </summary>
         public string TeamId { get; set; }
+        #endregion
 
         public override string ToString() => $"DivisionId={DivisionId}, LinkId={LinkId}, TeamId={TeamId}";
     }

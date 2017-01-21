@@ -16,7 +16,7 @@ namespace Ttc.Model.Players
         public string City { get; set; }
         #endregion
 
-        #region Constructor
+        #region Constructors
         public PlayerContact()
         {
 

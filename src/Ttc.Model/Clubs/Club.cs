@@ -4,6 +4,7 @@ namespace Ttc.Model.Clubs
 {
     public class Club
     {
+        #region Properties
         public int Id { get; set; }
         public string Name { get; set; }
         public string CodeVttl { get; set; }
@@ -19,6 +20,7 @@ namespace Ttc.Model.Clubs
         /// Voorzitter, secretaris, ...
         /// </summary>
         public ICollection<ClubManager> Managers { get; set; }
+        #endregion
 
         public override string ToString() => $"Id={Id}, Name={Name}, Vttl={CodeVttl}, Sporta={CodeSporta}, Active={Active}";
     }
