@@ -2,6 +2,7 @@
 {
     public class MatchPlayer
     {
+        #region Properties
         public int Id { get; set; }
         public int MatchId { get; set; }
         public string Status { get; set; }
@@ -19,6 +20,7 @@
         public bool Home { get; set; }
         public int PlayerId { get; set; }
         public string Alias { get; set; }
+        #endregion
 
         public override string ToString() =>  $"MatchId={MatchId}, Ply={Position} {Name} ({Ranking}), Won={Won}, Status={Status}";
     }

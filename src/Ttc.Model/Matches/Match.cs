@@ -11,6 +11,7 @@ namespace Ttc.Model.Matches
     /// </summary>
     public class OtherMatch
     {
+        #region Properties
         public int Id { get; set; }
         public DateTime Date { get; set; }
         public string FrenoyMatchId { get; set; }
@@ -27,6 +28,7 @@ namespace Ttc.Model.Matches
         public bool IsPlayed { get; set; }
         public ICollection<MatchPlayer> Players { get; set; }
         public ICollection<MatchGame> Games { get; set; }
+        #endregion
 
         public override string ToString() => $"Id: {Id}, Date: {Date}, FrenoyMatchId: {FrenoyMatchId}, IsSyncedWithFrenoy: {IsSyncedWithFrenoy}, Home: {Home}, Away: {Away}, Score: {Score}";
     }
@@ -69,6 +71,7 @@ namespace Ttc.Model.Matches
         public ICollection<MatchComment> Comments { get; set; }
         #endregion
 
+        #region Constructors
         public Match()
         {
             Players = new List<MatchPlayer>();
@@ -82,6 +85,7 @@ namespace Ttc.Model.Matches
         {
             ReportPlayerId = playerId;
         }
+        #endregion
 
         public override string ToString() => $"Id={Id} on {Date.ToString("g")}, Home={IsHomeMatch}, TeamId={TeamId}, Opponent=({Opponent})";
     }

@@ -7,8 +7,10 @@ namespace Ttc.Model.Teams
     /// </summary>
     public class TeamPlayer
     {
+        #region Properties
         public int PlayerId { get; set; }
         public TeamPlayerType Type { get; set; }
+        #endregion
 
         public override string ToString() => $"PlayerId={PlayerId}, Type={Type}";
     }

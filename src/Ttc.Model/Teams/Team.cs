@@ -8,6 +8,7 @@ namespace Ttc.Model.Teams
     /// </summary>
     public class Team
     {
+        #region Properties
         public int Id { get; set; }
 
         /// <summary>
@@ -19,11 +20,6 @@ namespace Ttc.Model.Teams
 
         // TODO: Opponents can be replaced with the Ranking
         public ICollection<OpposingTeam> Opponents { get; set; }
-
-        public Team()
-        {
-            Ranking = new List<DivisionRanking>();
-        }
 
         /// <summary>
         /// Vttl or Sporta
@@ -43,6 +39,14 @@ namespace Ttc.Model.Teams
         public FrenoyTeamLinks Frenoy { get; set; }
 
         public ICollection<DivisionRanking> Ranking { get; set; }
+        #endregion
+
+        #region Constructor
+        public Team()
+        {
+            Ranking = new List<DivisionRanking>();
+        }
+        #endregion
 
         public override string ToString() => $"{Competition} {Year} {TeamCode}: {DivisionName}";
     }
