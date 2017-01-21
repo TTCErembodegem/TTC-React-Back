@@ -23,9 +23,6 @@ namespace Ttc.DataEntities
             PlayerId = playerId;
         }
 
-        public override string ToString()
-        {
-            return $"{nameof(Guid)}: {Guid}, {nameof(ExpiresOn)}: {ExpiresOn}, {nameof(PlayerId)}: {PlayerId}";
-        }
+        public override string ToString() => $"{nameof(Guid)}: {Guid}, {nameof(ExpiresOn)}: {ExpiresOn}, {nameof(PlayerId)}: {PlayerId}";
     }
 }
