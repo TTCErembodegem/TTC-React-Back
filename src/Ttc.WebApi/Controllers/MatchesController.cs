@@ -186,9 +186,6 @@ namespace Ttc.WebApi.Controllers
         public int[] PlayerIds { get; set; }
         public string Comment { get; set; }
 
-        public override string ToString()
-        {
-            return $"MatchId={MatchId}, Block={BlockAlso}, Status={NewStatus}, Players={string.Join(",", PlayerIds)}";
-        }
+        public override string ToString() => $"MatchId={MatchId}, Block={BlockAlso}, Status={NewStatus}, Players={string.Join(",", PlayerIds)}";
     }
 }
