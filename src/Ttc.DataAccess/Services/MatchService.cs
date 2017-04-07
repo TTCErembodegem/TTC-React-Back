@@ -43,11 +43,13 @@ namespace Ttc.DataAccess.Services
                 }
 
                 var result = Mapper.Map<IList<MatchEntity>, IList<Match>>(matchEntities);
-                if (result.Any(m => m.ScoreType == MatchOutcome.BeingPlayed))
-                {
-                    _matches = result;
-                    MatchesPlaying = true;
-                }
+                //if (result.Any(m => m.ScoreType == MatchOutcome.BeingPlayed))
+                //{
+                //    _matches = result;
+                      // BUG: Cached matches have sensitive information permanently removed after the first non-logged in user fetches...
+                      // -> Just do it correctly with SignalR groups...
+                //    MatchesPlaying = true;
+                //}
                 return result;
             }
         }
