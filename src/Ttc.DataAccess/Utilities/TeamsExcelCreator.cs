@@ -59,6 +59,7 @@ namespace Ttc.DataAccess.Utilities
                                 sheet.Cells[rowIndex, cellColumn].StyleName = "Center";
                                 // Doesn't work on LibreOffice, therefor workaround with StyleName="Center"
                                 //sheet.Cells[rowIndex, cellColumn].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                                //http://stackoverflow.com/questions/34660560/epplus-isnt-honoring-excelhorizontalalignment-center-or-right
                             }
 
                             string blockName = match.Match.Block == PlayerMatchStatus.Major ? ExcelExportResources.MatchBlockAdminName : ExcelExportResources.MatchBlockCaptainName;

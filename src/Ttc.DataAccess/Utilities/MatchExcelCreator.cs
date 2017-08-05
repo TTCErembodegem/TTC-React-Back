@@ -10,6 +10,9 @@ using Ttc.Model.Matches;
 
 namespace Ttc.DataAccess.Utilities
 {
+    /// <summary>
+    /// TODO: Not in use? Delete?
+    /// </summary>
     internal class MatchExcelCreator
     {
         private readonly ICollection<PlayerEntity> _players;
