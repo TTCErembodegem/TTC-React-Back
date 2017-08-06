@@ -46,9 +46,14 @@ namespace Frenoy.Api
 
             foreach (MemberEntryType frenoyPlayer in frenoyPlayers.MemberEntries)
             {
+                string frenoyPlayerName = (frenoyPlayer.LastName + " " + frenoyPlayer.FirstName).ToUpperInvariant();
+                string frenoyPlayerName2 = (frenoyPlayer.FirstName + " " + frenoyPlayer.LastName).ToUpperInvariant();
+                var existingPlayer = _db.Players.SingleOrDefault(ply => ply.Naam.ToUpper() == frenoyPlayerName || ply.Naam.ToUpper() == frenoyPlayerName2);
                 if (_isVttl)
                 {
-                    var existingPlayer = _db.Players.SingleOrDefault(ply => ply.ComputerNummerVttl.HasValue && ply.ComputerNummerVttl.Value.ToString() == frenoyPlayer.UniqueIndex);
+                    if (existingPlayer == null)
+                        existingPlayer = _db.Players.SingleOrDefault(ply => ply.ComputerNummerVttl.HasValue && ply.ComputerNummerVttl.Value.ToString() == frenoyPlayer.UniqueIndex);
+
                     if (existingPlayer != null)
                     {
                         SetVttl(existingPlayer, frenoyPlayer);
@@ -66,7 +71,9 @@ namespace Frenoy.Api
                 }
                 else
                 {
-                    var existingPlayer = _db.Players.SingleOrDefault(ply => ply.LidNummerSporta.HasValue && ply.LidNummerSporta.Value.ToString() == frenoyPlayer.UniqueIndex);
+                    if (existingPlayer == null)
+                        existingPlayer = _db.Players.SingleOrDefault(ply => ply.LidNummerSporta.HasValue && ply.LidNummerSporta.Value.ToString() == frenoyPlayer.UniqueIndex);
+
                     if (existingPlayer != null)
                     {
                         SetSporta(existingPlayer, frenoyPlayer);

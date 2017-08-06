@@ -17,7 +17,7 @@ namespace Ttc.DataEntities
         #region Competition
         public const string Sporta = "Sporta";
         public const string Vttl = "Vttl";
-        public const int CurrentSeason = 2016;
+        public const int CurrentSeason = 2017;
         public const int FrenoySeason = CurrentSeason - 2000 + 1;
         public const string FrenoyTeamCategory = "1"; // 2=The ladies, 3=Veteranen, 13=Jeugd
 
