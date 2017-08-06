@@ -29,6 +29,13 @@ namespace Ttc.DataEntities
 
         [Key]
         public int Id { get; set; }
+
+        // TODO: Split Name sometime... (also on frontend admin section)
+        //public string Voornaam { get; set; }
+        //public string Achternaam { get; set; }
+        //[NotMapped]
+        //public string Naam => $"{Voornaam} {Achternaam}";
+
         public string Naam { get; set; }
         public string NaamKort { get; set; }
         public PlayerToegang Toegang { get; set; }

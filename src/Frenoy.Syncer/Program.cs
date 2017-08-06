@@ -17,21 +17,23 @@ namespace Frenoy.Syncer
             {
                 try
                 {
+                    // This code can be triggered from the UI!
                     //var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
-                    //vttlPlayers.StopAllPlayers();
+                    //vttlPlayers.StopAllPlayers(true);
                     //vttlPlayers.SyncPlayers();
                     //var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
                     //sportaPlayers.SyncPlayers();
-
-
-                    //Configuration.Seed(context, false);
 
                     //var vttl = new FrenoyMatchesApi(context, Competition.Vttl);
                     //vttl.SyncTeamsAndMatches();
                     //var sporta = new FrenoyMatchesApi(context, Competition.Sporta);
                     //sporta.SyncTeamsAndMatches();
 
-                    ChangeMatchDates(context);
+                    //RandomizeMatchDatesForTestingPurposes(context);
+
+
+
+                    //Configuration.Seed(context, false);
 
                     context.SaveChanges();
                 }
@@ -48,7 +50,7 @@ namespace Frenoy.Syncer
         /// If there is no real life data between seasons,
         /// change some match dates to around now for testing purposes
         /// </summary>
-        private static void ChangeMatchDates(TtcDbContext context)
+        private static void RandomizeMatchDatesForTestingPurposes(TtcDbContext context)
         {
             bool endOfSeason = !context.Matches.Any(match => match.Date > DateTime.Now);
             if (true || endOfSeason)

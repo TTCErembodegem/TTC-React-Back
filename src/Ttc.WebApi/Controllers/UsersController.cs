@@ -79,6 +79,8 @@ namespace Ttc.WebApi.Controllers
         {
             string playerEmail = _service.SetNewPassword(request);
 
+            throw new NotImplementedException("Code commented out...");
+
             // TODO: Send email when Admin resets someones password?
             //var emailConfig = _configService.GetEmailConfig();
             //var emailer = new PasswordChangedEmailer(emailConfig);
