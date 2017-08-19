@@ -44,6 +44,7 @@ namespace Ttc.Model.Matches
         public int Week { get; set; }
         public string Competition { get; set; }
         public int FrenoyDivisionId { get; set; }
+        [TtcConfidential]
         public string Block { get; set; }
 
         public int TeamId { get; set; }
@@ -87,6 +88,6 @@ namespace Ttc.Model.Matches
         }
         #endregion
 
-        public override string ToString() => $"Id={Id} on {Date.ToString("g")}, Home={IsHomeMatch}, TeamId={TeamId}, Opponent=({Opponent})";
+        public override string ToString() => $"Id={Id} on {Date:g}, Home={IsHomeMatch}, TeamId={TeamId}, Opponent=({Opponent})";
     }
 }
