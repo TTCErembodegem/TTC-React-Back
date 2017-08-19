@@ -198,12 +198,12 @@ namespace Ttc.DataAccess.Services
         }
 
         #region Login & Password
+        private const int SystemPlayerIdFromFrontend = -1;
         public User Login(UserCredentials user)
         {
             using (var dbContext = new TtcDbContext())
             {
-                const int systemPlayerIdFromFrontend = -1;
-                if (user.PlayerId == systemPlayerIdFromFrontend)
+                if (user.PlayerId == SystemPlayerIdFromFrontend)
                 {
                     user.PlayerId = dbContext.Players.Single(ply => ply.NaamKort == "SYSTEM").Id;
                 }
@@ -251,12 +251,21 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
-                var player = dbContext.Players.SingleOrDefault(x => x.Id == request.PlayerId);
+                PlayerEntity player;
+                if (request.PlayerId == SystemPlayerIdFromFrontend)
+                {
+                    player = dbContext.Players.Single(ply => ply.NaamKort == "SYSTEM");
+                }
+                else
+                {
+                    player = dbContext.Players.SingleOrDefault(x => x.Id == request.PlayerId);
+                }
+                
                 if (player != null)
                 {
                     dbContext.Database.ExecuteSqlCommand(
                         $"UPDATE {PlayerEntity.TableName} SET paswoord=MD5({{1}}) WHERE id={{0}}",
-                        request.PlayerId,
+                        player.Id,
                         request.NewPassword);
 
                     return player.Email;
