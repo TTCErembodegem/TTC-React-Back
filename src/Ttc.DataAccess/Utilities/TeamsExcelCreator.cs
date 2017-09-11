@@ -47,6 +47,10 @@ namespace Ttc.DataAccess.Utilities
                         sheet.Cells[rowIndex, 2].Value = DateTimeFormatInfo.CurrentInfo.GetDayName(match.Match.Date.DayOfWeek);
                         sheet.Cells[rowIndex, 3].Value = match.Match.Date.ToString("dd/MM/yyyy");
                         sheet.Cells[rowIndex, 4].Value = match.Match.Date.ToString("HH:mm");
+                        if (match.Match.Date.Hour != Constants.DefaultStartHour || match.Match.Date.Minute != 0)
+                        {
+                            sheet.Cells[rowIndex, 4].Style.Font.Bold = true;
+                        }
                         sheet.Cells[rowIndex, 5].Value = match.Home;
                         sheet.Cells[rowIndex, 6].Value = match.Out;
 

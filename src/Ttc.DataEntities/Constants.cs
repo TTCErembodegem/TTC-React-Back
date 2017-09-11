@@ -19,6 +19,7 @@ namespace Ttc.DataEntities
         public const string Vttl = "Vttl";
         public const int CurrentSeason = 2017;
         public const int FrenoySeason = CurrentSeason - 2000 + 1;
+        public const int DefaultStartHour = 20;
         public const string FrenoyTeamCategory = "1"; // 2=The ladies, 3=Veteranen, 13=Jeugd
 
         private static bool IsVttl(string value) => string.Equals(value.Trim(), Vttl, StringComparison.InvariantCultureIgnoreCase);
