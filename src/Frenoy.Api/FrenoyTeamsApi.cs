@@ -32,7 +32,8 @@ namespace Frenoy.Api
                         GamesLost = int.Parse(x.GamesLost),
                         Points = int.Parse(x.Points),
                         ClubId = GetClubId(x.TeamClub),
-                        TeamCode = ExtractTeamCodeFromFrenoyName(x.Team)
+                        TeamCode = ExtractTeamCodeFromFrenoyName(x.Team),
+                        IsForfait = ExtractIsForfaitFromFrenoyName(x.Team),
                     }).ToArray();
             }
             catch

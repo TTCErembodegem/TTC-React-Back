@@ -67,10 +67,15 @@ namespace Frenoy.Api
             var regMatch = ClubHasTeamCodeRegex.Match(team);
             if (regMatch.Success)
             {
-                return regMatch.Groups[0].Value;
+                return regMatch.Groups[1].Value;
             }
             Debug.Assert(false, "This code path is never been tested");
             return null;
+        }
+
+        protected static bool ExtractIsForfaitFromFrenoyName(string team)
+        {
+            return team.Contains("af");
         }
 
         protected int GetClubId(string frenoyClubCode)
