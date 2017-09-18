@@ -64,6 +64,7 @@ namespace Frenoy.Api
         private static readonly Regex ClubHasTeamCodeRegex = new Regex(@"(\w)( \(af\))?$");
         protected static string ExtractTeamCodeFromFrenoyName(string team)
         {
+            // team == Sint-Niklase Tafeltennisclub D
             var regMatch = ClubHasTeamCodeRegex.Match(team);
             if (regMatch.Success)
             {
@@ -75,7 +76,8 @@ namespace Frenoy.Api
 
         protected static bool ExtractIsForfaitFromFrenoyName(string team)
         {
-            return team.Contains("af");
+            var regMatch = ClubHasTeamCodeRegex.Match(team);
+            return regMatch.Groups[2].Success;
         }
 
         protected int GetClubId(string frenoyClubCode)

@@ -1,5 +1,8 @@
 ﻿namespace Ttc.Model.Teams
 {
+    /// <summary>
+    /// This is mapped from Frenoy API call
+    /// </summary>
     public class DivisionRanking
     {
         public int Position { get; set; }
