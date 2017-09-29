@@ -142,7 +142,7 @@ namespace Frenoy.Api
             return null;
         }
 
-        public void SyncLastOpponentMatches(TeamEntity team, OpposingTeam opponent)
+        public void SyncOpponentMatches(TeamEntity team, OpposingTeam opponent)
         {
             if (ShouldAttemptOpponentMatchSync(opponent, team.Id))
             {
@@ -300,8 +300,7 @@ namespace Frenoy.Api
         private static void AddMatchGames(IndividualMatchResultEntryType frenoyIndividual, int id, MatchEntity matchEntity)
         {
             MatchGameEntity matchResult;
-            int homeUniqueIndex, awayUniqueIndex;
-            if (!int.TryParse(frenoyIndividual.HomePlayerUniqueIndex, out homeUniqueIndex) || !int.TryParse(frenoyIndividual.AwayPlayerUniqueIndex, out awayUniqueIndex))
+            if (!int.TryParse(frenoyIndividual.HomePlayerUniqueIndex, out var homeUniqueIndex) || !int.TryParse(frenoyIndividual.AwayPlayerUniqueIndex, out var awayUniqueIndex))
             {
                 // Sporta doubles match:
                 matchResult = new MatchGameEntity
@@ -401,7 +400,7 @@ namespace Frenoy.Api
         #endregion
 
         #region Cache
-        private readonly static TimeSpan FrenoyPesterExpiration = TimeSpan.FromHours(1);
+        private static readonly TimeSpan FrenoyPesterExpiration = TimeSpan.FromHours(1);
         private static readonly Dictionary<int, DateTime> FrenoyNoPesterCache = new Dictionary<int, DateTime>();
         private static readonly object FrenoyNoPesterLock = new object();
         private static bool ShouldAttemptMatchSync(int matchId)

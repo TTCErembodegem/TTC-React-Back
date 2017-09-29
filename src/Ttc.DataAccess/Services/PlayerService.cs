@@ -31,7 +31,7 @@ namespace Ttc.DataAccess.Services
                 return _players;
             }
 
-                using (var dbContext = new TtcDbContext())
+            using (var dbContext = new TtcDbContext())
             {
                 var players = dbContext.Players.ToArray();
                 var result = Mapper.Map<IList<PlayerEntity>, IList<Player>>(players);

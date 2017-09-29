@@ -68,7 +68,7 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        public ICollection<OtherMatch> GetLastOpponentMatches(int teamId, OpposingTeam opponent)
+        public ICollection<OtherMatch> GetOpponentMatches(int teamId, OpposingTeam opponent)
         {
             using (var dbContext = new TtcDbContext())
             {
@@ -78,7 +78,7 @@ namespace Ttc.DataAccess.Services
                 var firstMatch = dbContext.Matches.Where(x => x.FrenoySeason == Constants.FrenoySeason).Min(x => x.Date);
                 if (DateTime.Now > firstMatch)
                 {
-                    frenoy.SyncLastOpponentMatches(team, opponent);
+                    frenoy.SyncOpponentMatches(team, opponent);
 
                     var matchEntities = dbContext.Matches
                         .WithIncludes()

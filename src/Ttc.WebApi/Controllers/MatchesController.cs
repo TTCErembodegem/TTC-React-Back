@@ -43,9 +43,9 @@ namespace Ttc.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("GetLastOpponentMatches")]
+        [Route("GetOpponentMatches")]
         [AllowAnonymous]
-        public IEnumerable<OtherMatch> GetLastOpponentMatches(int teamId, int clubId, string teamCode)
+        public IEnumerable<OtherMatch> GetOpponentMatches(int teamId, int clubId, string teamCode)
         {
             if (clubId == 0)
             {
@@ -57,7 +57,7 @@ namespace Ttc.WebApi.Controllers
                 ClubId = clubId,
                 TeamCode = teamCode
             };
-            var result = _service.GetLastOpponentMatches(teamId, opponent);
+            var result = _service.GetOpponentMatches(teamId, opponent);
             return result;
         }
         #endregion

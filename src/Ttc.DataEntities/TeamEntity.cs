@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Ttc.Model.Players;
 
 namespace Ttc.DataEntities
 {
@@ -24,6 +25,11 @@ namespace Ttc.DataEntities
         [MaxLength(10)]
         public string FrenoyTeamId { get; set; }
         public int FrenoyDivisionId { get; set; }
+
+        public Competition GetCompetition()
+        {
+            return Constants.NormalizeCompetition(Competition);
+        }
 
         //public ICollection<MatchEntity> Matches { get; set; }
         public ICollection<TeamPlayerEntity> Players { get; set; }

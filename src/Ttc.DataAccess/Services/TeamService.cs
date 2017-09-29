@@ -62,7 +62,7 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        private ICollection<DivisionRanking> GetFrenoyRanking(TtcDbContext dbContext, Competition competition, int divisionId)
+        private static ICollection<DivisionRanking> GetFrenoyRanking(TtcDbContext dbContext, Competition competition, int divisionId)
         {
             var key = new TeamRankingKey(competition, divisionId);
             if (RankingCache.ContainsKey(key))
