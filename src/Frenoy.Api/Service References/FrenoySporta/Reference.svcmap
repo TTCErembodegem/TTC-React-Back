@@ -19,10 +19,10 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://tafeltennis.sporcrea.be/api/?wsdl" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://ttonline.sporta.be/api/?wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="item.wsdl" MetadataType="Wsdl" ID="18c0a45e-bb22-4284-a6ea-f2e91aae2eed" SourceId="1" SourceUrl="http://tafeltennis.sporcrea.be/api/?wsdl" />
+    <MetadataFile FileName="item1.wsdl" MetadataType="Wsdl" ID="1c948563-a2a6-468b-bdcd-eab839854f43" SourceId="1" SourceUrl="https://ttonline.sporta.be/api/?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

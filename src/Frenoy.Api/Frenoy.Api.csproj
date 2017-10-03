@@ -154,7 +154,7 @@
     <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.UploadResponse1.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\FrenoySporta\item.wsdl" />
+    <None Include="Service References\FrenoySporta\item1.wsdl" />
     <None Include="Service References\FrenoyVttl\Frenoy.Api.FrenoyVttl.GetClubsResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
