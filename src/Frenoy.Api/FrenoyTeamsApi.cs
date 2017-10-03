@@ -14,6 +14,7 @@ namespace Frenoy.Api
 
         }
 
+        // TODO: async much?
         public ICollection<DivisionRanking> GetTeamRankings(int divisionId)
         {
             try
