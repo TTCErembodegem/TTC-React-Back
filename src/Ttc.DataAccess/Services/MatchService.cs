@@ -75,7 +75,7 @@ namespace Ttc.DataAccess.Services
                 var team = dbContext.Teams.Single(x => x.Id == teamId);
                 var frenoy = new FrenoyMatchesApi(dbContext, Constants.NormalizeCompetition(team.Competition));
 
-                var firstMatch = dbContext.Matches.Where(x => x.FrenoySeason == Constants.FrenoySeason).Min(x => x.Date);
+                var firstMatch = dbContext.Matches.Where(x => x.FrenoySeason == Constants.FrenoySeason && x.ShouldBePlayed).Min(x => x.Date);
                 if (DateTime.Now > firstMatch)
                 {
                     frenoy.SyncOpponentMatches(team, opponent);
@@ -93,6 +93,9 @@ namespace Ttc.DataAccess.Services
                 }
                 else
                 {
+                    // TODO: Bug PreSeason code: This doesn't work! These results are NOT displayed in the MatchCard, the spinner just keeps on spinnin'
+                    // 
+
                     // Pre season: Fetch last year matches instead
                     int? divisionId = frenoy.SyncLastYearOpponentMatches(team, opponent);
                     if (divisionId.HasValue)
