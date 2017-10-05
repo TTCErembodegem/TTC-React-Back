@@ -15,6 +15,8 @@ namespace Ttc.Model.Players
 
         [TtcConfidential]
         public string Security { get; set; }
+        [TtcConfidential]
+        public bool HasKey { get; set; }
 
         public PlayerStyle Style { get; set; }
 

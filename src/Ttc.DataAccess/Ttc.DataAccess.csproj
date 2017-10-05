@@ -278,6 +278,10 @@
     <Compile Include="Migrations\201612241625590_MatchShouldBePlayed.Designer.cs">
       <DependentUpon>201612241625590_MatchShouldBePlayed.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201710051447341_PlayerHasKey.cs" />
+    <Compile Include="Migrations\201710051447341_PlayerHasKey.Designer.cs">
+      <DependentUpon>201710051447341_PlayerHasKey.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\ServiceExtensions.cs" />
@@ -453,6 +457,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612241625590_MatchShouldBePlayed.resx">
       <DependentUpon>201612241625590_MatchShouldBePlayed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710051447341_PlayerHasKey.resx">
+      <DependentUpon>201710051447341_PlayerHasKey.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ExcelExportResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

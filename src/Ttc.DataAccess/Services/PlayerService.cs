@@ -120,6 +120,7 @@ namespace Ttc.DataAccess.Services
 
             existingSpeler.Gestopt = player.QuitYear;
             existingSpeler.Toegang = (PlayerToegang) Enum.Parse(typeof (PlayerToegang), player.Security);
+            existingSpeler.HasKey = player.HasKey;
 
             existingSpeler.Naam = player.Name;
             existingSpeler.NaamKort = player.Alias;

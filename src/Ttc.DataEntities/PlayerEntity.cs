@@ -42,6 +42,11 @@ namespace Ttc.DataEntities
         public string Stijl { get; set; }
         public string BesteSlag { get; set; }
 
+        /// <summary>
+        /// Has a key to enter the physical club
+        /// </summary>
+        public bool HasKey { get; set; }
+
         #region Vttl
         public int? ClubIdVttl { get; set; }
         public int? IndexVttl { get; set; }
