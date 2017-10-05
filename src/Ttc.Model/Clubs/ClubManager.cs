@@ -7,7 +7,9 @@ namespace Ttc.Model.Clubs
         Default,
         Chairman,
         Secretary,
-        Treasurer
+        Treasurer,
+        Vttl,
+        Sporta,
     }
 
     /// <summary>
