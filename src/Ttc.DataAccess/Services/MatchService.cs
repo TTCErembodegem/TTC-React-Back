@@ -161,6 +161,11 @@ namespace Ttc.DataAccess.Services
                     .WithIncludes()
                     .Single(x => x.Id == matchId);
 
+                if (match.IsSyncedWithFrenoy)
+                {
+                    return GetMatch(dbContext, match.Id);
+                }
+
                 match.AwayScore = score.Out;
                 match.HomeScore = score.Home;
                 dbContext.SaveChanges();
@@ -204,6 +209,11 @@ namespace Ttc.DataAccess.Services
             using (var dbContext = new TtcDbContext())
             {
                 var match = dbContext.Matches.Find(matchPlayer.MatchId);
+                if (match == null || match.IsSyncedWithFrenoy)
+                {
+                    return GetMatch(matchPlayer.MatchId);
+                }
+
                 var existingPlayer = dbContext.MatchPlayers
                     .Where(x => x.MatchId == matchPlayer.MatchId && x.PlayerId == matchPlayer.PlayerId)
                     .FirstOrDefault(x => x.Status == matchPlayer.Status);
