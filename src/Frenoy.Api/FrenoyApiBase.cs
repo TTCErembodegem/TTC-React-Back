@@ -32,11 +32,13 @@ namespace Frenoy.Api
         protected readonly bool _isVttl;
         protected readonly ITtcDbContext _db;
         protected readonly int _thuisClubId;
+        protected readonly bool _forceSync;
         #endregion
 
         #region Constructor
-        public FrenoyApiBase(ITtcDbContext ttcDbContext, Competition comp)
+        public FrenoyApiBase(ITtcDbContext ttcDbContext, Competition comp, bool forceSync = false)
         {
+            _forceSync = forceSync;
             _db = ttcDbContext;
 
             bool isVttl = comp == Competition.Vttl;

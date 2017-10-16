@@ -22,8 +22,8 @@ namespace Frenoy.Api
     public class FrenoyMatchesApi : FrenoyApiBase
     {
         #region Constructor
-        public FrenoyMatchesApi(ITtcDbContext ttcDbContext, Competition comp)
-            : base(ttcDbContext, comp)
+        public FrenoyMatchesApi(ITtcDbContext ttcDbContext, Competition comp, bool forceSync = false)
+            : base(ttcDbContext, comp, forceSync)
         {
             
         }
@@ -93,7 +93,7 @@ namespace Frenoy.Api
 
         public void SyncMatchDetails(MatchEntity matchEntity)
         {
-            if (ShouldAttemptMatchSync(matchEntity.Id))
+            if (_forceSync || ShouldAttemptMatchSync(matchEntity.Id))
             {
                 GetMatchesResponse matches = _frenoy.GetMatches(new GetMatchesRequest
                 {
@@ -227,7 +227,7 @@ namespace Frenoy.Api
 
         private void SyncMatchDetails(MatchEntity matchEntity, TeamMatchEntryType frenoyMatch)
         {
-            if (!matchEntity.IsSyncedWithFrenoy && matchEntity.ShouldBePlayed)
+            if ((_forceSync || !matchEntity.IsSyncedWithFrenoy) && matchEntity.ShouldBePlayed)
             {
                 if (frenoyMatch.Score != null)
                 {

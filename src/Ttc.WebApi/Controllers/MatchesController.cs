@@ -68,9 +68,9 @@ namespace Ttc.WebApi.Controllers
         [HttpPost]
         [Route("FrenoyMatchSync")]
         [AllowAnonymous]
-        public Match FrenoyMatchSync([FromBody]IdDto matchId)
+        public Match FrenoyMatchSync([FromBody]IdDto matchId, [FromUri]bool forceSync)
         {
-            var result = _service.FrenoyMatchSync(matchId.Id);
+            var result = _service.FrenoyMatchSync(matchId.Id, forceSync);
             CleanSensitiveData(result);
             return result;
         }

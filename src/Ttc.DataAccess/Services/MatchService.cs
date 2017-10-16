@@ -319,7 +319,7 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
-                FrenoyMatchSyncCore(dbContext, matchId);
+                FrenoyMatchSyncCore(dbContext, matchId, false);
                 var match = dbContext.Matches
                     .WithIncludes()
                     .Single(x => x.Id == matchId);
@@ -327,11 +327,11 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        public Match FrenoyMatchSync(int matchId)
+        public Match FrenoyMatchSync(int matchId, bool forceSync)
         {
             using (var dbContext = new TtcDbContext())
             {
-                FrenoyMatchSyncCore(dbContext, matchId);
+                FrenoyMatchSyncCore(dbContext, matchId, forceSync);
                 return GetMatch(dbContext, matchId);
             }
         }
@@ -346,15 +346,15 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        private static void FrenoyMatchSyncCore(TtcDbContext dbContext, int matchId)
+        private static void FrenoyMatchSyncCore(TtcDbContext dbContext, int matchId, bool forceSync)
         {
             var match = dbContext.Matches
-                    .WithIncludes()
-                    .Single(x => x.Id == matchId);
+                .WithIncludes()
+                .Single(x => x.Id == matchId);
 
-            if (match.Date < DateTime.Now && !match.IsSyncedWithFrenoy)
+            if (forceSync || (match.Date < DateTime.Now && !match.IsSyncedWithFrenoy))
             {
-                var frenoySync = new FrenoyMatchesApi(dbContext, match.Competition);
+                var frenoySync = new FrenoyMatchesApi(dbContext, match.Competition, forceSync);
                 frenoySync.SyncMatchDetails(match);
             }
         }
