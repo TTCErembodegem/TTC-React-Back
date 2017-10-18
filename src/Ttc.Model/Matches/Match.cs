@@ -6,10 +6,15 @@ using Ttc.Model.Teams;
 
 namespace Ttc.Model.Matches
 {
+    public interface IMatch
+    {
+        bool ShouldHide();
+    }
+
     /// <summary>
     /// Non-TTC Erembodegem match
     /// </summary>
-    public class OtherMatch
+    public class OtherMatch : IMatch
     {
         #region Properties
         public int Id { get; set; }
@@ -27,14 +32,21 @@ namespace Ttc.Model.Matches
         public MatchScore Score { get; set; }
         public MatchOutcome ScoreType { get; set; }
         public bool IsPlayed { get; set; }
+        [TtcConfidential("MATCH")]
         public ICollection<MatchPlayer> Players { get; set; }
         public ICollection<MatchGame> Games { get; set; }
         #endregion
 
+        public bool ShouldHide()
+        {
+            // Duplicated below
+            return IsPlayed || IsSyncedWithFrenoy || Helpers.HasMatchStarted(Date);
+        }
+
         public override string ToString() => $"Id: {Id}, Date: {Date}, FrenoyMatchId: {FrenoyMatchId}, IsSyncedWithFrenoy: {IsSyncedWithFrenoy}, Home: {Home}, Away: {Away}, Score: {Score}";
     }
 
-    public class Match
+    public class Match : IMatch
     {
         #region Kalender Properties
         public int Id { get; set; }
@@ -88,6 +100,12 @@ namespace Ttc.Model.Matches
             ReportPlayerId = playerId;
         }
         #endregion
+
+        public bool ShouldHide()
+        {
+            // Duplicated above
+            return IsPlayed || IsSyncedWithFrenoy || Helpers.HasMatchStarted(Date);
+        }
 
         public override string ToString() => $"Id={Id} on {Date:g}, Home={IsHomeMatch}, TeamId={TeamId}, Opponent=({Opponent})";
     }

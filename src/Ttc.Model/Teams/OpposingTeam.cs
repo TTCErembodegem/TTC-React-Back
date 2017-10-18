@@ -11,6 +11,23 @@
         public int ClubId { get; set; }
         #endregion
 
+        public OpposingTeam(int clubId, string teamCode)
+        {
+            TeamCode = teamCode;
+            ClubId = clubId;
+        }
+
+        public OpposingTeam()
+        {
+            
+        }
+
+        public static OpposingTeam Create(int? clubId, string teamCode)
+        {
+            if (!clubId.HasValue) return null;
+            return new OpposingTeam(clubId.Value, teamCode);
+        }
+
         public override string ToString() => $"ClubId={ClubId}, Team={TeamCode}";
     }
 }

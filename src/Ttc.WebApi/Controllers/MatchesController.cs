@@ -45,19 +45,11 @@ namespace Ttc.WebApi.Controllers
         [HttpGet]
         [Route("GetOpponentMatches")]
         [AllowAnonymous]
-        public IEnumerable<OtherMatch> GetOpponentMatches(int teamId, int clubId, string teamCode)
+        public IEnumerable<OtherMatch> GetOpponentMatches(int teamId/*, int? clubId = null, string teamCode = null*/)
         {
-            if (clubId == 0)
-            {
-                return null;
-            }
-
-            var opponent = new OpposingTeam
-            {
-                ClubId = clubId,
-                TeamCode = teamCode
-            };
-            var result = _service.GetOpponentMatches(teamId, opponent);
+            //var opponent = OpposingTeam.Create(clubId, teamCode);
+            var result = _service.GetOpponentMatches(teamId);
+            CleanSensitiveData(result);
             return result;
         }
         #endregion

@@ -32,12 +32,8 @@ namespace Ttc.Model.Core
     {
         public bool ShouldHide(object data)
         {
-            var match = (Match)data;
-            if (match.IsPlayed || match.IsSyncedWithFrenoy || Helpers.HasMatchStarted(match.Date))
-            {
-                return false;
-            }
-            return true;
+            var match = data as IMatch;
+            return match?.ShouldHide() ?? true;
         }
     }
 
