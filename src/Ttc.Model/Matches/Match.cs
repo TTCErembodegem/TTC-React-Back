@@ -40,7 +40,7 @@ namespace Ttc.Model.Matches
         public bool ShouldHide()
         {
             // Duplicated below
-            return IsPlayed || IsSyncedWithFrenoy || Helpers.HasMatchStarted(Date);
+            return !(IsPlayed || IsSyncedWithFrenoy || Helpers.HasMatchStarted(Date));
         }
 
         public override string ToString() => $"Id: {Id}, Date: {Date}, FrenoyMatchId: {FrenoyMatchId}, IsSyncedWithFrenoy: {IsSyncedWithFrenoy}, Home: {Home}, Away: {Away}, Score: {Score}";
@@ -104,7 +104,7 @@ namespace Ttc.Model.Matches
         public bool ShouldHide()
         {
             // Duplicated above
-            return IsPlayed || IsSyncedWithFrenoy || Helpers.HasMatchStarted(Date);
+            return !(IsPlayed || IsSyncedWithFrenoy || Helpers.HasMatchStarted(Date));
         }
 
         public override string ToString() => $"Id={Id} on {Date:g}, Home={IsHomeMatch}, TeamId={TeamId}, Opponent=({Opponent})";
