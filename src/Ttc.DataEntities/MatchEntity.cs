@@ -27,6 +27,7 @@ namespace Ttc.DataEntities
         [MaxLength(200)]
         public string Block { get; set; }
 
+        //[Index]
         public int FrenoyDivisionId { get; set; }
         /// <summary>
         /// 2015-2016 = 16
