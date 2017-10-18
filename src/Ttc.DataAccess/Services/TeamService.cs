@@ -171,8 +171,8 @@ namespace Ttc.DataAccess.Services
                     .ToArray();
 
                 var matches = dbContext.Matches
-                    .Include(x => x.HomeTeam)
-                    .Include(x => x.AwayTeam)
+                    //.Include(x => x.HomeTeam)
+                    //.Include(x => x.AwayTeam)
                     .Include(x => x.Players)
                     .Where(x => x.HomeClubId == Constants.OwnClubId || x.AwayClubId == Constants.OwnClubId)
                     .Where(x => x.FrenoySeason == Constants.FrenoySeason)
