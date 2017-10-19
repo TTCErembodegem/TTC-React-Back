@@ -9,6 +9,7 @@ namespace Ttc.Model.Matches
     public interface IMatch
     {
         bool ShouldHide();
+        ICollection<MatchPlayer> Players { get; set; }
     }
 
     /// <summary>

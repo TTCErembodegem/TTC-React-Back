@@ -123,7 +123,7 @@ namespace Ttc.DataAccess
 
                 .AfterMap((matchEntity, match) =>
                 {
-                    //SetMatchPlayerAliases(match);
+                    SetMatchPlayerAliases(match);
                     //ChangeMeaningOfHomePlayer(match);
                     SetIndividualMatchesOutcome(match.Games, null);
                 });
@@ -180,7 +180,7 @@ namespace Ttc.DataAccess
             return fullName.Substring(0, fullName.IndexOf(" ", StringComparison.InvariantCulture));
         }
 
-        private static void SetMatchPlayerAliases(Match match)
+        private static void SetMatchPlayerAliases(IMatch match)
         {
             foreach (var ply in match.Players)
             {
