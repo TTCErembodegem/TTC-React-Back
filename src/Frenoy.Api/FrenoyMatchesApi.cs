@@ -335,6 +335,44 @@ namespace Frenoy.Api
                 {
                     // Some sort of WO?
                     // Position + Home or AwayPlayerMatchIndex is filled in but all the rest is null?
+
+                    // TODO: Sporta doubles matches: the HomeSetCount/AwaySetCount is no longer filled in
+                    // and the match result is not saved...
+
+                    // The doubles result is still in the array of IndividualResults but has a different signature
+                    // C# just silently skips it...
+                    // uh...! https://github.com/gfrenoy/TabT-API
+
+                    //[6] => stdClass Object
+                    //  (
+                    //      [Position] => 7
+                    //      [HomePlayerMatchIndex] => Array
+                    //          (
+                    //              [0] => 1
+                    //              [1] => 2
+                    //          )
+                    //
+                    //      [HomePlayerUniqueIndex] => Array
+                    //          (
+                    //              [0] => 46671
+                    //              [1] => 47012
+                    //          )
+                    //
+                    //      [AwayPlayerMatchIndex] => Array
+                    //          (
+                    //              [0] => 2
+                    //              [1] => 3
+                    //          )
+                    //
+                    //      [AwayPlayerUniqueIndex] => Array
+                    //          (
+                    //              [0] => 8259
+                    //              [1] => 9177
+                    //          )
+                    //
+                    //      [HomeSetCount] => 0
+                    //      [AwaySetCount] => 3
+                    //  )
                     return;
                 }
 
