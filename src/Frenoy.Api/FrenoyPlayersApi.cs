@@ -46,9 +46,9 @@ namespace Frenoy.Api
 
             foreach (MemberEntryType frenoyPlayer in frenoyPlayers.MemberEntries)
             {
-                string frenoyPlayerName = (frenoyPlayer.LastName + " " + frenoyPlayer.FirstName).ToUpperInvariant();
-                string frenoyPlayerName2 = (frenoyPlayer.FirstName + " " + frenoyPlayer.LastName).ToUpperInvariant();
-                var existingPlayer = _db.Players.SingleOrDefault(ply => ply.Name.ToUpper() == frenoyPlayerName || ply.Name.ToUpper() == frenoyPlayerName2);
+                string frenoyFirstName = frenoyPlayer.FirstName.ToUpperInvariant();
+                string frenoyLastName = frenoyPlayer.LastName.ToUpperInvariant();
+                var existingPlayer = _db.Players.SingleOrDefault(ply => ply.FirstName.ToUpper() == frenoyFirstName && ply.LastName.ToUpper() == frenoyLastName);
                 if (_isVttl)
                 {
                     if (existingPlayer == null)
@@ -108,10 +108,7 @@ namespace Frenoy.Api
 
         private PlayerEntity CreatePlayerEntity(MemberEntryType frenoyPlayer)
         {
-            string name = frenoyPlayer.LastName + " " + frenoyPlayer.FirstName;
-            name = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(name.Trim().ToLowerInvariant());
-
-            var existingPlayer = _db.Players.SingleOrDefault(x => x.Name == name);
+            var existingPlayer = _db.Players.SingleOrDefault(x => x.FirstName.ToUpper() == frenoyPlayer.FirstName && x.LastName.ToUpper() == frenoyPlayer.LastName);
             if (existingPlayer != null)
             {
                 if (_isVttl)
@@ -121,9 +118,9 @@ namespace Frenoy.Api
                 return null;
             }
             var newPlayer = new PlayerEntity();
-            newPlayer.FirstName = name.Substring(0, name.IndexOf(" "));
-            newPlayer.LastName = name.Substring(name.IndexOf(" ") + 1);
-            newPlayer.NaamKort = name;
+            newPlayer.FirstName = frenoyPlayer.FirstName;
+            newPlayer.LastName = frenoyPlayer.LastName;
+            newPlayer.NaamKort = newPlayer.Name;
             newPlayer.Toegang = PlayerToegang.Player;
             newPlayer.Email = frenoyPlayer.Email;
             if (frenoyPlayer.Phone != null)
@@ -133,7 +130,6 @@ namespace Frenoy.Api
             if (frenoyPlayer.Address != null)
             {
                 newPlayer.Adres = frenoyPlayer.Address.Line1;
-                //frenoyPlayer.Address.Line1
                 newPlayer.Gemeente = frenoyPlayer.Address.ZipCode + " " + frenoyPlayer.Address.Town;
             }
             return newPlayer;
