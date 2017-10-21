@@ -54,7 +54,7 @@ namespace Ttc.DataAccess.Migrations
             context.Players.AddOrUpdate(p => p.NaamKort, new PlayerEntity
             {
                 Gestopt = 1,
-                Naam = "SYSTEM",
+                FirstName = "SYSTEM",
                 NaamKort = "SYSTEM",
                 Toegang = PlayerToegang.System
             });

@@ -282,6 +282,10 @@
     <Compile Include="Migrations\201710051447341_PlayerHasKey.Designer.cs">
       <DependentUpon>201710051447341_PlayerHasKey.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201710210003388_PlayerSplitName.cs" />
+    <Compile Include="Migrations\201710210003388_PlayerSplitName.Designer.cs">
+      <DependentUpon>201710210003388_PlayerSplitName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\ServiceExtensions.cs" />
@@ -460,6 +464,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201710051447341_PlayerHasKey.resx">
       <DependentUpon>201710051447341_PlayerHasKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710210003388_PlayerSplitName.resx">
+      <DependentUpon>201710210003388_PlayerSplitName.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ExcelExportResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

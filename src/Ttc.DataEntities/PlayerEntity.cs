@@ -30,13 +30,16 @@ namespace Ttc.DataEntities
         [Key]
         public int Id { get; set; }
 
-        // TODO: Split Name sometime... (also on frontend admin section)
-        //public string Voornaam { get; set; }
-        //public string Achternaam { get; set; }
-        //[NotMapped]
-        //public string Naam => $"{Voornaam} {Achternaam}";
+        [StringLength(100)]
+        public string FirstName { get; set; }
+        [StringLength(100)]
+        public string LastName { get; set; }
+        [NotMapped]
+        public string Name => $"{FirstName} {LastName}";
 
-        public string Naam { get; set; }
+        [Column("Naam")]
+        public string OldFullName { get; set; }
+
         public string NaamKort { get; set; }
         public PlayerToegang Toegang { get; set; }
         public string Stijl { get; set; }

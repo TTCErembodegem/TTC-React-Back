@@ -122,7 +122,8 @@ namespace Ttc.DataAccess.Services
             existingSpeler.Toegang = (PlayerToegang) Enum.Parse(typeof (PlayerToegang), player.Security);
             existingSpeler.HasKey = player.HasKey;
 
-            existingSpeler.Naam = player.Name;
+            existingSpeler.FirstName = player.FirstName;
+            existingSpeler.LastName = player.LastName;
             existingSpeler.NaamKort = player.Alias;
         }
 

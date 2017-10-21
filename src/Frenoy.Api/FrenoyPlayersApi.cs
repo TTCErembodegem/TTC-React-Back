@@ -48,7 +48,7 @@ namespace Frenoy.Api
             {
                 string frenoyPlayerName = (frenoyPlayer.LastName + " " + frenoyPlayer.FirstName).ToUpperInvariant();
                 string frenoyPlayerName2 = (frenoyPlayer.FirstName + " " + frenoyPlayer.LastName).ToUpperInvariant();
-                var existingPlayer = _db.Players.SingleOrDefault(ply => ply.Naam.ToUpper() == frenoyPlayerName || ply.Naam.ToUpper() == frenoyPlayerName2);
+                var existingPlayer = _db.Players.SingleOrDefault(ply => ply.Name.ToUpper() == frenoyPlayerName || ply.Name.ToUpper() == frenoyPlayerName2);
                 if (_isVttl)
                 {
                     if (existingPlayer == null)
@@ -111,7 +111,7 @@ namespace Frenoy.Api
             string name = frenoyPlayer.LastName + " " + frenoyPlayer.FirstName;
             name = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(name.Trim().ToLowerInvariant());
 
-            var existingPlayer = _db.Players.SingleOrDefault(x => x.Naam == name);
+            var existingPlayer = _db.Players.SingleOrDefault(x => x.Name == name);
             if (existingPlayer != null)
             {
                 if (_isVttl)
@@ -121,7 +121,8 @@ namespace Frenoy.Api
                 return null;
             }
             var newPlayer = new PlayerEntity();
-            newPlayer.Naam = name;
+            newPlayer.FirstName = name.Substring(0, name.IndexOf(" "));
+            newPlayer.LastName = name.Substring(name.IndexOf(" ") + 1);
             newPlayer.NaamKort = name;
             newPlayer.Toegang = PlayerToegang.Player;
             newPlayer.Email = frenoyPlayer.Email;

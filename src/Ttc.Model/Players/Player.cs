@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Ttc.Model.Core;
 
 namespace Ttc.Model.Players
@@ -8,7 +9,11 @@ namespace Ttc.Model.Players
     {
         #region Properties
         public int Id { get; set; }
-        public string Name { get; set; }
+        [StringLength(100)]
+        public string FirstName { get; set; }
+        [StringLength(100)]
+        public string LastName { get; set; }
+
         public string Alias { get; set; }
         public bool Active { get; set; }
         public int? QuitYear { get; set; }

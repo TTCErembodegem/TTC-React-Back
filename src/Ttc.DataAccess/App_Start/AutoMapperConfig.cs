@@ -319,9 +319,6 @@ namespace Ttc.DataAccess
         {
             cfg.CreateMap<PlayerEntity, Player>()
                 .ForMember(
-                    dest => dest.Name,
-                    opts => opts.MapFrom(src => src.Naam))
-                .ForMember(
                     dest => dest.Alias,
                     opts => opts.MapFrom(src => src.NaamKort))
                 .ForMember(

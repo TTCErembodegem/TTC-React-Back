@@ -45,7 +45,7 @@ namespace Ttc.DataAccess.Services
                     {
                         Description = string.IsNullOrWhiteSpace(managerInfo.Omschrijving) ? ClubManagerType.Default : (ClubManagerType)Enum.Parse(typeof(ClubManagerType), managerInfo.Omschrijving, true),
                         PlayerId = managerInfo.SpelerId,
-                        Name = managerPlayer.Naam,
+                        Name = managerPlayer.Name,
                         Contact = new PlayerContact(managerPlayer.Id, managerPlayer.Email, managerPlayer.Gsm, managerPlayer.Adres, managerPlayer.Gemeente),
                         SortOrder = managerInfo.Sortering
                     });

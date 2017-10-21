@@ -89,7 +89,7 @@ namespace Ttc.DataAccess.Utilities
                 worksheet.Cells[i, 1].Value = player.VolgnummerSporta;
                 worksheet.Cells[i, 2].Value = player.IndexSporta;
                 worksheet.Cells[i, 3].Value = player.LidNummerSporta;
-                worksheet.Cells[i, 4].Value = player.Naam;
+                worksheet.Cells[i, 4].Value = player.Name;
                 worksheet.Cells[i, 5].Value = player.KlassementSporta;
                 worksheet.Cells[i, 6].Value = rankingValueConverter.Sporta(player.KlassementSporta);
 
@@ -115,7 +115,7 @@ namespace Ttc.DataAccess.Utilities
                 worksheet.Cells[i, 1].Value = player.VolgnummerVttl;
                 worksheet.Cells[i, 2].Value = player.IndexVttl;
                 worksheet.Cells[i, 3].Value = player.ComputerNummerVttl;
-                worksheet.Cells[i, 4].Value = player.Naam;
+                worksheet.Cells[i, 4].Value = player.Name;
                 worksheet.Cells[i, 5].Value = player.KlassementVttl;
 
                 i++;
@@ -126,9 +126,9 @@ namespace Ttc.DataAccess.Utilities
         private void SetPlayersSheet(ExcelWorksheet worksheet)
         {
             int i = 2;
-            foreach (var player in _players.OrderBy(x => x.Naam))
+            foreach (var player in _players.OrderBy(x => x.Name))
             {
-                worksheet.Cells[i, 1].Value = player.Naam;
+                worksheet.Cells[i, 1].Value = player.Name;
                 worksheet.Cells[i, 2].Value = player.Adres;
                 worksheet.Cells[i, 3].Value = player.Gemeente;
 
