@@ -250,6 +250,11 @@ namespace Ttc.DataAccess.Services
             using (var db = new TtcDbContext())
             {
                 var match = db.Matches.Single(x => x.Id == matchId);
+                if (match.IsSyncedWithFrenoy)
+                {
+                    return GetMatch(matchId);
+                }
+
                 match.FormationComment = comment;
                 match.Block = blockAlso ? newStatus : null;
                 var existingPlayers = db.MatchPlayers
