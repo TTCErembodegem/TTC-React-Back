@@ -286,6 +286,10 @@
     <Compile Include="Migrations\201710210003388_PlayerSplitName.Designer.cs">
       <DependentUpon>201710210003388_PlayerSplitName.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201710251828213_PlayerHasKeyNullable.cs" />
+    <Compile Include="Migrations\201710251828213_PlayerHasKeyNullable.Designer.cs">
+      <DependentUpon>201710251828213_PlayerHasKeyNullable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\ServiceExtensions.cs" />
@@ -467,6 +471,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201710210003388_PlayerSplitName.resx">
       <DependentUpon>201710210003388_PlayerSplitName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710251828213_PlayerHasKeyNullable.resx">
+      <DependentUpon>201710251828213_PlayerHasKeyNullable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ExcelExportResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
