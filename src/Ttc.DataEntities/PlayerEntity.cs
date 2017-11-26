@@ -37,9 +37,6 @@ namespace Ttc.DataEntities
         [NotMapped]
         public string Name => $"{FirstName} {LastName}";
 
-        [Column("Naam")]
-        public string OldFullName { get; set; }
-
         public string NaamKort { get; set; }
         public PlayerToegang Toegang { get; set; }
         public string Stijl { get; set; }

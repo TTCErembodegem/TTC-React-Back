@@ -58,7 +58,7 @@ namespace Ttc.DataAccess.Migrations
                 NaamKort = "SYSTEM",
                 Toegang = PlayerToegang.System
             });
-            context.Database.ExecuteSqlCommand("UPDATE speler SET paswoord=MD5('system') WHERE Naam='SYSTEM' AND paswoord IS NULL");
+            //context.Database.ExecuteSqlCommand("UPDATE speler SET paswoord=MD5('system') WHERE FirstName='SYSTEM' AND paswoord IS NULL");
         }
     }
 }
