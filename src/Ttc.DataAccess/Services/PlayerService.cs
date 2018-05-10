@@ -108,6 +108,17 @@ namespace Ttc.DataAccess.Services
             return newPlayer;
         }
 
+        public void DeletePlayer(int playerId)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var player = dbContext.Players.Find(playerId);
+                if (player == null) return;
+                dbContext.Players.Remove(player);
+                dbContext.SaveChanges();
+            }
+        }
+
         private static void MapPlayer(Player player, PlayerEntity existingSpeler)
         {
             existingSpeler.Gsm = player.Contact.Mobile;

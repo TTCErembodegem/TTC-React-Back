@@ -58,6 +58,13 @@ namespace Ttc.WebApi.Controllers
         }
 
         [HttpPost]
+        [Route("DeletePlayer/{playerId}")]
+        public void DeletePlayer(int playerId)
+        {
+            _service.DeletePlayer(playerId);
+        }
+
+        [HttpPost]
         [Route("FrenoySync")]
         public void FrenoySync()
         {
