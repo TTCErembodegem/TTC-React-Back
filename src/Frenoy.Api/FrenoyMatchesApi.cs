@@ -302,6 +302,9 @@ namespace Frenoy.Api
             MatchGameEntity matchResult;
             if (!int.TryParse(frenoyIndividual.HomePlayerUniqueIndex, out var homeUniqueIndex) || !int.TryParse(frenoyIndividual.AwayPlayerUniqueIndex, out var awayUniqueIndex))
             {
+                // TODO: We also got here when matchEntity.WalkOver = true
+                //       HomePlayerUniqueIndex or AwayPlayerUniqueIndex = "" when the Team forfeited the entire season
+
                 // Sporta doubles match:
                 matchResult = new MatchGameEntity
                 {
@@ -384,6 +387,9 @@ namespace Frenoy.Api
 
         private void AddMatchPlayers(TeamMatchPlayerEntryType[] players, MatchEntity match, bool thuisSpeler)
         {
+            if (players == null)
+                return;
+
             foreach (var frenoyVerslagSpeler in players)
             {
                 if (string.IsNullOrWhiteSpace(frenoyVerslagSpeler.UniqueIndex))
