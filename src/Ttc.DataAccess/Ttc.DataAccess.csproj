@@ -297,8 +297,13 @@
     <Compile Include="Migrations\201711261055215_PlayerRemoveOldFullNameColumn.Designer.cs">
       <DependentUpon>201711261055215_PlayerRemoveOldFullNameColumn.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201806192135410_ConfigParameters.cs" />
+    <Compile Include="Migrations\201806192135410_ConfigParameters.Designer.cs">
+      <DependentUpon>201806192135410_ConfigParameters.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\BaseService.cs" />
+    <Compile Include="Utilities\EmailConfig.cs" />
     <Compile Include="Services\ServiceExtensions.cs" />
     <Compile Include="Services\ClubService.cs" />
     <Compile Include="Services\ConfigService.cs" />
@@ -484,6 +489,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711261055215_PlayerRemoveOldFullNameColumn.resx">
       <DependentUpon>201711261055215_PlayerRemoveOldFullNameColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806192135410_ConfigParameters.resx">
+      <DependentUpon>201806192135410_ConfigParameters.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ExcelExportResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

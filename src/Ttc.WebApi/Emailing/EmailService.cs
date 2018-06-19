@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using Ttc.DataAccess.Services;
+using Ttc.DataAccess.Utilities;
 
 namespace Ttc.WebApi.Emailing
 {

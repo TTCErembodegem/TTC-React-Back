@@ -5,6 +5,12 @@ namespace Ttc.DataEntities
 {
     public static class Constants
     {
+        // TODO: unused keys from dbContext.Parameters:
+        // jaar, Frenoy_SeasonId, stduur, frenoy_wsdlUrl*, link*
+
+        /// <summary>
+        /// Duplicated in frontend in ClubModel.js
+        /// </summary>
         public const int OwnClubId = 1;
 
         /// <summary>
