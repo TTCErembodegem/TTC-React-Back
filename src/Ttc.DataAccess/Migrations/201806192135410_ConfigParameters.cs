@@ -21,6 +21,7 @@ namespace Ttc.DataAccess.Migrations
             Sql("delete from parameter where sleutel in ('updated', 'kalold', 'kalnew', 'training_personen', 'training_kaldesc')");
             Sql("update parameter set sleutel = 'youthMembership' where sleutel = 'CLUBINFO_MIN18JARIGE'");
             Sql("update parameter set sleutel = 'frenoyClubIdVttl' where sleutel = 'Frenoy_ClubId'");
+            Sql("update parameter set value='OVL134' where sleutel='frenoyClubIdVttl'");
         }
         
         public override void Down()

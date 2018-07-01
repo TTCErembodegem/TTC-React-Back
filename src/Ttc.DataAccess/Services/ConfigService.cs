@@ -16,7 +16,7 @@ namespace Ttc.DataAccess.Services
                 {
                     "email", "googleMapsUrl", "location", "trainingDays", "competitionDays",
                     "adultMembership", "youthMembership", "additionalMembership", "recreationalMembers",
-                    "frenoyClubIdVttl", "frenoyClubIdSporta"
+                    "frenoyClubIdVttl", "frenoyClubIdSporta", "compBalls", "clubBankNr", "clubOrgNr"
                 };
                 foreach (var parameter in context.Parameters.ToArray().Where(x => keys.Contains(x.Sleutel)))
                 {
