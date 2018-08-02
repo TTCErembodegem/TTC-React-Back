@@ -130,7 +130,7 @@ namespace Ttc.DataAccess.Services
         }
         #endregion
 
-        #region Boilderplate code
+        #region Boilerplate code
         private Match GetMatch(TtcDbContext dbContext, int matchId)
         {
             var match = dbContext.Matches

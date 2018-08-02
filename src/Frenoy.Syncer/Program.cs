@@ -24,14 +24,14 @@ namespace Frenoy.Syncer
                     //var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
                     //sportaPlayers.SyncPlayers();
 
-                    //var vttl = new FrenoyMatchesApi(context, Competition.Vttl);
-                    //vttl.SyncTeamsAndMatches();
-                    //var sporta = new FrenoyMatchesApi(context, Competition.Sporta);
-                    //sporta.SyncTeamsAndMatches();
+                    // This code can be triggered by deploying a new migration
+                    // (better code because it will also StopPlayers & StartPlayers)
+                    var vttl = new FrenoyMatchesApi(context, Competition.Vttl);
+                    vttl.SyncTeamsAndMatches();
+                    var sporta = new FrenoyMatchesApi(context, Competition.Sporta);
+                    sporta.SyncTeamsAndMatches();
 
                     //RandomizeMatchDatesForTestingPurposes(context);
-
-
 
                     //Configuration.Seed(context, false);
 

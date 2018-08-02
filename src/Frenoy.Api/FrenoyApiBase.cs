@@ -102,7 +102,6 @@ namespace Frenoy.Api
 
         private ClubEntity CreateClub(string frenoyClubCode)
         {
-            Debug.Assert(_isVttl, "or need to write an if");
             var frenoyClub = _frenoy.GetClubs(new GetClubs
             {
                 Club = frenoyClubCode,
@@ -112,11 +111,13 @@ namespace Frenoy.Api
 
             var club = new ClubEntity
             {
-                CodeVttl = frenoyClubCode,
+                CodeVttl = _isVttl ? frenoyClubCode : null,
+                CodeSporta = !_isVttl ? frenoyClubCode : null,
                 Actief = 1,
                 Naam = frenoyClub.ClubEntries.First().LongName,
                 Douche = 0
             };
+
             _db.Clubs.Add(club);
             CommitChanges();
 
