@@ -118,8 +118,8 @@ namespace Frenoy.Api
                 return null;
             }
             var newPlayer = new PlayerEntity();
-            newPlayer.FirstName = frenoyPlayer.FirstName;
-            newPlayer.LastName = frenoyPlayer.LastName;
+            newPlayer.FirstName = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(frenoyPlayer.FirstName);
+            newPlayer.LastName = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(frenoyPlayer.LastName);
             newPlayer.NaamKort = newPlayer.Name;
             newPlayer.Toegang = PlayerToegang.Player;
             newPlayer.Email = frenoyPlayer.Email;
