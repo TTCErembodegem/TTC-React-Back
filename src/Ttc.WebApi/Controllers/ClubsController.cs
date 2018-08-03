@@ -21,7 +21,29 @@ namespace Ttc.WebApi.Controllers
         [AllowAnonymous]
         public IEnumerable<Club> Get() => _service.GetActiveClubs();
 
-        //[AllowAnonymous]
-        //public Club Get(int id) => _service.GetClub(id);
+        #region Club Board
+        [HttpPost]
+        [Route("Board")]
+        public void SaveBoardMember([FromBody]BoardMember m)
+        {
+            _service.SaveBoardMember(m.PlayerId, m.BoardFunction, m.Sort);
+        }
+
+        [HttpPost]
+        [Route("Board/{playerId}")]
+        public void DeleteBoardMember([FromUri]int playerId)
+        {
+            _service.DeleteBoardMember(playerId);
+        }
+
+        public class BoardMember
+        {
+            public int PlayerId { get; set; }
+            public string BoardFunction { get; set; }
+            public int Sort { get; set; }
+
+            public override string ToString() => $"{PlayerId} => {BoardFunction} ({Sort})";
+        }
+        #endregion
     }
 }

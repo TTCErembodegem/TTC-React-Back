@@ -59,5 +59,38 @@ namespace Ttc.DataAccess.Services
                 return result;
             }
         }
+
+        #region Club Board
+        public void SaveBoardMember(int playerId, string boardFunction, int sort)
+        {
+            using (var context = new TtcDbContext())
+            {
+                var board = context.ClubContacten.SingleOrDefault(x => x.SpelerId == playerId);
+                if (board == null)
+                {
+                    board = new ClubContact()
+                    {
+                        ClubId = Constants.OwnClubId,
+                        SpelerId = playerId
+                    };
+                    context.ClubContacten.Add(board);
+                }
+
+                board.Omschrijving = Enum.Parse(typeof(ClubManagerType), boardFunction, true).ToString();
+                board.Sortering = sort;
+                context.SaveChanges();
+            }
+        }
+
+        public void DeleteBoardMember(int playerId)
+        {
+            using (var context = new TtcDbContext())
+            {
+                var board = context.ClubContacten.Single(x => x.SpelerId == playerId);
+                context.ClubContacten.Remove(board);
+                context.SaveChanges();
+            }
+        }
+        #endregion
     }
 }
