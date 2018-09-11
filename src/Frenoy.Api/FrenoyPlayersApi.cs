@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Frenoy.Api.FrenoyVttl;
 using Ttc.DataEntities;
 using Ttc.DataEntities.Core;
@@ -18,9 +20,9 @@ namespace Frenoy.Api
 
         }
 
-        public void StopAllPlayers(bool alsoSetGestopt)
+        public async Task StopAllPlayers(bool alsoSetGestopt)
         {
-            foreach (var dbPlayer in _db.Players.Where(x => x.ClubIdVttl == Constants.OwnClubId || x.ClubIdSporta == Constants.OwnClubId))
+            foreach (var dbPlayer in await _db.Players.Where(x => x.ClubIdVttl == Constants.OwnClubId || x.ClubIdSporta == Constants.OwnClubId).ToArrayAsync())
             {
                 if (alsoSetGestopt)
                 {
@@ -29,12 +31,12 @@ namespace Frenoy.Api
                 dbPlayer.ClubIdSporta = null;
                 dbPlayer.ClubIdVttl = null;
             }
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
 
-        public void SyncPlayers()
+        public async Task SyncPlayers()
         {
-            var frenoyPlayers = _frenoy.GetMembers(new GetMembersRequest
+            var frenoyPlayers = await _frenoy.GetMembersAsync(new GetMembersRequest
             {
                 Club = _settings.FrenoyClub,
                 Credentials = new CredentialsType()
@@ -44,15 +46,15 @@ namespace Frenoy.Api
                 }
             });
 
-            foreach (MemberEntryType frenoyPlayer in frenoyPlayers.MemberEntries)
+            foreach (MemberEntryType frenoyPlayer in frenoyPlayers.GetMembersResponse.MemberEntries)
             {
                 string frenoyFirstName = frenoyPlayer.FirstName.ToUpperInvariant();
                 string frenoyLastName = frenoyPlayer.LastName.ToUpperInvariant();
-                var existingPlayer = _db.Players.SingleOrDefault(ply => ply.FirstName.ToUpper() == frenoyFirstName && ply.LastName.ToUpper() == frenoyLastName);
+                var existingPlayer = await _db.Players.SingleOrDefaultAsync(ply => ply.FirstName.ToUpper() == frenoyFirstName && ply.LastName.ToUpper() == frenoyLastName);
                 if (_isVttl)
                 {
                     if (existingPlayer == null)
-                        existingPlayer = _db.Players.SingleOrDefault(ply => ply.ComputerNummerVttl.HasValue && ply.ComputerNummerVttl.Value.ToString() == frenoyPlayer.UniqueIndex);
+                        existingPlayer = await _db.Players.SingleOrDefaultAsync(ply => ply.ComputerNummerVttl.HasValue && ply.ComputerNummerVttl.Value.ToString() == frenoyPlayer.UniqueIndex);
 
                     if (existingPlayer != null)
                     {
@@ -60,19 +62,19 @@ namespace Frenoy.Api
                     }
                     else
                     {
-                        var newPlayer = CreatePlayerEntity(frenoyPlayer);
+                        var newPlayer = await CreatePlayerEntity(frenoyPlayer);
                         if (newPlayer != null)
                         {
                             SetVttl(newPlayer, frenoyPlayer);
                             _db.Players.Add(newPlayer);
-                            _db.SaveChanges();
+                            await _db.SaveChangesAsync();
                         }
                     }
                 }
                 else
                 {
                     if (existingPlayer == null)
-                        existingPlayer = _db.Players.SingleOrDefault(ply => ply.LidNummerSporta.HasValue && ply.LidNummerSporta.Value.ToString() == frenoyPlayer.UniqueIndex);
+                        existingPlayer = await _db.Players.SingleOrDefaultAsync(ply => ply.LidNummerSporta.HasValue && ply.LidNummerSporta.Value.ToString() == frenoyPlayer.UniqueIndex);
 
                     if (existingPlayer != null)
                     {
@@ -80,18 +82,18 @@ namespace Frenoy.Api
                     }
                     else
                     {
-                        var newPlayer = CreatePlayerEntity(frenoyPlayer);
+                        var newPlayer = await CreatePlayerEntity(frenoyPlayer);
                         if (newPlayer != null)
                         {
                             SetSporta(newPlayer, frenoyPlayer);
                             _db.Players.Add(newPlayer);
-                            _db.SaveChanges();
+                            await _db.SaveChangesAsync();
                         }
                     }
                 }
             }
 
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
 
         private static void SetVttl(PlayerEntity player, MemberEntryType frenoyPlayer)
@@ -106,15 +108,16 @@ namespace Frenoy.Api
             //player.LinkKaartVttl
         }
 
-        private PlayerEntity CreatePlayerEntity(MemberEntryType frenoyPlayer)
+        private async Task<PlayerEntity> CreatePlayerEntity(MemberEntryType frenoyPlayer)
         {
-            var existingPlayer = _db.Players.SingleOrDefault(x => x.FirstName.ToUpper() == frenoyPlayer.FirstName && x.LastName.ToUpper() == frenoyPlayer.LastName);
+            var existingPlayer = await _db.Players.SingleOrDefaultAsync(x => x.FirstName.ToUpper() == frenoyPlayer.FirstName && x.LastName.ToUpper() == frenoyPlayer.LastName);
             if (existingPlayer != null)
             {
                 if (_isVttl)
                     SetVttl(existingPlayer, frenoyPlayer);
                 else
                     SetSporta(existingPlayer, frenoyPlayer);
+
                 return null;
             }
             var newPlayer = new PlayerEntity();

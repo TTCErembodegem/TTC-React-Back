@@ -19,7 +19,7 @@ namespace Frenoy.Api
         }
 
         #region ClubLokalen
-        public void SyncClubLokalen()
+        public async Task SyncClubLokalen()
         {
             // TODO: these methods need to be applied to vttl and sporta together
             // TODO: need to check with Dirk/Jelle if frenoy club locations are actually better than current data...
@@ -38,21 +38,21 @@ namespace Frenoy.Api
                 getClubCode = dbClub => dbClub.CodeSporta;
                 clubs = _db.Clubs.Include(x => x.Lokalen).Where(club => !string.IsNullOrEmpty(club.CodeSporta)).ToArray();
             }
-            SyncClubLokalen(clubs, getClubCode);
+            await SyncClubLokalen(clubs, getClubCode);
         }
 
-        private void SyncClubLokalen(IEnumerable<ClubEntity> clubs, Func<ClubEntity, string> getClubCode)
+        private async Task SyncClubLokalen(IEnumerable<ClubEntity> clubs, Func<ClubEntity, string> getClubCode)
         {
             foreach (var dbClub in clubs)
             {
-                var oldLokalen = _db.ClubLokalen.Where(x => x.ClubId == dbClub.Id).ToArray();
+                var oldLokalen = await _db.ClubLokalen.Where(x => x.ClubId == dbClub.Id).ToArrayAsync();
 
-                var frenoyClubs = _frenoy.GetClubs(new GetClubs
+                var frenoyClubs = await _frenoy.GetClubsAsync(new GetClubs
                 {
                     Club = getClubCode(dbClub)
                 });
 
-                var frenoyClub = frenoyClubs.ClubEntries.FirstOrDefault();
+                var frenoyClub = frenoyClubs.GetClubsResponse.ClubEntries.FirstOrDefault();
                 if (frenoyClub == null)
                 {
                     Debug.Print("Got some wrong CodeSporta/Vttl in legacy db: " + dbClub.Naam);
@@ -87,7 +87,7 @@ namespace Frenoy.Api
                     }
                 }
             }
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
         #endregion
     }

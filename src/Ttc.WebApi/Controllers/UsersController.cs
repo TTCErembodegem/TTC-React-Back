@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using JWT;
@@ -31,9 +32,9 @@ namespace Ttc.WebApi.Controllers
         [HttpPost]
         [Route("Login")]
         [AllowAnonymous]
-        public User Login([FromBody]UserCredentials user)
+        public async Task<User> Login([FromBody]UserCredentials user)
         {
-            var player = _service.Login(user);
+            var player = await _service.Login(user);
             if (player != null)
             {
                 player.Token = TtcAuthorizationFilterAttribute.CreateToken(player);
@@ -43,9 +44,9 @@ namespace Ttc.WebApi.Controllers
 
         [HttpPost]
         [Route("ChangePassword")]
-        public User ChangePassword([FromBody]PasswordCredentials userNewPassword)
+        public async Task<User> ChangePassword([FromBody]PasswordCredentials userNewPassword)
         {
-            var player = _service.ChangePassword(userNewPassword);
+            var player = await _service.ChangePassword(userNewPassword);
             if (player != null)
             {
                 player.Token = TtcAuthorizationFilterAttribute.CreateToken(player);
@@ -56,31 +57,31 @@ namespace Ttc.WebApi.Controllers
         [HttpPost]
         [Route("SetNewPasswordFromGuid")]
         [AllowAnonymous]
-        public void SetNewPasswordFromGuid([FromBody]NewPasswordRequest request)
+        public async Task SetNewPasswordFromGuid([FromBody]NewPasswordRequest request)
         {
-            _service.SetNewPasswordFromGuid(request.Guid, request.PlayerId, request.Password);
+            await _service.SetNewPasswordFromGuid(request.Guid, request.PlayerId, request.Password);
         }
 
         [HttpPost]
         [Route("RequestResetPasswordLink")]
         [AllowAnonymous]
-        public void RequestResetPasswordLink([FromBody]NewPasswordLinkRequest request)
+        public async Task RequestResetPasswordLink([FromBody]NewPasswordLinkRequest request)
         {
-            Guid paswoordResetLinkId = _service.EmailMatchesPlayer(request.Email, request.PlayerId);
+            Guid paswoordResetLinkId = await _service.EmailMatchesPlayer(request.Email, request.PlayerId);
 
-            var emailConfig = _configService.GetEmailConfig();
+            var emailConfig = await _configService.GetEmailConfig();
             var emailer = new NewPasswordRequestEmailer(emailConfig);
             emailer.Email(request.Email, paswoordResetLinkId);
         }
 
         [HttpPost]
         [Route("AdminSetNewPassword")]
-        public void AdminSetNewPassword([FromBody]PasswordCredentials request)
+        public async Task AdminSetNewPassword([FromBody]PasswordCredentials request)
         {
-            string playerEmail = _service.SetNewPassword(request);
+            string playerEmail = await _service.SetNewPassword(request);
             if (!string.IsNullOrWhiteSpace(playerEmail))
             {
-                var emailConfig = _configService.GetEmailConfig();
+                var emailConfig = await _configService.GetEmailConfig();
                 var emailer = new PasswordChangedEmailer(emailConfig);
                 emailer.Email(playerEmail);
             }
@@ -89,7 +90,7 @@ namespace Ttc.WebApi.Controllers
         [HttpPost]
         [Route("ValidateToken")]
         [AllowAnonymous]
-        public User ValidateToken([FromBody]ValidateTokenRequest token)
+        public async Task<User> ValidateToken([FromBody]ValidateTokenRequest token)
         {
             var validated = TtcAuthorizationFilterAttribute.ValidateToken(token.Token);
             if (validated == null)
@@ -97,7 +98,7 @@ namespace Ttc.WebApi.Controllers
                 return null;
             }
 
-            var userModel = _service.GetUser(validated.PlayerId);
+            var userModel = await _service.GetUser(validated.PlayerId);
             userModel.Token = TtcAuthorizationFilterAttribute.CreateToken(userModel);
             return userModel;
         }

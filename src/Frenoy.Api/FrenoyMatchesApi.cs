@@ -56,7 +56,7 @@ namespace Frenoy.Api
                 {
                     teamEntity = CreateTeam(frenoyTeam);
                     _db.Teams.Add(teamEntity);
-                    CommitChanges();
+                    await CommitChanges();
 
                     // Create the teams in the new division=reeks
                     var frenoyDivision = _frenoy.GetDivisionRanking(new GetDivisionRankingRequest
@@ -65,10 +65,10 @@ namespace Frenoy.Api
                     });
                     foreach (var frenoyTeamsInDivision in frenoyDivision.RankingEntries.Where(x => ExtractTeamCodeFromFrenoyName(x.Team) != frenoyTeam.Team || !IsOwnClub(x.TeamClub)))
                     {
-                        var teamOpponent = CreateTeamOpponent(teamEntity, frenoyTeamsInDivision);
+                        var teamOpponent = await CreateTeamOpponent(teamEntity, frenoyTeamsInDivision);
                         _db.TeamOpponents.Add(teamOpponent);
                     }
-                    CommitChanges();
+                    await CommitChanges();
                 }
 
                 await SyncTeamMatches(teamEntity);
@@ -171,14 +171,14 @@ namespace Frenoy.Api
                 if (matchEntity == null)
                 {
                     matchEntity = new MatchEntity();
-                    MapMatch(matchEntity, teamId, frenoyDivisionId, frenoyMatch, frenoySeason);
+                    await MapMatch(matchEntity, teamId, frenoyDivisionId, frenoyMatch, frenoySeason);
                     _db.Matches.Add(matchEntity);
-                    CommitChanges();
+                    await CommitChanges();
                 }
                 else
                 {
-                    MapMatch(matchEntity, teamId, frenoyDivisionId, frenoyMatch, frenoySeason);
-                    CommitChanges();
+                    await MapMatch(matchEntity, teamId, frenoyDivisionId, frenoyMatch, frenoySeason);
+                    await CommitChanges();
                 }
 
                 if (alsoSyncMatchDetails)
@@ -188,21 +188,21 @@ namespace Frenoy.Api
             }
         }
 
-        private void MapMatch(MatchEntity entity, int? teamId, int frenoyDivisionId, TeamMatchEntryType frenoyMatch, int frenoySeason = Constants.FrenoySeason)
+        private async Task MapMatch(MatchEntity entity, int? teamId, int frenoyDivisionId, TeamMatchEntryType frenoyMatch, int frenoySeason = Constants.FrenoySeason)
         {
             entity.ShouldBePlayed = !frenoyMatch.HomeTeam.Trim().StartsWith("Vrij") && !frenoyMatch.AwayTeam.Trim().StartsWith("Vrij");
             entity.FrenoyMatchId = frenoyMatch.MatchId;
             entity.Date = frenoyMatch.Date + new TimeSpan(frenoyMatch.Time.Hour, frenoyMatch.Time.Minute, 0);
             if (frenoyMatch.HomeClub != "-")
             {
-                entity.HomeClubId = GetClubId(frenoyMatch.HomeClub);
+                entity.HomeClubId = await GetClubId(frenoyMatch.HomeClub);
                 entity.HomeTeamCode = ExtractTeamCodeFromFrenoyName(frenoyMatch.HomeTeam);
             }
 
             Debug.Assert(entity.ShouldBePlayed || frenoyMatch.AwayClub == "-" || frenoyMatch.HomeClub == "-");
             if (frenoyMatch.AwayClub != "-")
             {
-                entity.AwayClubId = GetClubId(frenoyMatch.AwayClub);
+                entity.AwayClubId = await GetClubId(frenoyMatch.AwayClub);
                 entity.AwayTeamCode = ExtractTeamCodeFromFrenoyName(frenoyMatch.AwayTeam);
             }
             
@@ -263,7 +263,7 @@ namespace Frenoy.Api
                     matchEntity.IsSyncedWithFrenoy = true;
                 }
 
-                CommitChanges();
+                await CommitChanges();
             }
         }
 
@@ -560,12 +560,12 @@ namespace Frenoy.Api
             return team;
         }
 
-        private TeamOpponentEntity CreateTeamOpponent(TeamEntity teamEntity, RankingEntryType frenoyTeam)
+        private async Task<TeamOpponentEntity> CreateTeamOpponent(TeamEntity teamEntity, RankingEntryType frenoyTeam)
         {
             var opponent = new TeamOpponentEntity
             {
                 TeamId = teamEntity.Id,
-                ClubId = GetClubId(frenoyTeam.TeamClub),
+                ClubId = await GetClubId(frenoyTeam.TeamClub),
                 TeamCode = ExtractTeamCodeFromFrenoyName(frenoyTeam.Team)
             };
             return opponent;

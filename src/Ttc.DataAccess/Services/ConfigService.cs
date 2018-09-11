@@ -1,13 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using Ttc.DataAccess.Utilities;
 
 namespace Ttc.DataAccess.Services
 {
     public class ConfigService : BaseService
     {
-        public Dictionary<string, string> Get()
+        public async Task<Dictionary<string, string>> Get()
         {
             var dict = new Dictionary<string, string>();
             using (var context = new TtcDbContext())
@@ -18,7 +20,7 @@ namespace Ttc.DataAccess.Services
                     "adultMembership", "youthMembership", "additionalMembership", "recreationalMembers",
                     "frenoyClubIdVttl", "frenoyClubIdSporta", "compBalls", "clubBankNr", "clubOrgNr"
                 };
-                foreach (var parameter in context.Parameters.ToArray().Where(x => keys.Contains(x.Sleutel)))
+                foreach (var parameter in (await context.Parameters.ToArrayAsync()).Where(x => keys.Contains(x.Sleutel)))
                 {
                     dict.Add(parameter.Sleutel, parameter.Value);
                 }
@@ -26,12 +28,12 @@ namespace Ttc.DataAccess.Services
             return dict;
         }
 
-        public EmailConfig GetEmailConfig()
+        public async Task<EmailConfig> GetEmailConfig()
         {
             using (var context = new TtcDbContext())
             {
-                var sendGridApiKey = context.Parameters.Single(x => x.Sleutel == "SendGridApiKey").Value;
-                var fromEmail = context.Parameters.Single(x => x.Sleutel == "FromEmail").Value;
+                var sendGridApiKey = (await context.Parameters.SingleAsync(x => x.Sleutel == "SendGridApiKey")).Value;
+                var fromEmail = (await context.Parameters.SingleAsync(x => x.Sleutel == "FromEmail")).Value;
                 return new EmailConfig(fromEmail, sendGridApiKey);
             }
         }

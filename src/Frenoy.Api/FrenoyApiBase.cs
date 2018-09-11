@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 using System.ServiceModel;
 using System.ServiceModel.Configuration;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Frenoy.Api;
 using Frenoy.Api.FrenoyVttl;
 using Ttc.DataEntities;
@@ -87,25 +88,25 @@ namespace Frenoy.Api
             return regMatch.Groups[2].Success;
         }
 
-        protected int GetClubId(string frenoyClubCode)
+        protected async Task<int> GetClubId(string frenoyClubCode)
         {
             ClubEntity club;
             if (_isVttl)
             {
-                club = _db.Clubs.SingleOrDefault(x => x.CodeVttl == frenoyClubCode);
+                club = await _db.Clubs.SingleOrDefaultAsync(x => x.CodeVttl == frenoyClubCode);
             }
             else
             {
-                club = _db.Clubs.SingleOrDefault(x => x.CodeSporta == frenoyClubCode);
+                club = await _db.Clubs.SingleOrDefaultAsync(x => x.CodeSporta == frenoyClubCode);
             }
             if (club == null)
             {
-                club = CreateClub(frenoyClubCode);
+                club = await CreateClub(frenoyClubCode);
             }
             return club.Id;
         }
 
-        private ClubEntity CreateClub(string frenoyClubCode)
+        private async Task<ClubEntity> CreateClub(string frenoyClubCode)
         {
             var frenoyClub = _frenoy.GetClubs(new GetClubs
             {
@@ -124,7 +125,7 @@ namespace Frenoy.Api
             };
 
             _db.Clubs.Add(club);
-            CommitChanges();
+            await CommitChanges();
 
             foreach (var frenoyLokaal in frenoyClub.ClubEntries.First().VenueEntries)
             {
@@ -144,9 +145,9 @@ namespace Frenoy.Api
             return club;
         }
 
-        protected void CommitChanges()
+        protected async Task CommitChanges()
         {
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
     }
 }

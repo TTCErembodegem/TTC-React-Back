@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Ttc.DataAccess.Services;
 using Ttc.Model.Players;
@@ -26,56 +27,56 @@ namespace Ttc.WebApi.Controllers
         #endregion
 
         [AllowAnonymous]
-        public IEnumerable<Player> Get()
+        public async Task<IEnumerable<Player>> Get()
         {
-            var result = _service.GetOwnClub();
+            var result = await _service.GetOwnClub();
             CleanSensitiveData(result);
             return result;
         }
 
         [AllowAnonymous]
-        public Player Get(int id)
+        public async Task<Player> Get(int id)
         {
-            var result = _service.GetPlayer(id, true);
+            var result = await _service.GetPlayer(id, true);
             CleanSensitiveData(result);
             return result;
         }
 
         [HttpPost]
         [Route("UpdateStyle")]
-        public Player UpdateStyle([FromBody]PlayerStyle playerStyle)
+        public async Task<Player> UpdateStyle([FromBody]PlayerStyle playerStyle)
         {
-            var result = _service.UpdateStyle(playerStyle);
+            var result = await _service.UpdateStyle(playerStyle);
             return result;
         }
 
         [HttpPost]
         [Route("UpdatePlayer")]
-        public Player UpdatePlayer([FromBody]Player player)
+        public async Task<Player> UpdatePlayer([FromBody]Player player)
         {
-            var result = _service.UpdatePlayer(player);
+            var result = await _service.UpdatePlayer(player);
             return result;
         }
 
         [HttpPost]
         [Route("DeletePlayer/{playerId}")]
-        public void DeletePlayer(int playerId)
+        public async Task DeletePlayer(int playerId)
         {
-            _service.DeletePlayer(playerId);
+            await _service.DeletePlayer(playerId);
         }
 
         [HttpPost]
         [Route("FrenoySync")]
-        public void FrenoySync()
+        public async Task FrenoySync()
         {
-            _service.FrenoySync();
+            await _service.FrenoySync();
         }
 
         [HttpGet]
         [Route("ExcelExport")]
-        public string GetExcelExport()
+        public async Task<string> GetExcelExport()
         {
-            var excel = _service.GetExcelExport();
+            var excel = await _service.GetExcelExport();
             return Convert.ToBase64String(excel);
         }
     }

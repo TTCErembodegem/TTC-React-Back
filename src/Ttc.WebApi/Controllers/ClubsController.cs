@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Ttc.DataAccess.Services;
 using Ttc.Model.Clubs;
@@ -19,21 +20,21 @@ namespace Ttc.WebApi.Controllers
         #endregion
 
         [AllowAnonymous]
-        public IEnumerable<Club> Get() => _service.GetActiveClubs();
+        public async Task <IEnumerable<Club>> Get() => await _service.GetActiveClubs();
 
         #region Club Board
         [HttpPost]
         [Route("Board")]
-        public void SaveBoardMember([FromBody]BoardMember m)
+        public async Task SaveBoardMember([FromBody]BoardMember m)
         {
-            _service.SaveBoardMember(m.PlayerId, m.BoardFunction, m.Sort);
+            await _service.SaveBoardMember(m.PlayerId, m.BoardFunction, m.Sort);
         }
 
         [HttpPost]
         [Route("Board/{playerId}")]
-        public void DeleteBoardMember([FromUri]int playerId)
+        public async Task DeleteBoardMember([FromUri]int playerId)
         {
-            _service.DeleteBoardMember(playerId);
+            await _service.DeleteBoardMember(playerId);
         }
 
         public class BoardMember

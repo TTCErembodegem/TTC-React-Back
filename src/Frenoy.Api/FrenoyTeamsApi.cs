@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Frenoy.Api.FrenoyVttl;
 using Ttc.DataEntities.Core;
 using Ttc.Model.Players;
@@ -14,28 +15,33 @@ namespace Frenoy.Api
 
         }
 
-        // TODO: async much?
-        public ICollection<DivisionRanking> GetTeamRankings(int divisionId)
+        public async Task<IList<DivisionRanking>> GetTeamRankings(int divisionId)
         {
             try
             {
-                var rankings = _frenoy.GetDivisionRanking(new GetDivisionRankingRequest
+                var rankingsResult = await _frenoy.GetDivisionRankingAsync(new GetDivisionRankingRequest
                 {
                     DivisionId = divisionId.ToString(),
                 });
 
-                return rankings.RankingEntries
-                    .Select(x => new DivisionRanking
+                var rankings = rankingsResult.GetDivisionRankingResponse.RankingEntries
+                    .Select(x =>
                     {
-                        Position = int.Parse(x.Position),
-                        GamesDraw = int.Parse(x.GamesDraw),
-                        GamesWon = int.Parse(x.GamesWon),
-                        GamesLost = int.Parse(x.GamesLost),
-                        Points = int.Parse(x.Points),
-                        ClubId = GetClubId(x.TeamClub),
-                        TeamCode = ExtractTeamCodeFromFrenoyName(x.Team),
-                        IsForfait = ExtractIsForfaitFromFrenoyName(x.Team),
-                    }).ToArray();
+                        var rank = new DivisionRanking
+                        {
+                            Position = int.Parse(x.Position),
+                            GamesDraw = int.Parse(x.GamesDraw),
+                            GamesWon = int.Parse(x.GamesWon),
+                            GamesLost = int.Parse(x.GamesLost),
+                            Points = int.Parse(x.Points),
+                            ClubId = GetClubId(x.TeamClub).Result,
+                            TeamCode = ExtractTeamCodeFromFrenoyName(x.Team),
+                            IsForfait = ExtractIsForfaitFromFrenoyName(x.Team),
+                        };
+                        return rank;
+                    }).ToList();
+
+                return rankings;
             }
             catch
             {

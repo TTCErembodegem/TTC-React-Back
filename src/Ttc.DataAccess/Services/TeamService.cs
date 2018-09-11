@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Data.Entity;
+using System.Threading.Tasks;
 using Frenoy.Api;
 using Frenoy.Api.FrenoySporta;
 using OfficeOpenXml;
@@ -18,15 +19,15 @@ namespace Ttc.DataAccess.Services
     {
         private static readonly TimeSpan FrenoyTeamRankingExpiration = TimeSpan.FromHours(1);
 
-        public IEnumerable<Team> GetForCurrentYear()
+        public async Task<IEnumerable<Team>> GetForCurrentYear()
         {
             using (var dbContext = new TtcDbContext())
             {
-                var teams = dbContext.Teams
+                var teams = await dbContext.Teams
                     .Include(x => x.Players)
                     .Include(x => x.Opponents)
                     .Where(x => x.Year == Constants.CurrentSeason)
-                    .ToArray();
+                    .ToArrayAsync();
 
                 var result = Mapper.Map<IList<TeamEntity>, IList<Team>>(teams);
                 foreach (var team in result)
@@ -44,25 +45,25 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        public Team GetTeam(int teamId, bool syncFrenoy)
+        public async Task<Team> GetTeam(int teamId, bool syncFrenoy)
         {
             using (var dbContext = new TtcDbContext())
             {
-                var teamEntity = dbContext.Teams
+                var teamEntity = await dbContext.Teams
                     .Include(x => x.Players)
                     .Include(x => x.Opponents)
-                    .Single(x => x.Id == teamId);
+                    .SingleAsync(x => x.Id == teamId);
 
                 var team = Mapper.Map<TeamEntity, Team>(teamEntity);
                 if (syncFrenoy)
                 {
-                    team.Ranking = GetFrenoyRanking(dbContext, team.Competition, team.Frenoy.DivisionId);
+                    team.Ranking = await GetFrenoyRanking(dbContext, team.Competition, team.Frenoy.DivisionId);
                 }
                 return team;
             }
         }
 
-        private static ICollection<DivisionRanking> GetFrenoyRanking(TtcDbContext dbContext, Competition competition, int divisionId)
+        private static async Task<ICollection<DivisionRanking>> GetFrenoyRanking(TtcDbContext dbContext, Competition competition, int divisionId)
         {
             var key = new TeamRankingKey(competition, divisionId);
             if (RankingCache.ContainsKey(key))
@@ -71,7 +72,7 @@ namespace Ttc.DataAccess.Services
             }
 
             var frenoy = new FrenoyTeamsApi(dbContext, competition);
-            var ranking = frenoy.GetTeamRankings(divisionId);
+            var ranking = await frenoy.GetTeamRankings(divisionId);
             if (!RankingCache.ContainsKey(key))
             {
                 lock (CacheLock)
@@ -136,7 +137,7 @@ namespace Ttc.DataAccess.Services
         }
         #endregion
 
-        public Team ToggleTeamPlayer(TeamToggleRequest req)
+        public async Task<Team> ToggleTeamPlayer(TeamToggleRequest req)
         {
             using (var db = new TtcDbContext())
             {
@@ -156,31 +157,31 @@ namespace Ttc.DataAccess.Services
                     db.Entry(exPlayer).State = EntityState.Deleted;
                 }
                 db.SaveChanges();
-                return GetTeam(req.TeamId, false);
+                return await GetTeam(req.TeamId, false);
             }
         }
 
-        public byte[] GetExcelExport()
+        public async Task<byte[]> GetExcelExport()
         {
             using (var dbContext = new TtcDbContext())
             {
-                var teams = dbContext.Teams
+                var teams = await dbContext.Teams
                     .Include(x => x.Players)
                     //.Include(x => x.Opponents)
                     .Where(x => x.Year == Constants.CurrentSeason)
-                    .ToArray();
+                    .ToArrayAsync();
 
-                var matches = dbContext.Matches
+                var matches = await dbContext.Matches
                     //.Include(x => x.HomeTeam)
                     //.Include(x => x.AwayTeam)
                     .Include(x => x.Players)
                     .Where(x => x.HomeClubId == Constants.OwnClubId || x.AwayClubId == Constants.OwnClubId)
                     .Where(x => x.FrenoySeason == Constants.FrenoySeason)
-                    .ToList();
+                    .ToListAsync();
 
-                var players = dbContext.Players.Where(x => x.Gestopt == null).ToArray();
+                var players = await dbContext.Players.Where(x => x.Gestopt == null).ToArrayAsync();
 
-                var clubs = dbContext.Clubs.ToArray();
+                var clubs = await dbContext.Clubs.ToArrayAsync();
 
                 var exceller = TeamsExcelCreator.CreateFormation(teams, matches, players, clubs);
                 return exceller.Create();

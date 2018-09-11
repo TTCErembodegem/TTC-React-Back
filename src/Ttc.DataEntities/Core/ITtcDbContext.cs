@@ -22,6 +22,6 @@ namespace Ttc.DataEntities.Core
         DbSet<MatchPlayerEntity> MatchPlayers { get; set; }
         DbSet<MatchGameEntity> MatchGames { get; set; }
 
-        int SaveChanges(); // TODO: remove this dependency
+        Task<int> SaveChangesAsync();
     }
 }

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using log4net;
 using log4net.Appender;
@@ -25,7 +26,7 @@ namespace Ttc.WebApi.Controllers
         #endregion
 
         [AllowAnonymous]
-        public Dictionary<string, string> Get() => _service.Get();
+        public async Task<Dictionary<string, string>> Get() => await _service.Get();
 
         [HttpPost]
         [Route("Log")]

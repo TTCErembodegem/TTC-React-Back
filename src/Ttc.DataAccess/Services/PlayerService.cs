@@ -24,7 +24,7 @@ namespace Ttc.DataAccess.Services
         private static IList<Player> _players;
 
         #region Player
-        public ICollection<Player> GetOwnClub()
+        public async Task<ICollection<Player>> GetOwnClub()
         {
             if (MatchService.MatchesPlaying && _players != null)
             {
@@ -33,7 +33,7 @@ namespace Ttc.DataAccess.Services
 
             using (var dbContext = new TtcDbContext())
             {
-                var players = dbContext.Players.ToArray();
+                var players = await dbContext.Players.ToArrayAsync();
                 var result = Mapper.Map<IList<PlayerEntity>, IList<Player>>(players);
 
                 if (MatchService.MatchesPlaying)
@@ -45,17 +45,17 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        public Player GetPlayer(int playerId, bool allowCache = false)
+        public async Task<Player> GetPlayer(int playerId, bool allowCache = false)
         {
             if (allowCache && _players != null)
             {
                 var ply = _players.SingleOrDefault(x => x.Id == playerId);
-                return ply ?? GetPlayer(playerId);
+                return ply ?? await GetPlayer(playerId);
             }
 
             using (var dbContext = new TtcDbContext())
             {
-                var newPlayer = Mapper.Map<PlayerEntity, Player>(dbContext.Players.SingleOrDefault(x => x.Id == playerId));
+                var newPlayer = Mapper.Map<PlayerEntity, Player>(await dbContext.Players.SingleOrDefaultAsync(x => x.Id == playerId));
 
                 if (_players != null)
                 {
@@ -67,11 +67,11 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        public Player UpdateStyle(PlayerStyle playerStyle)
+        public async Task<Player> UpdateStyle(PlayerStyle playerStyle)
         {
             using (var dbContext = new TtcDbContext())
             {
-                var existingSpeler = dbContext.Players.FirstOrDefault(x => x.Id == playerStyle.PlayerId);
+                var existingSpeler = await dbContext.Players.FirstOrDefaultAsync(x => x.Id == playerStyle.PlayerId);
                 if (existingSpeler == null)
                 {
                     return null;
@@ -79,17 +79,17 @@ namespace Ttc.DataAccess.Services
 
                 existingSpeler.Stijl = playerStyle.Name;
                 existingSpeler.BesteSlag = playerStyle.BestStroke;
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
             }
-            var newMatch = GetPlayer(playerStyle.PlayerId);
+            var newMatch = await GetPlayer(playerStyle.PlayerId);
             return newMatch;
         }
 
-        public Player UpdatePlayer(Player player)
+        public async Task<Player> UpdatePlayer(Player player)
         {
             using (var dbContext = new TtcDbContext())
             {
-                var existingSpeler = dbContext.Players.FirstOrDefault(x => x.Id == player.Id);
+                var existingSpeler = await dbContext.Players.FirstOrDefaultAsync(x => x.Id == player.Id);
                 if (existingSpeler == null)
                 {
                     existingSpeler = new PlayerEntity();
@@ -101,21 +101,21 @@ namespace Ttc.DataAccess.Services
                     MapPlayer(player, existingSpeler);
                 }
                 
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
                 player.Id = existingSpeler.Id;
             }
-            var newPlayer = GetPlayer(player.Id);
+            var newPlayer = await GetPlayer(player.Id);
             return newPlayer;
         }
 
-        public void DeletePlayer(int playerId)
+        public async Task DeletePlayer(int playerId)
         {
             using (var dbContext = new TtcDbContext())
             {
-                var player = dbContext.Players.Find(playerId);
+                var player = await dbContext.Players.FindAsync(playerId);
                 if (player == null) return;
                 dbContext.Players.Remove(player);
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
             }
         }
 
@@ -138,41 +138,42 @@ namespace Ttc.DataAccess.Services
             existingSpeler.NaamKort = player.Alias;
         }
 
-        public byte[] GetExcelExport()
+        public async Task<byte[]> GetExcelExport()
         {
             using (var dbContext = new TtcDbContext())
             {
-                var activePlayers = dbContext.Players.Where(x => x.Gestopt == null);
-                var exceller = new PlayersExcelCreator(activePlayers.ToArray());
+                var activePlayers = await dbContext.Players.Where(x => x.Gestopt == null).ToArrayAsync();
+                var exceller = new PlayersExcelCreator(activePlayers);
                 return exceller.Create();
             }
         }
         #endregion
 
         #region User
-        public User GetUser(int playerId)
+        public async Task<User> GetUser(int playerId)
         {
             using (var dbContext = new TtcDbContext())
             {
-                return GetUser(dbContext, playerId);
+                return await GetUser(dbContext, playerId);
             }
         }
 
-        private static User GetUser(TtcDbContext dbContext, int playerId)
+        private static async Task<User> GetUser(TtcDbContext dbContext, int playerId)
         {
-            var teams = dbContext.Teams
+            var teams = await dbContext.Teams
                 .Include(x => x.Players)
                 .Where(x => x.Year == Constants.CurrentSeason)
                 .Where(x => x.Players.Any(ply => ply.PlayerId == playerId))
-                .Select(x => x.Id);
+                .Select(x => x.Id)
+                .ToListAsync();
 
-            var player = dbContext.Players.Single(ply => ply.Id == playerId);
+            var player = await dbContext.Players.SingleAsync(ply => ply.Id == playerId);
             return new User
             {
                 PlayerId = playerId,
                 Alias = player.NaamKort,
                 Security = GetPlayerSecurity(player.Toegang),
-                Teams = teams.ToList()
+                Teams = teams
             };
         }
 
@@ -198,51 +199,51 @@ namespace Ttc.DataAccess.Services
         }
         #endregion
 
-        public void FrenoySync()
+        public async Task FrenoySync()
         {
             using (var context = new TtcDbContext())
             {
                 var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
-                vttlPlayers.StopAllPlayers(false);
-                vttlPlayers.SyncPlayers();
+                await vttlPlayers.StopAllPlayers(false);
+                await vttlPlayers.SyncPlayers();
                 var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
-                sportaPlayers.SyncPlayers();
+                await sportaPlayers.SyncPlayers();
             }
         }
 
         #region Login & Password
         private const int SystemPlayerIdFromFrontend = -1;
-        public User Login(UserCredentials user)
+        public async Task<User> Login(UserCredentials user)
         {
             using (var dbContext = new TtcDbContext())
             {
                 if (user.PlayerId == SystemPlayerIdFromFrontend)
                 {
-                    user.PlayerId = dbContext.Players.Single(ply => ply.NaamKort == "SYSTEM").Id;
+                    user.PlayerId = (await dbContext.Players.SingleAsync(ply => ply.NaamKort == "SYSTEM")).Id;
                 }
 
-                var pwdCheck = dbContext.Database.SqlQuery<int>(
+                var pwdCheck = await dbContext.Database.SqlQuery<int>(
                     $"SELECT COUNT(0) FROM {PlayerEntity.TableName} WHERE id={{0}} AND paswoord=MD5({{1}})",
                     user.PlayerId,
-                    user.Password).FirstOrDefault();
+                    user.Password).FirstOrDefaultAsync();
 
                 if (pwdCheck != 1)
                 {
                     return null;
                 }
 
-                return GetUser(user.PlayerId);
+                return await GetUser(user.PlayerId);
             }
         }
 
-        public User ChangePassword(PasswordCredentials userNewCredentials)
+        public async Task<User> ChangePassword(PasswordCredentials userNewCredentials)
         {
             using (var dbContext = new TtcDbContext())
             {
-                var pwdCheck = dbContext.Database.SqlQuery<int>(
+                var pwdCheck = await dbContext.Database.SqlQuery<int>(
                     $"SELECT COUNT(0) FROM {PlayerEntity.TableName} WHERE id={{0}} AND paswoord=MD5({{1}})",
                     userNewCredentials.PlayerId,
-                    userNewCredentials.OldPassword).FirstOrDefault();
+                    userNewCredentials.OldPassword).FirstOrDefaultAsync();
 
                 if (pwdCheck != 1)
                 {
@@ -250,33 +251,33 @@ namespace Ttc.DataAccess.Services
                 }
                 else
                 {
-                    dbContext.Database.ExecuteSqlCommand(
-                    $"UPDATE {PlayerEntity.TableName} SET paswoord=MD5({{1}}) WHERE id={{0}}",
-                    userNewCredentials.PlayerId,
-                    userNewCredentials.NewPassword);
+                    await dbContext.Database.ExecuteSqlCommandAsync(
+                        $"UPDATE {PlayerEntity.TableName} SET paswoord=MD5({{1}}) WHERE id={{0}}",
+                        userNewCredentials.PlayerId,
+                        userNewCredentials.NewPassword);
 
-                    return GetUser(userNewCredentials.PlayerId);
+                    return await GetUser(userNewCredentials.PlayerId);
                 }
             }
         }
 
-        public string SetNewPassword(PasswordCredentials request)
+        public async Task<string> SetNewPassword(PasswordCredentials request)
         {
             using (var dbContext = new TtcDbContext())
             {
                 PlayerEntity player;
                 if (request.PlayerId == SystemPlayerIdFromFrontend)
                 {
-                    player = dbContext.Players.Single(ply => ply.NaamKort == "SYSTEM");
+                    player = await dbContext.Players.SingleAsync(ply => ply.NaamKort == "SYSTEM");
                 }
                 else
                 {
-                    player = dbContext.Players.SingleOrDefault(x => x.Id == request.PlayerId);
+                    player = await dbContext.Players.SingleOrDefaultAsync(x => x.Id == request.PlayerId);
                 }
                 
                 if (player != null)
                 {
-                    dbContext.Database.ExecuteSqlCommand(
+                    await dbContext.Database.ExecuteSqlCommandAsync(
                         $"UPDATE {PlayerEntity.TableName} SET paswoord=MD5({{1}}) WHERE id={{0}}",
                         player.Id,
                         request.NewPassword);
@@ -287,11 +288,11 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        public Guid EmailMatchesPlayer(string email, int playerId)
+        public async Task<Guid> EmailMatchesPlayer(string email, int playerId)
         {
             using (var dbContext = new TtcDbContext())
             {
-                var player = dbContext.Players.SingleOrDefault(x => x.Id == playerId && x.Email.ToLower() == email.ToLower());
+                var player = await dbContext.Players.SingleOrDefaultAsync(x => x.Id == playerId && x.Email.ToLower() == email.ToLower());
                 if (player == null)
                 {
                     throw new Exception("Email komt niet overeen voor " + playerId);
@@ -299,21 +300,21 @@ namespace Ttc.DataAccess.Services
 
                 var passwordReset = new PlayerPasswordResetEntity(playerId);
                 dbContext.PlayerPasswordResets.Add(passwordReset);
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
 
                 return passwordReset.Guid;
             }
         }
 
-        public void SetNewPasswordFromGuid(Guid guid, int playerId, string password)
+        public async Task SetNewPasswordFromGuid(Guid guid, int playerId, string password)
         {
             using (var dbContext = new TtcDbContext())
             {
                 var now = DateTime.UtcNow;
-                var resetInfo = dbContext.PlayerPasswordResets.FirstOrDefault(x => x.Guid == guid && x.PlayerId == playerId && x.ExpiresOn > now);
+                var resetInfo = await dbContext.PlayerPasswordResets.FirstOrDefaultAsync(x => x.Guid == guid && x.PlayerId == playerId && x.ExpiresOn > now);
                 if (resetInfo != null)
                 {
-                    dbContext.Database.ExecuteSqlCommand(
+                    await dbContext.Database.ExecuteSqlCommandAsync(
                         $"UPDATE {PlayerEntity.TableName} SET paswoord=MD5({{1}}) WHERE id={{0}}",
                         playerId,
                         password);

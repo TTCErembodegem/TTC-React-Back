@@ -4,6 +4,7 @@ using System.Linq;
 using AutoMapper;
 using Ttc.DataEntities;
 using System.Data.Entity;
+using System.Threading.Tasks;
 using Ttc.Model.Clubs;
 using Ttc.Model.Players;
 
@@ -13,7 +14,7 @@ namespace Ttc.DataAccess.Services
     {
         private static IEnumerable<Club> _clubs;
 
-        public IEnumerable<Club> GetActiveClubs()
+        public async Task<IEnumerable<Club>> GetActiveClubs()
         {
             if (MatchService.MatchesPlaying && _clubs != null)
             {
@@ -22,11 +23,11 @@ namespace Ttc.DataAccess.Services
 
             using (var dbContext = new TtcDbContext())
             {
-                var activeClubs = dbContext.Clubs
+                var activeClubs = await dbContext.Clubs
                     .Include(x => x.Lokalen)
                     .Include(x => x.Contacten)
                     .Where(x => x.Actief.HasValue && x.Actief == 1)
-                    .ToList();
+                    .ToListAsync();
 
                 var result = Mapper.Map<IList<ClubEntity>, IList<Club>>(activeClubs);
 
@@ -37,7 +38,7 @@ namespace Ttc.DataAccess.Services
                 var ourClub = result.Single(x => x.Id == Constants.OwnClubId);
                 ourClub.Managers = new List<ClubManager>();
 
-                var managerPlayers = dbContext.Players.Where(x => managerIds.Contains(x.Id));
+                var managerPlayers = await dbContext.Players.Where(x => managerIds.Contains(x.Id)).ToArrayAsync();
                 foreach (var managerPlayer in managerPlayers)
                 {
                     var managerInfo = managers.Single(x => x.SpelerId == managerPlayer.Id);
@@ -61,11 +62,11 @@ namespace Ttc.DataAccess.Services
         }
 
         #region Club Board
-        public void SaveBoardMember(int playerId, string boardFunction, int sort)
+        public async Task SaveBoardMember(int playerId, string boardFunction, int sort)
         {
             using (var context = new TtcDbContext())
             {
-                var board = context.ClubContacten.SingleOrDefault(x => x.SpelerId == playerId);
+                var board = await context.ClubContacten.SingleOrDefaultAsync(x => x.SpelerId == playerId);
                 if (board == null)
                 {
                     board = new ClubContact()
@@ -78,17 +79,17 @@ namespace Ttc.DataAccess.Services
 
                 board.Omschrijving = Enum.Parse(typeof(ClubManagerType), boardFunction, true).ToString();
                 board.Sortering = sort;
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
         }
 
-        public void DeleteBoardMember(int playerId)
+        public async Task DeleteBoardMember(int playerId)
         {
             using (var context = new TtcDbContext())
             {
-                var board = context.ClubContacten.Single(x => x.SpelerId == playerId);
+                var board = await context.ClubContacten.SingleAsync(x => x.SpelerId == playerId);
                 context.ClubContacten.Remove(board);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
         }
         #endregion
