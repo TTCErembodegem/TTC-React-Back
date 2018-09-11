@@ -29,6 +29,12 @@ namespace Ttc.WebApi.Controllers
         public async Task<Dictionary<string, string>> Get() => await _service.Get();
 
         [HttpPost]
+        public async Task Post([FromBody]ConfigParam param)
+        {
+            await _service.Save(param.Key, param.Value);
+        }
+
+        [HttpPost]
         [Route("Log")]
         [AllowAnonymous]
         public void Log([FromBody]dynamic context)
@@ -58,5 +64,13 @@ namespace Ttc.WebApi.Controllers
             }
             return resp;
         }
+    }
+
+    public class ConfigParam
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
+
+        public override string ToString() => $"{Key} => {Value}";
     }
 }

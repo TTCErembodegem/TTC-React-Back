@@ -37,5 +37,15 @@ namespace Ttc.DataAccess.Services
                 return new EmailConfig(fromEmail, sendGridApiKey);
             }
         }
+
+        public async Task Save(string key, string value)
+        {
+            using (var context = new TtcDbContext())
+            {
+                var param = await context.Parameters.SingleAsync(x => x.Sleutel == key);
+                param.Value = value;
+                await context.SaveChangesAsync();
+            }
+        }
     }
 }
