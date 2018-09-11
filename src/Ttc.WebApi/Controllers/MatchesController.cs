@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Ttc.DataAccess.Services;
 using Ttc.Model;
@@ -27,17 +28,17 @@ namespace Ttc.WebApi.Controllers
 
         #region Getters
         [AllowAnonymous]
-        public IEnumerable<Match> Get()
+        public async Task<IEnumerable<Match>> Get()
         {
-            var result = _service.GetMatches();
+            var result = await _service.GetMatches();
             CleanSensitiveData(result);
             return result;
         }
 
         [AllowAnonymous]
-        public Match Get(int id)
+        public async Task<Match> Get(int id)
         {
-            var result = _service.GetMatch(id, true);
+            var result = await _service.GetMatch(id, true);
             CleanSensitiveData(result);
             return result;
         }
@@ -45,10 +46,10 @@ namespace Ttc.WebApi.Controllers
         [HttpGet]
         [Route("GetOpponentMatches")]
         [AllowAnonymous]
-        public IEnumerable<OtherMatch> GetOpponentMatches(int teamId/*, int? clubId = null, string teamCode = null*/)
+        public async Task<IEnumerable<OtherMatch>> GetOpponentMatches(int teamId/*, int? clubId = null, string teamCode = null*/)
         {
             //var opponent = OpposingTeam.Create(clubId, teamCode);
-            var result = _service.GetOpponentMatches(teamId);
+            var result = await _service.GetOpponentMatches(teamId);
             CleanSensitiveData(result);
             return result;
         }
@@ -60,87 +61,87 @@ namespace Ttc.WebApi.Controllers
         [HttpPost]
         [Route("FrenoyMatchSync")]
         [AllowAnonymous]
-        public Match FrenoyMatchSync([FromBody]IdDto matchId, [FromUri]bool forceSync)
+        public async Task<Match> FrenoyMatchSync([FromBody]IdDto matchId, [FromUri]bool forceSync)
         {
-            var result = _service.FrenoyMatchSync(matchId.Id, forceSync);
+            var result = await _service.FrenoyMatchSync(matchId.Id, forceSync);
             CleanSensitiveData(result);
             return result;
         }
 
         [HttpPost]
         [Route("FrenoyTeamSync")]
-        public void FrenoyTeamSync([FromBody]IdDto teamId)
+        public async Task FrenoyTeamSync([FromBody]IdDto teamId)
         {
-            _service.FrenoyTeamSync(teamId.Id);
+            await _service.FrenoyTeamSync(teamId.Id);
         }
 
         [HttpPost]
         [Route("FrenoyOtherMatchSync")]
         [AllowAnonymous]
-        public OtherMatch FrenoyOtherMatchSync([FromBody]IdDto matchId)
+        public async Task<OtherMatch> FrenoyOtherMatchSync([FromBody]IdDto matchId)
         {
-            var result = _service.FrenoyOtherMatchSync(matchId.Id);
+            var result = await _service.FrenoyOtherMatchSync(matchId.Id);
             return result;
         }
 
         [HttpPost]
         [Route("TogglePlayer")]
-        public Match TogglePlayer([FromBody]MatchPlayer player)
+        public async Task<Match> TogglePlayer([FromBody]MatchPlayer player)
         {
-            var result = _service.ToggleMatchPlayer(player);
+            var result = await _service.ToggleMatchPlayer(player);
             return result;
         }
 
         [HttpPost]
         [Route("SetMyFormation")]
-        public Match SetMyFormation([FromBody]MatchPlayer player)
+        public async Task<Match> SetMyFormation([FromBody]MatchPlayer player)
         {
-            var result = _service.SetMyFormation(player);
+            var result = await _service.SetMyFormation(player);
             return result;
         }
 
         [HttpPost]
         [Route("EditMatchPlayers")]
-        public Match EditMatchPlayers([FromBody]MatchPlayersDto dto)
+        public async Task<Match> EditMatchPlayers([FromBody]MatchPlayersDto dto)
         {
-            var result = _service.EditMatchPlayers(dto.MatchId, dto.PlayerIds, dto.NewStatus, dto.BlockAlso, dto.Comment);
+            var result = await _service.EditMatchPlayers(dto.MatchId, dto.PlayerIds, dto.NewStatus, dto.BlockAlso, dto.Comment);
             return result;
         }
 
         [HttpPost]
         [Route("Report")]
-        public Match Report([FromBody]MatchReport report)
+        public async Task<Match> Report([FromBody]MatchReport report)
         {
-            var result = _service.UpdateReport(report);
+            var result = await _service.UpdateReport(report);
             return result;
         }
 
         [HttpPost]
         [Route("Comment")]
-        public Match Comment([FromBody]MatchComment comment)
+        public async Task<Match> Comment([FromBody]MatchComment comment)
         {
-            var result = _service.AddComment(comment);
+            var result = await _service.AddComment(comment);
             return result;
         }
 
         [HttpPost]
         [Route("DeleteComment")]
-        public Match DeleteComment([FromBody]IdDto comment)
+        public async Task<Match> DeleteComment([FromBody]IdDto comment)
         {
-            var result = _service.DeleteComment(comment.Id);
+            var result = await _service.DeleteComment(comment.Id);
             return result;
         }
 
         [HttpPost]
         [Route("UpdateScore")]
-        public Match UpdateScore([FromBody]MatchScoreDto score)
+        public async Task<Match> UpdateScore([FromBody]MatchScoreDto score)
         {
             if (score.Home < 0) score.Home = 0;
             else if (score.Home > 15) score.Home = 16;
             if (score.Out < 0) score.Out = 0;
             else if (score.Out > 15) score.Out = 16;
 
-            var result = _service.UpdateScore(score.MatchId, new MatchScore(score.Home, score.Out));
+            var result = await _service.UpdateScore(score.MatchId, new MatchScore(score.Home, score.Out));
             return result;
         }
         #endregion
@@ -148,9 +149,9 @@ namespace Ttc.WebApi.Controllers
 
         [HttpGet]
         [Route("ExcelScoresheet")]
-        public string GetExcelExport([FromUri] int matchId)
+        public async Task<string> GetExcelExport([FromUri] int matchId)
         {
-            var excel = _service.GetExcelExport(matchId);
+            var excel = await _service.GetExcelExport(matchId);
             return Convert.ToBase64String(excel);
         }
     }

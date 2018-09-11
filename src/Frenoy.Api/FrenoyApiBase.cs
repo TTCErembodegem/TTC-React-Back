@@ -22,9 +22,9 @@ namespace Frenoy.Api
     public class FrenoyApiBase
     {
         #region Fields
-        const string FrenoyVttlWsdlUrl = "http://api.vttl.be/0.7/?wsdl";
+        const string FrenoyVttlWsdlUrl = "https://api.vttl.be/?wsdl";
         const string FrenoySportaWsdlUrl = "https://ttonline.sporta.be/api/?wsdl";
-        const string FrenoyVttlEndpoint = "http://api.vttl.be/0.7/index.php?s=vttl";
+        const string FrenoyVttlEndpoint = "https://api.vttl.be/index.php?s=vttl";
         const string FrenoySportaEndpoint = "https://ttonline.sporta.be/api/index.php?s=sporcrea";
 
         protected readonly FrenoySettings _settings;
@@ -60,6 +60,11 @@ namespace Frenoy.Api
                 var endpoint = new EndpointAddress(FrenoySportaEndpoint);
                 _frenoy = new TabTAPI_PortTypeClient(binding, endpoint);
             }
+
+            //_frenoy.Endpoint.Binding.ReceiveTimeout = TimeSpan.FromMinutes(5);
+            //_frenoy.Endpoint.Binding.CloseTimeout = TimeSpan.FromMinutes(5);
+            //_frenoy.Endpoint.Binding.OpenTimeout = TimeSpan.FromMinutes(5);
+            //_frenoy.Endpoint.Binding.SendTimeout = TimeSpan.FromMinutes(5);
         }
         #endregion     
 

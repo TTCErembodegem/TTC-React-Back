@@ -19,7 +19,7 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://ttonline.sporta.be/api/?wsdl" Protocol="http" SourceId="1" />
+    <MetadataSource Address="https://ttonline.sporta.be/api/?wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
     <MetadataFile FileName="item1.wsdl" MetadataType="Wsdl" ID="1c948563-a2a6-468b-bdcd-eab839854f43" SourceId="1" SourceUrl="https://ttonline.sporta.be/api/?wsdl" />

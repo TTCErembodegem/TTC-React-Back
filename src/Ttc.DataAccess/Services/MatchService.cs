@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Frenoy.Api;
 using Ttc.DataAccess.Utilities;
@@ -19,7 +20,7 @@ namespace Ttc.DataAccess.Services
         public static bool MatchesPlaying;
 
         #region Getters
-        public ICollection<Match> GetMatches()
+        public async Task<IList<Match>> GetMatches()
         {
             if (MatchesPlaying)
             {
@@ -28,15 +29,15 @@ namespace Ttc.DataAccess.Services
 
             using (var dbContext = new TtcDbContext())
             {
-                var matchEntities = dbContext.Matches
+                var matchEntities = await dbContext.Matches
                     .WithIncludes()
                     //.Where(x => x.Id == 802)
                     .Where(x => x.HomeClubId == Constants.OwnClubId || x.AwayClubId == Constants.OwnClubId)
                     .Where(x => x.FrenoySeason == Constants.FrenoySeason)
-                    .ToList();
+                    .ToListAsync();
 
                 var matchIds = matchEntities.Select(x => x.Id).ToArray();
-                var comments = dbContext.MatchComments.Where(x => matchIds.Contains(x.MatchId)).ToArray();
+                var comments = await dbContext.MatchComments.Where(x => matchIds.Contains(x.MatchId)).ToArrayAsync();
                 foreach (var match in matchEntities)
                 {
                     match.Comments = comments.Where(x => x.MatchId == match.Id).ToArray();
@@ -54,25 +55,25 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        public Match GetMatch(int matchId, bool allowCache = false)
+        public async Task<Match> GetMatch(int matchId, bool allowCache = false)
         {
             if (allowCache && _matches != null)
             {
                 var ply = _matches.SingleOrDefault(x => x.Id == matchId);
-                return ply ?? GetMatch(matchId);
+                return ply ?? await GetMatch(matchId);
             }
 
             using (var dbContext = new TtcDbContext())
             {
-                return GetMatch(dbContext, matchId);
+                return await GetMatch(dbContext, matchId);
             }
         }
 
-        public ICollection<OtherMatch> GetOpponentMatches(int teamId, OpposingTeam opponent = null)
+        public async Task<ICollection<OtherMatch>> GetOpponentMatches(int teamId, OpposingTeam opponent = null)
         {
             using (var dbContext = new TtcDbContext())
             {
-                var team = dbContext.Teams.Single(x => x.Id == teamId);
+                var team = await dbContext.Teams.SingleAsync(x => x.Id == teamId);
                 //var frenoy = new FrenoyMatchesApi(dbContext, Constants.NormalizeCompetition(team.Competition));
 
                 //var firstMatch = dbContext.Matches.Where(x => x.FrenoySeason == Constants.FrenoySeason && x.ShouldBePlayed).Min(x => x.Date);
@@ -82,11 +83,11 @@ namespace Ttc.DataAccess.Services
 
                 var watch = Stopwatch.StartNew();
                 
-                var matchEntities = dbContext.Matches
+                var matchEntities = await dbContext.Matches
                     .WithIncludes()
                     //.Where(match => (match.AwayClubId == opponent.ClubId && match.AwayTeamCode == opponent.TeamCode) || (match.HomeClubId == opponent.ClubId && match.HomeTeamCode == opponent.TeamCode))
                     .Where(match => match.FrenoyDivisionId == team.FrenoyDivisionId)
-                    .ToArray();
+                    .ToArrayAsync();
 
                 Debug.WriteLine("aaaaand: " + watch.Elapsed.ToString("g"));
                 watch.Restart();
@@ -131,16 +132,16 @@ namespace Ttc.DataAccess.Services
         #endregion
 
         #region Boilerplate code
-        private Match GetMatch(TtcDbContext dbContext, int matchId)
+        private async Task<Match> GetMatch(TtcDbContext dbContext, int matchId)
         {
-            var match = dbContext.Matches
+            var match = await dbContext.Matches
                     .WithIncludes()
-                    .SingleOrDefault(x => x.Id == matchId);
+                    .SingleOrDefaultAsync(x => x.Id == matchId);
 
             if (match == null)
                 return null;
 
-            var comments = dbContext.MatchComments.Where(x => x.MatchId == matchId).ToArray();
+            var comments = await dbContext.MatchComments.Where(x => x.MatchId == matchId).ToArrayAsync();
             match.Comments = comments;
 
             var matchModel = Map(match);
@@ -160,36 +161,36 @@ namespace Ttc.DataAccess.Services
         #endregion
 
         #region Putters
-        public Match UpdateScore(int matchId, MatchScore score)
+        public async Task<Match> UpdateScore(int matchId, MatchScore score)
         {
             using (var dbContext = new TtcDbContext())
             {
-                var match = dbContext.Matches
+                var match = await dbContext.Matches
                     .WithIncludes()
-                    .Single(x => x.Id == matchId);
+                    .SingleAsync(x => x.Id == matchId);
 
                 if (match.IsSyncedWithFrenoy)
                 {
-                    return GetMatch(dbContext, match.Id);
+                    return await GetMatch(dbContext, match.Id);
                 }
 
                 match.AwayScore = score.Out;
                 match.HomeScore = score.Home;
                 dbContext.SaveChanges();
 
-                return GetMatch(dbContext, match.Id);
+                return await GetMatch(dbContext, match.Id);
             }
         }
 
         #region Players
-        public Match SetMyFormation(MatchPlayer matchPlayer)
+        public async Task<Match> SetMyFormation(MatchPlayer matchPlayer)
         {
             using (var dbContext = new TtcDbContext())
             {
-                var existingPlayer = dbContext.MatchPlayers
+                var existingPlayer = await dbContext.MatchPlayers
                     .Include(x => x.Match)
                     .Where(x => x.MatchId == matchPlayer.MatchId && x.PlayerId == matchPlayer.PlayerId)
-                    .FirstOrDefault(x => x.Status != PlayerMatchStatus.Captain && x.Status != PlayerMatchStatus.Major);
+                    .FirstOrDefaultAsync(x => x.Status != PlayerMatchStatus.Captain && x.Status != PlayerMatchStatus.Major);
 
                 if (existingPlayer != null)
                 {
@@ -201,29 +202,29 @@ namespace Ttc.DataAccess.Services
                     var verslagSpeler = Mapper.Map<MatchPlayer, MatchPlayerEntity>(matchPlayer);
                     dbContext.MatchPlayers.Add(verslagSpeler);
                 }
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
             }
-            var newMatch = GetMatch(matchPlayer.MatchId);
+            var newMatch = await GetMatch(matchPlayer.MatchId);
             return newMatch;
         }
 
         /// <summary>
         /// Toggle Captain/Major player by any player of the team on the day of the match
         /// </summary>
-        public Match ToggleMatchPlayer(MatchPlayer matchPlayer)
+        public async Task<Match> ToggleMatchPlayer(MatchPlayer matchPlayer)
         {
             Debug.Assert(matchPlayer.Status == PlayerMatchStatus.Captain || matchPlayer.Status == PlayerMatchStatus.Major);
             using (var dbContext = new TtcDbContext())
             {
-                var match = dbContext.Matches.Find(matchPlayer.MatchId);
+                var match = await dbContext.Matches.FindAsync(matchPlayer.MatchId);
                 if (match == null || match.IsSyncedWithFrenoy)
                 {
-                    return GetMatch(matchPlayer.MatchId);
+                    return await GetMatch(matchPlayer.MatchId);
                 }
 
-                var existingPlayer = dbContext.MatchPlayers
+                var existingPlayer = await dbContext.MatchPlayers
                     .Where(x => x.MatchId == matchPlayer.MatchId && x.PlayerId == matchPlayer.PlayerId)
-                    .FirstOrDefault(x => x.Status == matchPlayer.Status);
+                    .FirstOrDefaultAsync(x => x.Status == matchPlayer.Status);
 
                 match.Block = matchPlayer.Status;
                 if (existingPlayer != null)
@@ -234,9 +235,9 @@ namespace Ttc.DataAccess.Services
                 {
                     dbContext.MatchPlayers.Add(Mapper.Map<MatchPlayer, MatchPlayerEntity>(matchPlayer));
                 }
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
             }
-            var newMatch = GetMatch(matchPlayer.MatchId);
+            var newMatch = await GetMatch(matchPlayer.MatchId);
             return newMatch;
         }
 
@@ -244,28 +245,28 @@ namespace Ttc.DataAccess.Services
         /// Set all players for the match to Captain/Major
         /// </summary>
         /// <param name="blockAlso">Also block the match to the newStatus level</param>
-        public Match EditMatchPlayers(int matchId, int[] playerIds, string newStatus, bool blockAlso, string comment)
+        public async Task<Match> EditMatchPlayers(int matchId, int[] playerIds, string newStatus, bool blockAlso, string comment)
         {
             Debug.Assert(newStatus == PlayerMatchStatus.Captain || newStatus == PlayerMatchStatus.Major);
             using (var db = new TtcDbContext())
             {
-                var match = db.Matches.Single(x => x.Id == matchId);
+                var match = await db.Matches.SingleAsync(x => x.Id == matchId);
                 if (match.IsSyncedWithFrenoy)
                 {
-                    return GetMatch(matchId);
+                    return await GetMatch(matchId);
                 }
 
                 match.FormationComment = comment;
                 match.Block = blockAlso ? newStatus : null;
-                var existingPlayers = db.MatchPlayers
+                var existingPlayers = await db.MatchPlayers
                     .Where(x => x.MatchId == matchId)
                     .Where(x => x.Status == newStatus)
-                    .ToArray();
+                    .ToArrayAsync();
                 db.MatchPlayers.RemoveRange(existingPlayers);
 
                 for (int i = 0; i < playerIds.Length; i++)
                 {
-                    var player = db.Players.Find(playerIds[i]);
+                    var player = await db.Players.FindAsync(playerIds[i]);
                     var newMatchPlayer = new MatchPlayerEntity
                     {
                         Id = i * -1,
@@ -279,59 +280,59 @@ namespace Ttc.DataAccess.Services
                     };
                     db.MatchPlayers.Add(newMatchPlayer);
                 }
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
-            var newMatch = GetMatch(matchId);
+            var newMatch = await GetMatch(matchId);
             return newMatch;
         }
         #endregion
 
         #region Report & Comments
-        public Match UpdateReport(MatchReport report)
+        public async Task<Match> UpdateReport(MatchReport report)
         {
             using (var dbContext = new TtcDbContext())
             {
-                var existingMatch = dbContext.Matches.First(x => x.Id == report.MatchId);
+                var existingMatch = await dbContext.Matches.FirstAsync(x => x.Id == report.MatchId);
                 existingMatch.ReportPlayerId = report.PlayerId;
                 existingMatch.Description = report.Text;
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
             }
-            var newMatch = GetMatch(report.MatchId);
+            var newMatch = await GetMatch(report.MatchId);
             return newMatch;
         }
 
-        public Match AddComment(MatchComment comment)
+        public async Task<Match> AddComment(MatchComment comment)
         {
             using (var dbContext = new TtcDbContext())
             {
                 var entity = Mapper.Map<MatchCommentEntity>(comment);
                 entity.PostedOn = TtcDbContext.GetCurrentBelgianDateTime();
                 dbContext.MatchComments.Add(entity);
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
             }
-            var newMatch = GetMatch(comment.MatchId);
+            var newMatch = await GetMatch(comment.MatchId);
             return newMatch;
         }
 
-        public Match DeleteComment(int commentId)
+        public async Task<Match> DeleteComment(int commentId)
         {
             using (var dbContext = new TtcDbContext())
             {
-                var comment = dbContext.MatchComments.Single(x => x.Id == commentId);
+                var comment = await dbContext.MatchComments.SingleAsync(x => x.Id == commentId);
                 dbContext.MatchComments.Remove(comment);
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
 
-                return GetMatch(dbContext, comment.MatchId);
+                return await GetMatch(dbContext, comment.MatchId);
             }
         }
         #endregion
 
         #region Frenoy Sync
-        public OtherMatch FrenoyOtherMatchSync(int matchId)
+        public async Task<OtherMatch> FrenoyOtherMatchSync(int matchId)
         {
             using (var dbContext = new TtcDbContext())
             {
-                FrenoyMatchSyncCore(dbContext, matchId, false);
+                await FrenoyMatchSyncCore(dbContext, matchId, false);
                 var match = dbContext.Matches
                     .WithIncludes()
                     .Single(x => x.Id == matchId);
@@ -339,46 +340,46 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        public Match FrenoyMatchSync(int matchId, bool forceSync)
+        public async Task<Match> FrenoyMatchSync(int matchId, bool forceSync)
         {
             using (var dbContext = new TtcDbContext())
             {
-                FrenoyMatchSyncCore(dbContext, matchId, forceSync);
-                return GetMatch(dbContext, matchId);
+                await FrenoyMatchSyncCore(dbContext, matchId, forceSync);
+                return await GetMatch(dbContext, matchId);
             }
         }
 
-        public void FrenoyTeamSync(int teamId)
+        public async Task FrenoyTeamSync(int teamId)
         {
             using (var db = new TtcDbContext())
             {
-                var team = db.Teams.Single(x => x.Id == teamId);
+                var team = await db.Teams.SingleAsync(x => x.Id == teamId);
                 var frenoySync = new FrenoyMatchesApi(db, Constants.NormalizeCompetition(team.Competition));
-                frenoySync.SyncTeamMatches(team);
+                await frenoySync.SyncTeamMatches(team);
             }
         }
 
-        private static void FrenoyMatchSyncCore(TtcDbContext dbContext, int matchId, bool forceSync)
+        private static async Task FrenoyMatchSyncCore(TtcDbContext dbContext, int matchId, bool forceSync)
         {
-            var match = dbContext.Matches
+            var match = await dbContext.Matches
                 .WithIncludes()
-                .Single(x => x.Id == matchId);
+                .SingleAsync(x => x.Id == matchId);
 
             if (forceSync || (match.Date < DateTime.Now && !match.IsSyncedWithFrenoy))
             {
                 var frenoySync = new FrenoyMatchesApi(dbContext, match.Competition, forceSync);
-                frenoySync.SyncMatchDetails(match);
+                await frenoySync.SyncMatchDetails(match);
             }
         }
         #endregion
         #endregion
 
-        public byte[] GetExcelExport(int matchId)
+        public async Task<byte[]> GetExcelExport(int matchId)
         {
             using (var dbContext = new TtcDbContext())
             {
                 var activePlayers = dbContext.Players.Where(x => x.Gestopt == null);
-                var match = GetMatch(dbContext, matchId);
+                var match = await GetMatch(dbContext, matchId);
                 var exceller = new MatchExcelCreator(match, activePlayers.ToArray());
                 return exceller.Create();
             }

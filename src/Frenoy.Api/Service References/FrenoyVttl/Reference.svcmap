@@ -19,10 +19,10 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://api.vttl.be/0.7/?wsdl" Protocol="http" SourceId="1" />
+    <MetadataSource Address="https://api.vttl.be/0.7/?wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="item.wsdl" MetadataType="Wsdl" ID="74291100-b1af-4467-83d3-2cd7caffc792" SourceId="1" SourceUrl="http://api.vttl.be/0.7/?wsdl" />
+    <MetadataFile FileName="item1.wsdl" MetadataType="Wsdl" ID="23e59b82-36c3-4576-a489-5c91ae7ec599" SourceId="1" SourceUrl="https://api.vttl.be/0.7/?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

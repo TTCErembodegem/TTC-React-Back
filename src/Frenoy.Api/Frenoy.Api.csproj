@@ -151,6 +151,12 @@
     <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.TestResponse1.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.TournamentRegisterResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.TournamentRegisterResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\FrenoySporta\Frenoy.Api.FrenoySporta.UploadResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -218,13 +224,18 @@
     <None Include="Service References\FrenoyVttl\Frenoy.Api.FrenoyVttl.TestResponse1.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\FrenoyVttl\Frenoy.Api.FrenoyVttl.TournamentRegisterResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\FrenoyVttl\Frenoy.Api.FrenoyVttl.TournamentRegisterResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\FrenoyVttl\Frenoy.Api.FrenoyVttl.UploadResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\FrenoyVttl\Frenoy.Api.FrenoyVttl.UploadResponse1.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\FrenoyVttl\item.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Ttc.DataEntities\Ttc.DataEntities.csproj">
@@ -250,6 +261,7 @@
     <None Include="Service References\FrenoyVttl\configuration.svcinfo" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Service References\FrenoyVttl\item1.wsdl" />
     <None Include="Service References\FrenoyVttl\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

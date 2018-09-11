@@ -35,7 +35,7 @@ namespace Ttc.UnitTests
 
 
             var service = new MatchService();
-            var package = service.GetExcelExport(1246);
+            var package = service.GetExcelExport(1246).Result;
 
             File.WriteAllBytes(@"c:\temp\ttc-excels\testy-" + DateTime.Now.ToString("yyyy-M-d HH.mm.ss") + ".xlsx", package);
         }
