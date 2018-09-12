@@ -148,7 +148,7 @@ namespace Ttc.WebApi.Controllers
 
 
         [HttpGet]
-        [Route("ExcelScoresheet")]
+        [Route("ExcelScoresheet/{matchId}")]
         public async Task<string> GetExcelExport([FromUri] int matchId)
         {
             var excel = await _service.GetExcelExport(matchId);

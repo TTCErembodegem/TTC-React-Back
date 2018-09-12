@@ -12,7 +12,7 @@ using Ttc.Model.Matches;
 namespace Ttc.DataAccess.Utilities
 {
     /// <summary>
-    /// 
+    /// Create Sporta match scoresheet
     /// </summary>
     internal class SportaMatchExcelCreator
     {
@@ -21,8 +21,6 @@ namespace Ttc.DataAccess.Utilities
         private readonly Match _match;
 
         private static string TemplatePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Resources\SportaScoresheetTemplate.xlsx");
-        private static string SavePath => @"c:\temp\ttc-excels\SportaScoresheetTemplate-{season}.xlsx";
-
 
         public SportaMatchExcelCreator(Match match, ICollection<PlayerEntity> players, ICollection<TeamEntity> teams)
         {
@@ -31,22 +29,34 @@ namespace Ttc.DataAccess.Utilities
             _teams = teams;
         }
 
-        #region Template
-        public byte[] CreateTemplate()
+        public byte[] Create()
         {
             var template = new FileInfo(TemplatePath);
-            var dest = new FileInfo(SavePath.Replace("{season", Constants.CurrentSeason.ToString()));
-            //var dest = new FileInfo(@"c:\temp\ttc-excels\testy-" + DateTime.Now.ToString("yyyy-M-d HH.mm.ss") + ".xlsx");
-
-            using (var package = new ExcelPackage(dest, template))
+            using (var package = new ExcelPackage(template))
             {
+                // Update formula's etc
                 CreateTemplatePlayers(package);
                 CreateTemplateVisitors(package);
+
+                // Fill in match details
+                var scoresheet = package.Workbook.Worksheets["Wedstrijdblad"];
+                scoresheet.Cells["B6"].Value = _match.Date;
+                scoresheet.Cells["G6"].Value = _match.Date.ToString(@"HH\umm");
+                scoresheet.Cells["U4"].Value = _match.FrenoyMatchId;
+
+                var team = _teams.Single(x => x.Id == _match.TeamId);
+                scoresheet.Cells["W5"].Value = string.IsNullOrWhiteSpace(team.ReeksNummer) ? "Ere" : team.ReeksNummer + team.ReeksCode;
+
+
+
+                scoresheet.Cells["A9"].Value = $"Erembodegem {team.TeamCode}";
+                //scoresheet.Cells["A16"].Value = $"{_match.Opponent.}";
 
                 return package.GetAsByteArray();
             }
         }
 
+        #region Template
         private void CreateTemplateVisitors(ExcelPackage package)
         {
             var ploegenSheet = package.Workbook.Worksheets["Ploegen"];
@@ -111,18 +121,5 @@ namespace Ttc.DataAccess.Utilities
         }
         #endregion
 
-
-        public byte[] Create()
-        {
-            var dest = new FileInfo(@"c:\temp\ttc-excels\testy-" + DateTime.Now.ToString("yyyy-M-d HH.mm.ss") + ".xlsx");
-            var template = new FileInfo(@"C:\Users\Wouter\Desktop\SportaScoresheet.xlsx");
-
-            using (var package = new ExcelPackage(dest, template))
-            {
-                var scoresheet = package.Workbook.Worksheets["Wedstrijdblad"];
-                scoresheet.Cells["B6"].Value = _match.Date;
-                return package.GetAsByteArray();
-            }
-        }
     }
 }

@@ -24,19 +24,21 @@ namespace Ttc.UnitTests
     [TestFixture]
     public class PlaygroundTests
     {
+        private static string SavePath => @"c:\temp\ttc-excels\SportaScoresheetTemplate-{season}.xlsx";
+
+
         [Test]
         public void ExcelExportTesting()
         {
             AutoMapperConfig.Configure(new KlassementValueConverter());
 
-            //var players = new PlayerService();
-            //players.GetExcelExport();
-
             var service = new MatchService();
-            var package = service.GetExcelExportTemplate(48567).Result;
-            //var package = service.GetExcelExport(48567).Result;
+            var package = service.GetExcelExport(48567).Result;
 
-            File.WriteAllBytes(@"c:\temp\ttc-excels\testy-" + DateTime.Now.ToString("yyyy-M-d HH.mm.ss") + ".xlsx", package);
+            //var dest = SavePath.Replace("{season}", Constants.CurrentSeason.ToString());
+            var dest = @"c:\temp\ttc-excels\testy-" + DateTime.Now.ToString("yyyy-M-d HH.mm.ss") + ".xlsx";
+
+            File.WriteAllBytes(dest, package);
         }
 
         //[Test]

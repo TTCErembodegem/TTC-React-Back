@@ -384,15 +384,6 @@ namespace Ttc.DataAccess.Services
             }
         }
 
-        public async Task<byte[]> GetExcelExportTemplate(int matchId)
-        {
-            using (var dbContext = new TtcDbContext())
-            {
-                var exceller = await CreateExcelCreator(matchId, dbContext);
-                return exceller.CreateTemplate();
-            }
-        }
-
         private async Task<SportaMatchExcelCreator> CreateExcelCreator(int matchId, TtcDbContext dbContext)
         {
             var activePlayers = await dbContext.Players
