@@ -18,6 +18,8 @@ namespace Frenoy.Syncer
                 try
                 {
                     // This code can be triggered from the UI!
+                    // Admin > Spelers > Frenoy Sync button (float: right)
+
                     //var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
                     //vttlPlayers.StopAllPlayers(true);
                     //vttlPlayers.SyncPlayers();
@@ -25,15 +27,13 @@ namespace Frenoy.Syncer
                     //sportaPlayers.SyncPlayers();
 
                     // This code can be triggered by deploying a new migration
-                    // (better code because it will also StopPlayers & StartPlayers)
+                    // --> No more at the moment with asyncy stuff see README.
                     var vttl = new FrenoyMatchesApi(context, Competition.Vttl);
                     vttl.SyncTeamsAndMatches();
                     var sporta = new FrenoyMatchesApi(context, Competition.Sporta);
                     sporta.SyncTeamsAndMatches();
 
                     //RandomizeMatchDatesForTestingPurposes(context);
-
-                    //Configuration.Seed(context, false);
 
                     context.SaveChanges();
                 }

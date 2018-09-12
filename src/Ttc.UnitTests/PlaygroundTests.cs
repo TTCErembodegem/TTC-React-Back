@@ -25,17 +25,16 @@ namespace Ttc.UnitTests
     public class PlaygroundTests
     {
         [Test]
-        public void PlayerExcelExport()
+        public void ExcelExportTesting()
         {
-            //IoCInitializer.Initialize();
             AutoMapperConfig.Configure(new KlassementValueConverter());
 
             //var players = new PlayerService();
             //players.GetExcelExport();
 
-
             var service = new MatchService();
-            var package = service.GetExcelExport(1246).Result;
+            var package = service.GetExcelExportTemplate(48567).Result;
+            //var package = service.GetExcelExport(48567).Result;
 
             File.WriteAllBytes(@"c:\temp\ttc-excels\testy-" + DateTime.Now.ToString("yyyy-M-d HH.mm.ss") + ".xlsx", package);
         }

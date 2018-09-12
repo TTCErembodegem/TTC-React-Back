@@ -12,6 +12,9 @@ namespace Ttc.DataEntities
         public int Id { get; set; }
         [MaxLength(10)]
         public string Competition { get; set; }
+        /// <summary>
+        /// ColumnName "Reeks" in the db
+        /// </summary>
         [Column("Reeks")]
         [MaxLength(2)]
         public string ReeksNummer { get; set; }

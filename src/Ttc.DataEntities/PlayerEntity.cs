@@ -34,6 +34,9 @@ namespace Ttc.DataEntities
         public string FirstName { get; set; }
         [StringLength(100)]
         public string LastName { get; set; }
+        /// <summary>
+        /// FirstName + LastName
+        /// </summary>
         [NotMapped]
         public string Name => $"{FirstName} {LastName}";
 
