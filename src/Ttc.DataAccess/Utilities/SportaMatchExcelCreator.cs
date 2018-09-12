@@ -11,6 +11,16 @@ using Ttc.Model.Matches;
 
 namespace Ttc.DataAccess.Utilities
 {
+    public class SportaMatchFileInfo
+    {
+        public string FrenoyId { get; set; }
+        public string TheirTeamCode { get; set; }
+        public string TheirTeamName { get; set; }
+        public string OurTeamCode { get; set; }
+
+        public override string ToString() => $"{FrenoyId} Sporta {OurTeamCode}: {TheirTeamName} {TheirTeamCode}";
+    }
+
     /// <summary>
     /// Create Sporta match scoresheet
     /// </summary>
@@ -18,12 +28,20 @@ namespace Ttc.DataAccess.Utilities
     {
         private readonly ICollection<PlayerEntity> _players;
         private readonly ICollection<TeamEntity> _teams;
-        private readonly Match _match;
+        private readonly TtcDbContext _context;
+        private readonly MatchEntity _match;
+        private SportaMatchFileInfo _fileInfo;
 
         private static string TemplatePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Resources\SportaScoresheetTemplate.xlsx");
 
-        public SportaMatchExcelCreator(Match match, ICollection<PlayerEntity> players, ICollection<TeamEntity> teams)
+        /// <summary>
+        /// ATTN: Set after create!
+        /// </summary>
+        public SportaMatchFileInfo FileInfo => _fileInfo;
+
+        public SportaMatchExcelCreator(TtcDbContext context, MatchEntity match, ICollection<PlayerEntity> players, ICollection<TeamEntity> teams)
         {
+            _context = context;
             _match = match;
             _players = players;
             _teams = teams;
@@ -44,16 +62,33 @@ namespace Ttc.DataAccess.Utilities
                 scoresheet.Cells["G6"].Value = _match.Date.ToString(@"HH\umm");
                 scoresheet.Cells["U4"].Value = _match.FrenoyMatchId;
 
-                var team = _teams.Single(x => x.Id == _match.TeamId);
-                scoresheet.Cells["W5"].Value = string.IsNullOrWhiteSpace(team.ReeksNummer) ? "Ere" : team.ReeksNummer + team.ReeksCode;
+                var ourTeam = _match.HomeTeam ?? _match.AwayTeam;
+                scoresheet.Cells["W5"].Value = string.IsNullOrWhiteSpace(ourTeam.ReeksNummer) ? "Ere" : ourTeam.ReeksNummer + ourTeam.ReeksCode;
+                scoresheet.Cells["A9"].Value = $"Erembodegem {ourTeam.TeamCode}";
 
+                var theirTeam = GetTheirTeam();
+                var club = _context.Clubs.Single(x => x.Id == theirTeam.ClubId);
+                scoresheet.Cells["A16"].Value = $"{club.Naam + " " + theirTeam.TeamCode}";
 
-
-                scoresheet.Cells["A9"].Value = $"Erembodegem {team.TeamCode}";
-                //scoresheet.Cells["A16"].Value = $"{_match.Opponent.}";
+                _fileInfo = new SportaMatchFileInfo()
+                {
+                    FrenoyId = _match.FrenoyMatchId.Replace("/", "-"),
+                    OurTeamCode = ourTeam.TeamCode,
+                    TheirTeamName = club.Naam,
+                    TheirTeamCode = theirTeam.TeamCode,
+                };
 
                 return package.GetAsByteArray();
             }
+        }
+
+        private (int ClubId, string TeamCode) GetTheirTeam()
+        {
+            if (_match.HomeTeamId.HasValue)
+            {
+                return (_match.AwayClubId, _match.AwayTeamCode);
+            }
+            return (_match.HomeClubId, _match.HomeTeamCode);
         }
 
         #region Template

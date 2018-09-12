@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using AutoMapper;
 using Frenoy.Api;
 using NUnit.Framework;
@@ -24,21 +25,40 @@ namespace Ttc.UnitTests
     [TestFixture]
     public class PlaygroundTests
     {
-        private static string SavePath => @"c:\temp\ttc-excels\SportaScoresheetTemplate-{season}.xlsx";
+        private static string SavePathTemplate => @"c:\temp\ttc-excels\SportaScoresheetTemplate-{season}.xlsx";
+        private static string SavePath => @"c:\temp\ttc-excels\";
 
 
+        /// <summary>
+        /// Creates all Sporta home matches excels
+        /// </summary>
         [Test]
-        public void ExcelExportTesting()
+        public async Task SportaMatchesScoresheetsExcelCreation()
         {
             AutoMapperConfig.Configure(new KlassementValueConverter());
 
             var service = new MatchService();
-            var package = service.GetExcelExport(48567).Result;
 
-            //var dest = SavePath.Replace("{season}", Constants.CurrentSeason.ToString());
-            var dest = @"c:\temp\ttc-excels\testy-" + DateTime.Now.ToString("yyyy-M-d HH.mm.ss") + ".xlsx";
+            var matches = (await service.GetMatches())
+                .Where(x => x.ShouldBePlayed)
+                .Where(x => x.Competition == Constants.Sporta)
+                .Where(x => x.IsHomeMatch.HasValue && x.IsHomeMatch.Value);
 
-            File.WriteAllBytes(dest, package);
+            foreach (var match in matches)
+            {
+                var (package, info) = await service.GetExcelExport(match.Id);
+
+                var fileName = "{frenoyId} Sporta {teamCode} vs {theirClub} {theirTeam}.xlsx"
+                    .Replace("{frenoyId}", info.FrenoyId)
+                    .Replace("{teamCode}", info.OurTeamCode)
+                    .Replace("{theirClub}", info.TheirTeamName)
+                    .Replace("{theirTeam}", info.TheirTeamCode);
+
+                //var dest = SavePath.Replace("{season}", Constants.CurrentSeason.ToString());
+                var dir = Path.Combine(SavePath, $"Sporta {info.OurTeamCode}");
+                Directory.CreateDirectory(dir);
+                File.WriteAllBytes(Path.Combine(dir, fileName), package);
+            }
         }
 
         //[Test]

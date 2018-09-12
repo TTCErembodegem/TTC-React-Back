@@ -375,33 +375,36 @@ namespace Ttc.DataAccess.Services
         #endregion
 
         #region Excel Export
-        public async Task<byte[]> GetExcelExport(int matchId)
+        public async Task<(byte[] file, SportaMatchFileInfo fileInfo)> GetExcelExport(int matchId)
         {
             using (var dbContext = new TtcDbContext())
             {
                 var exceller = await CreateExcelCreator(matchId, dbContext);
-                return exceller.Create();
+                return (exceller.Create(), exceller.FileInfo);
             }
         }
 
-        private async Task<SportaMatchExcelCreator> CreateExcelCreator(int matchId, TtcDbContext dbContext)
+        private static async Task<SportaMatchExcelCreator> CreateExcelCreator(int matchId, TtcDbContext dbContext)
         {
             var activePlayers = await dbContext.Players
                 .Where(x => x.Gestopt == null)
                 .Where(x => x.ClubIdSporta.HasValue)
                 .ToArrayAsync();
 
-            var match = await GetMatch(dbContext, matchId);
+            var match = await dbContext.Matches
+                .Include(x => x.HomeTeam)
+                .Include(x => x.AwayTeam)
+                .SingleAsync(x => x.Id == matchId);
+
             var teams = await dbContext.Teams
                 .Include(x => x.Opponents.Select(o => o.Club))
                 .Where(x => x.Year == Constants.CurrentSeason)
                 .Where(x => x.Competition == Competition.Sporta.ToString())
                 .ToArrayAsync();
 
-            var exceller = new SportaMatchExcelCreator(match, activePlayers, teams);
+            var exceller = new SportaMatchExcelCreator(dbContext, match, activePlayers, teams);
             return exceller;
         }
-
         #endregion
     }
 }
