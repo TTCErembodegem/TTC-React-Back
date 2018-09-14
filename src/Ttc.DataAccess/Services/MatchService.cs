@@ -363,6 +363,8 @@ namespace Ttc.DataAccess.Services
         {
             var match = await dbContext.Matches
                 .WithIncludes()
+                .Include(x => x.HomeTeam)
+                .Include(x => x.AwayTeam)
                 .SingleAsync(x => x.Id == matchId);
 
             if (forceSync || (match.Date < DateTime.Now && !match.IsSyncedWithFrenoy))

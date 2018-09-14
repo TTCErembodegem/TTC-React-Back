@@ -36,13 +36,12 @@ namespace Frenoy.Api
         /// </summary>
         public async Task SyncTeamsAndMatches()
         {
-            // ATTN: Not thread safe!
-            var frenoyTeams = _frenoy.GetClubTeams(new GetClubTeamsRequest
+            var frenoyTeams = await _frenoy.GetClubTeamsAsync(new GetClubTeamsRequest
             {
                 Club = _settings.FrenoyClub,
                 Season = _settings.FrenoySeason.ToString()
             });
-            await SyncTeamsAndMatches(frenoyTeams);
+            await SyncTeamsAndMatches(frenoyTeams.GetClubTeamsResponse);
         }
 
         private async Task SyncTeamsAndMatches(GetClubTeamsResponse frenoyTeams)
@@ -59,11 +58,11 @@ namespace Frenoy.Api
                     await CommitChanges();
 
                     // Create the teams in the new division=reeks
-                    var frenoyDivision = _frenoy.GetDivisionRanking(new GetDivisionRankingRequest
+                    var frenoyDivision = await _frenoy.GetDivisionRankingAsync(new GetDivisionRankingRequest
                     {
                         DivisionId = frenoyTeam.DivisionId
                     });
-                    foreach (var frenoyTeamsInDivision in frenoyDivision.RankingEntries.Where(x => ExtractTeamCodeFromFrenoyName(x.Team) != frenoyTeam.Team || !IsOwnClub(x.TeamClub)))
+                    foreach (var frenoyTeamsInDivision in frenoyDivision.GetDivisionRankingResponse.RankingEntries.Where(x => ExtractTeamCodeFromFrenoyName(x.Team) != frenoyTeam.Team || !IsOwnClub(x.TeamClub)))
                     {
                         var teamOpponent = await CreateTeamOpponent(teamEntity, frenoyTeamsInDivision);
                         _db.TeamOpponents.Add(teamOpponent);
@@ -80,7 +79,7 @@ namespace Frenoy.Api
         public async Task SyncTeamMatches(TeamEntity team)
         {
             // Create the matches=kalender table in the new  division=reeks
-            var matches = _frenoy.GetMatches(new GetMatchesRequest
+            var matches = await _frenoy.GetMatchesAsync(new GetMatchesRequest
             {
                 Club = _settings.FrenoyClub,
                 Season = _settings.FrenoySeason.ToString(), // TODO: replace with team.Year - 1999
@@ -89,80 +88,92 @@ namespace Frenoy.Api
                 WithDetailsSpecified = false,
                 WithDetails = false,
             });
-            await SyncMatches(team.Id, team.FrenoyDivisionId, matches, false);
+            await SyncTeamMatches(team.Id, team.FrenoyDivisionId, matches.GetMatchesResponse);
         }
 
         public async Task SyncMatchDetails(MatchEntity matchEntity)
         {
             if (_forceSync || ShouldAttemptMatchSync(matchEntity.Id))
             {
-                GetMatchesResponse matches = _frenoy.GetMatches(new GetMatchesRequest
+                var matches = await _frenoy.GetMatchesAsync(new GetMatchesRequest
                 {
                     DivisionId = matchEntity.FrenoyDivisionId.ToString(),
                     WithDetailsSpecified = true,
                     WithDetails = true,
                     MatchId = matchEntity.FrenoyMatchId
                 });
-                Debug.Assert(matches.MatchCount == "1");
-                await SyncMatchDetails(matchEntity, matches.TeamMatchesEntries[0]);
+
+                Debug.Assert(matches.GetMatchesResponse.MatchCount == "1");
+
+                var frenoyMatch = matches.GetMatchesResponse.TeamMatchesEntries[0];
+                var ourTeam = matchEntity.HomeTeam ?? matchEntity.AwayTeam;
+
+                await MapMatch(matchEntity, ourTeam.Id, ourTeam.FrenoyDivisionId, frenoyMatch, matchEntity.FrenoySeason);
+
+                await SyncMatchResults(matchEntity, frenoyMatch);
+
+                await CommitChanges();
             }
         }
 
-        public async Task<int?> SyncLastYearOpponentMatches(TeamEntity team, OpposingTeam opponent)
-        {
-            const int prevFrenoySeason = Constants.FrenoySeason - 1;
-            string frenoyOpponentClub = GetFrenoyClubdId(opponent.ClubId);
+        // TODO: This is probably some code that fetches opponent team last year performance
+        // as an indicator of what they might this year look like. Something for pre season.
+        // Probably not worth the trouble...
+        //public async Task<int?> SyncLastYearOpponentMatches(TeamEntity team, OpposingTeam opponent)
+        //{
+        //    const int prevFrenoySeason = Constants.FrenoySeason - 1;
+        //    string frenoyOpponentClub = GetFrenoyClubdId(opponent.ClubId);
 
-            var opponentTeams = _frenoy.GetClubTeams(new GetClubTeamsRequest
-            {
-                Club = frenoyOpponentClub,
-                Season = prevFrenoySeason.ToString()
-            });
+        //    var opponentTeams = await _frenoy.GetClubTeamsAsync(new GetClubTeamsRequest
+        //    {
+        //        Club = frenoyOpponentClub,
+        //        Season = prevFrenoySeason.ToString()
+        //    });
 
-            var lastYearTeam = opponentTeams.TeamEntries.SingleOrDefault(x => x.Team == opponent.TeamCode && x.DivisionCategory == Constants.FrenoyTeamCategory);
-            if (lastYearTeam != null)
-            {
-                int lastYearDivisionId = int.Parse(lastYearTeam.DivisionId);
-                var ourTeam = _db.Teams.SingleOrDefault(x => x.Year == Constants.CurrentSeason - 1 && x.FrenoyDivisionId == lastYearDivisionId && x.Competition == _settings.Competition.ToString());
-                if (ShouldAttemptOpponentMatchSync(opponent, team.Id, prevFrenoySeason))
-                {
-                    GetMatchesResponse matches = _frenoy.GetMatches(new GetMatchesRequest
-                    {
-                        Club = frenoyOpponentClub,
-                        Season = prevFrenoySeason.ToString(),
-                        Team = opponent.TeamCode,
-                        WithDetailsSpecified = false,
-                        WithDetails = false,
-                        DivisionId = lastYearTeam.DivisionId
-                    });
-                    await SyncMatches(ourTeam?.Id, lastYearDivisionId, matches, false, prevFrenoySeason);
-                }
+        //    var lastYearTeam = opponentTeams.TeamEntries.SingleOrDefault(x => x.Team == opponent.TeamCode && x.DivisionCategory == Constants.FrenoyTeamCategory);
+        //    if (lastYearTeam != null)
+        //    {
+        //        int lastYearDivisionId = int.Parse(lastYearTeam.DivisionId);
+        //        var ourTeam = _db.Teams.SingleOrDefault(x => x.Year == Constants.CurrentSeason - 1 && x.FrenoyDivisionId == lastYearDivisionId && x.Competition == _settings.Competition.ToString());
+        //        if (ShouldAttemptOpponentMatchSync(opponent, team.Id, prevFrenoySeason))
+        //        {
+        //            GetMatchesResponse matches = await _frenoy.GetMatchesAsync(new GetMatchesRequest
+        //            {
+        //                Club = frenoyOpponentClub,
+        //                Season = prevFrenoySeason.ToString(),
+        //                Team = opponent.TeamCode,
+        //                WithDetailsSpecified = false,
+        //                WithDetails = false,
+        //                DivisionId = lastYearTeam.DivisionId
+        //            });
+        //            await SyncMatches(ourTeam?.Id, lastYearDivisionId, matches, false, prevFrenoySeason);
+        //        }
 
-                return lastYearDivisionId;
-            }
-            return null;
-        }
+        //        return lastYearDivisionId;
+        //    }
+        //    return null;
+        //}
 
-        public async Task SyncOpponentMatches(TeamEntity team, OpposingTeam opponent)
-        {
-            if (ShouldAttemptOpponentMatchSync(opponent, team.Id))
-            {
-                GetMatchesResponse matches = _frenoy.GetMatches(new GetMatchesRequest
-                {
-                    Club = GetFrenoyClubdId(opponent.ClubId),
-                    Season = _settings.FrenoySeason.ToString(),
-                    Team = opponent.TeamCode,
-                    WithDetailsSpecified = false,
-                    WithDetails = false,
-                    DivisionId = team.FrenoyDivisionId.ToString()
-                });
-                await SyncMatches(team.Id, team.FrenoyDivisionId, matches, false);
-            }
-        }
+        //public async Task SyncOpponentMatches(TeamEntity team, OpposingTeam opponent)
+        //{
+        //    if (ShouldAttemptOpponentMatchSync(opponent, team.Id))
+        //    {
+        //        GetMatchesResponse matches = await _frenoy.GetMatchesAsync(new GetMatchesRequest
+        //        {
+        //            Club = GetFrenoyClubdId(opponent.ClubId),
+        //            Season = _settings.FrenoySeason.ToString(),
+        //            Team = opponent.TeamCode,
+        //            WithDetailsSpecified = false,
+        //            WithDetails = false,
+        //            DivisionId = team.FrenoyDivisionId.ToString()
+        //        });
+        //        await SyncMatches(team.Id, team.FrenoyDivisionId, matches, false);
+        //    }
+        //}
         #endregion
 
         #region Match Creation
-        private async Task SyncMatches(int? teamId, int frenoyDivisionId, GetMatchesResponse matches, bool alsoSyncMatchDetails = true, int frenoySeason = Constants.FrenoySeason)
+        private async Task SyncTeamMatches(int? teamId, int frenoyDivisionId, GetMatchesResponse matches, int frenoySeason = Constants.FrenoySeason)
         {
             foreach (TeamMatchEntryType frenoyMatch in matches.TeamMatchesEntries)
             {
@@ -179,11 +190,6 @@ namespace Frenoy.Api
                 {
                     await MapMatch(matchEntity, teamId, frenoyDivisionId, frenoyMatch, frenoySeason);
                     await CommitChanges();
-                }
-
-                if (alsoSyncMatchDetails)
-                {
-                    await SyncMatchDetails(matchEntity, frenoyMatch);
                 }
             }
         }
@@ -218,17 +224,22 @@ namespace Frenoy.Api
                 if (entity.HomeClubId == Constants.OwnClubId)
                 {
                     entity.HomeTeamId = teamId;
+                    entity.AwayTeamId = null;
                 }
                 else if (entity.AwayClubId == Constants.OwnClubId)
                 {
                     entity.AwayTeamId = teamId;
+                    entity.HomeTeamId = null;
                 }
             }
         }
 
-        private async Task SyncMatchDetails(MatchEntity matchEntity, TeamMatchEntryType frenoyMatch)
+        /// <summary>
+        /// Sync match score, players and individual results
+        /// </summary>
+        private async Task SyncMatchResults(MatchEntity matchEntity, TeamMatchEntryType frenoyMatch)
         {
-            if ((_forceSync || !matchEntity.IsSyncedWithFrenoy) && matchEntity.ShouldBePlayed)
+            if (_forceSync || (!matchEntity.IsSyncedWithFrenoy && matchEntity.ShouldBePlayed))
             {
                 if (frenoyMatch.Score != null)
                 {
@@ -262,8 +273,6 @@ namespace Frenoy.Api
                 {
                     matchEntity.IsSyncedWithFrenoy = true;
                 }
-
-                await CommitChanges();
             }
         }
 
@@ -289,14 +298,14 @@ namespace Frenoy.Api
             _db.MatchGames.RemoveRange(oldMatchGames);
         }
 
-        private static void AssertMatchPlayers(MatchEntity matchEntity)
-        {
-            var testPlayer = matchEntity.Players.Count(x => x.PlayerId != 0) == 0 || matchEntity.Players.Count > 8;
-            if (testPlayer && (matchEntity.AwayTeamId.HasValue || matchEntity.HomeTeamId.HasValue))
-            {
-                Debug.Assert(false, "player problem");
-            }
-        }
+        //private static void AssertMatchPlayers(MatchEntity matchEntity)
+        //{
+        //    var testPlayer = matchEntity.Players.Count(x => x.PlayerId != 0) == 0 || matchEntity.Players.Count > 8;
+        //    if (testPlayer && (matchEntity.AwayTeamId.HasValue || matchEntity.HomeTeamId.HasValue))
+        //    {
+        //        Debug.Assert(false, "player problem");
+        //    }
+        //}
 
         private static void AddMatchGames(IndividualMatchResultEntryType frenoyIndividual, int id, MatchEntity matchEntity)
         {

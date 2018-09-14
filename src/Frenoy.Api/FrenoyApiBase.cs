@@ -108,26 +108,26 @@ namespace Frenoy.Api
 
         private async Task<ClubEntity> CreateClub(string frenoyClubCode)
         {
-            var frenoyClub = _frenoy.GetClubs(new GetClubs
+            var frenoyClub = await _frenoy.GetClubsAsync(new GetClubs
             {
                 Club = frenoyClubCode,
                 Season = _settings.FrenoySeason.ToString()
             });
-            Debug.Assert(frenoyClub.ClubEntries.Count() == 1);
+            Debug.Assert(frenoyClub.GetClubsResponse.ClubEntries.Count() == 1);
 
             var club = new ClubEntity
             {
                 CodeVttl = _isVttl ? frenoyClubCode : null,
                 CodeSporta = !_isVttl ? frenoyClubCode : null,
                 Actief = 1,
-                Naam = frenoyClub.ClubEntries.First().LongName,
+                Naam = frenoyClub.GetClubsResponse.ClubEntries.First().LongName,
                 Douche = 0
             };
 
             _db.Clubs.Add(club);
             await CommitChanges();
 
-            foreach (var frenoyLokaal in frenoyClub.ClubEntries.First().VenueEntries)
+            foreach (var frenoyLokaal in frenoyClub.GetClubsResponse.ClubEntries.First().VenueEntries)
             {
                 var lokaal = new ClubLokaal
                 {
