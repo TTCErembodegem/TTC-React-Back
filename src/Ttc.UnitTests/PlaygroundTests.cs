@@ -46,7 +46,7 @@ namespace Ttc.UnitTests
 
             foreach (var match in matches)
             {
-                var (package, info) = await service.GetExcelExport(match.Id);
+                var (package, info) = await service.GetExcelExport(match.Id, false);
 
                 var fileName = "{frenoyId} Sporta {teamCode} vs {theirClub} {theirTeam}.xlsx"
                     .Replace("{frenoyId}", info.FrenoyId)

@@ -377,12 +377,12 @@ namespace Ttc.DataAccess.Services
         #endregion
 
         #region Excel Export
-        public async Task<(byte[] file, SportaMatchFileInfo fileInfo)> GetExcelExport(int matchId)
+        public async Task<(byte[] file, SportaMatchFileInfo fileInfo)> GetExcelExport(int matchId, bool fillInOurTeam = true)
         {
             using (var dbContext = new TtcDbContext())
             {
                 var exceller = await CreateExcelCreator(matchId, dbContext);
-                return (exceller.Create(), exceller.FileInfo);
+                return (exceller.Create(fillInOurTeam), exceller.FileInfo);
             }
         }
 
@@ -396,6 +396,7 @@ namespace Ttc.DataAccess.Services
             var match = await dbContext.Matches
                 .Include(x => x.HomeTeam)
                 .Include(x => x.AwayTeam)
+                .Include(x => x.Players)
                 .SingleAsync(x => x.Id == matchId);
 
             var teams = await dbContext.Teams
@@ -404,7 +405,11 @@ namespace Ttc.DataAccess.Services
                 .Where(x => x.Competition == Competition.Sporta.ToString())
                 .ToArrayAsync();
 
-            var exceller = new SportaMatchExcelCreator(dbContext, match, activePlayers, teams);
+            var frenoy = new FrenoyPlayersApi(dbContext, Competition.Sporta);
+            var theirClubId = match.AwayTeamId.HasValue ? match.HomeClubId : match.AwayClubId;
+            var opponentPlayers = await frenoy.GetPlayers(theirClubId);
+
+            var exceller = new SportaMatchExcelCreator(dbContext, match, activePlayers, teams, opponentPlayers);
             return exceller;
         }
         #endregion

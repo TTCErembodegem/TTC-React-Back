@@ -4,10 +4,12 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using Frenoy.Api;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using Ttc.DataEntities;
 using Ttc.Model.Matches;
+using Ttc.Model.Players;
 
 namespace Ttc.DataAccess.Utilities
 {
@@ -28,9 +30,11 @@ namespace Ttc.DataAccess.Utilities
     {
         private readonly ICollection<PlayerEntity> _players;
         private readonly ICollection<TeamEntity> _teams;
+        private readonly ICollection<PlayerEntity> _opponentPlayers;
         private readonly TtcDbContext _context;
         private readonly MatchEntity _match;
         private SportaMatchFileInfo _fileInfo;
+        private readonly KlassementValueConverter _klassementCalc = new KlassementValueConverter();
 
         private static string TemplatePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Resources\SportaScoresheetTemplate.xlsx");
 
@@ -39,15 +43,22 @@ namespace Ttc.DataAccess.Utilities
         /// </summary>
         public SportaMatchFileInfo FileInfo => _fileInfo;
 
-        public SportaMatchExcelCreator(TtcDbContext context, MatchEntity match, ICollection<PlayerEntity> players, ICollection<TeamEntity> teams)
+        public SportaMatchExcelCreator(
+            TtcDbContext context,
+            MatchEntity match,
+            ICollection<PlayerEntity> players,
+            ICollection<TeamEntity> teams,
+            ICollection<PlayerEntity> opponentPlayers
+        )
         {
             _context = context;
             _match = match;
             _players = players;
             _teams = teams;
+            _opponentPlayers = opponentPlayers;
         }
 
-        public byte[] Create()
+        public byte[] Create(bool fillInOurTeam = true)
         {
             var template = new FileInfo(TemplatePath);
             using (var package = new ExcelPackage(template))
@@ -55,6 +66,7 @@ namespace Ttc.DataAccess.Utilities
                 // Update formula's etc
                 CreateTemplatePlayers(package);
                 CreateTemplateVisitors(package);
+                CreateTemplateVisitorPlayers(package);
 
                 // Fill in match details
                 var scoresheet = package.Workbook.Worksheets["Wedstrijdblad"];
@@ -67,31 +79,76 @@ namespace Ttc.DataAccess.Utilities
                 scoresheet.Cells["A9"].Value = $"Erembodegem {ourTeam.TeamCode}";
 
                 var theirTeam = GetTheirTeam();
-                var club = _context.Clubs.Single(x => x.Id == theirTeam.ClubId);
-                scoresheet.Cells["A16"].Value = $"{club.Naam + " " + theirTeam.TeamCode}";
+                scoresheet.Cells["A16"].Value = theirTeam.ClubName + " " + theirTeam.TeamCode;
 
                 _fileInfo = new SportaMatchFileInfo()
                 {
                     FrenoyId = _match.FrenoyMatchId.Replace("/", "-"),
                     OurTeamCode = ourTeam.TeamCode,
-                    TheirTeamName = club.Naam,
+                    TheirTeamName = theirTeam.ClubName,
                     TheirTeamCode = theirTeam.TeamCode,
                 };
+
+                if (fillInOurTeam)
+                {
+                    int playerIndex = 10;
+                    foreach (var player in _match.Players.Where(x => x.Player != null).OrderBy(x => x.Position))
+                    {
+                        scoresheet.Cells["B" + playerIndex].Value = player.Player.Name;
+                        playerIndex++;
+                    }
+                }
+
+                package.Workbook.Worksheets["Ploegen"].Hidden = eWorkSheetHidden.Hidden;
+                package.Workbook.Worksheets["Spelers"].Hidden = eWorkSheetHidden.Hidden;
+
+                scoresheet.Calculate();
 
                 return package.GetAsByteArray();
             }
         }
 
-        private (int ClubId, string TeamCode) GetTheirTeam()
+        
+
+        private (string ClubName, string TeamCode) GetTheirTeam()
         {
+            var theirClubId = _match.HomeTeamId.HasValue ? _match.AwayClubId : _match.HomeClubId;
+            var club = _context.Clubs.Single(x => x.Id == theirClubId);
             if (_match.HomeTeamId.HasValue)
             {
-                return (_match.AwayClubId, _match.AwayTeamCode);
+                return (club.Naam, _match.AwayTeamCode);
             }
-            return (_match.HomeClubId, _match.HomeTeamCode);
+            return (club.Naam, _match.HomeTeamCode);
+        }
+
+        private string GetTheirTeamDesc()
+        {
+            var theirTeam = GetTheirTeam();
+            return theirTeam.ClubName + " " + theirTeam.TeamCode;
         }
 
         #region Template
+        private void CreateTemplateVisitorPlayers(ExcelPackage package)
+        {
+            var sheet = package.Workbook.Worksheets.Add("Tegenstanders");
+            sheet.Column(1).Width = 20;
+            sheet.Cells["A1"].Value = GetTheirTeamDesc();
+
+            sheet.Cells["A2"].Value = "Naam";
+            sheet.Cells["B2"].Value = "Lidkaart";
+            sheet.Cells["C2"].Value = "Klassement";
+            sheet.Cells["D2"].Value = "Waarde";
+            int rowIndex = 3;
+            foreach (var opponent in _opponentPlayers.OrderBy(x => x.IndexSporta))
+            {
+                sheet.Cells["A" + rowIndex].Value = opponent.Name;
+                sheet.Cells["B" + rowIndex].Value = opponent.LidNummerSporta;
+                sheet.Cells["C" + rowIndex].Value = opponent.KlassementSporta;
+                sheet.Cells["D" + rowIndex].Value = _klassementCalc.Sporta(opponent.KlassementSporta);
+                rowIndex++;
+            }
+        }
+
         private void CreateTemplateVisitors(ExcelPackage package)
         {
             var ploegenSheet = package.Workbook.Worksheets["Ploegen"];
@@ -134,7 +191,6 @@ namespace Ttc.DataAccess.Utilities
 
         private void CreateTemplatePlayers(ExcelPackage package)
         {
-            var klassementCalc = new KlassementValueConverter();
             var playersSheet = package.Workbook.Worksheets["Spelers"];
 
             var players = _players
@@ -142,19 +198,25 @@ namespace Ttc.DataAccess.Utilities
                 .Select(x => new
                 {
                     Naam = x.Name,
+                    Klassement = _klassementCalc.Sporta(x.KlassementSporta),
                     Waarde = x.KlassementSporta,
-                    Klassement = klassementCalc.Sporta(x.KlassementSporta),
                     Lidkaart = x.LidNummerSporta
                 })
                 .ToArray();
 
             playersSheet.Cells["A2"].LoadFromCollection(players);
 
+            int lastPlayerIndex = players.Length + 1;
 
             var spelersRange = package.Workbook.Names["spelers"];
-            spelersRange.Address = "'Spelers'!$A$2:$A$" + (players.Length + 1);
+            spelersRange.Address = "'Spelers'!$A$2:$A$" + lastPlayerIndex;
+
+            // TODO: This didn't work. The template has been updated to 'Spelers'!A1:E50 (so as long as we don't get 50 Sporta members, all is good:)
+            //playersSheet.Cells["D10:D12"].Formula = $"IF(ISERROR(VLOOKUP(B10,'Spelers'!A1:E{lastPlayerIndex},4))=TRUE,\"\",VLOOKUP(B10,'Spelers'!A1:E{lastPlayerIndex},4))";
+            //var e10 = playersSheet.Cells["E10"];
+            //e10.Formula = $"IF(ISERROR(VLOOKUP(B10,'Spelers'!A1:E{lastPlayerIndex},4))=TRUE,\"\",VLOOKUP(B10,'Spelers'!A1:E{lastPlayerIndex},3))";
+            //playersSheet.Cells["F10"].Formula = $"IF(ISERROR(VLOOKUP(B10,'Spelers'!A1:E{lastPlayerIndex},4))=TRUE,\"\",VLOOKUP(B10,'Spelers'!A1:E{lastPlayerIndex},2))";
         }
         #endregion
-
     }
 }
