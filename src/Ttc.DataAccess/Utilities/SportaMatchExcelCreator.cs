@@ -130,16 +130,16 @@ namespace Ttc.DataAccess.Utilities
         #region Template
         private void CreateTemplateVisitorPlayers(ExcelPackage package)
         {
-            var sheet = package.Workbook.Worksheets.Add("Tegenstanders");
-            sheet.Column(1).Width = 20;
+            var sheet = package.Workbook.Worksheets["Tegenstanders"];
+            //sheet.Column(1).Width = 20;
             sheet.Cells["A1"].Value = GetTheirTeamDesc();
 
-            sheet.Cells["A2"].Value = "Naam";
-            sheet.Cells["B2"].Value = "Lidkaart";
-            sheet.Cells["C2"].Value = "Klassement";
-            sheet.Cells["D2"].Value = "Waarde";
+            //sheet.Cells["A2"].Value = "Naam";
+            //sheet.Cells["B2"].Value = "Lidkaart";
+            //sheet.Cells["C2"].Value = "Klassement";
+            //sheet.Cells["D2"].Value = "Waarde";
             int rowIndex = 3;
-            foreach (var opponent in _opponentPlayers.OrderBy(x => x.IndexSporta))
+            foreach (var opponent in _opponentPlayers.OrderBy(x => x.Name))
             {
                 sheet.Cells["A" + rowIndex].Value = opponent.Name;
                 sheet.Cells["B" + rowIndex].Value = opponent.LidNummerSporta;
@@ -147,6 +147,9 @@ namespace Ttc.DataAccess.Utilities
                 sheet.Cells["D" + rowIndex].Value = _klassementCalc.Sporta(opponent.KlassementSporta);
                 rowIndex++;
             }
+
+            var spelersRange = package.Workbook.Names["tegenstanders"];
+            spelersRange.Address = "'Tegenstanders'!$A$3:$A$" + rowIndex;
         }
 
         private void CreateTemplateVisitors(ExcelPackage package)
