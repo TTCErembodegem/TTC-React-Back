@@ -12,6 +12,8 @@ namespace Ttc.DataAccess
         [Obsolete("Seed no longer works from Migrations. Add currentSeason to db and configure from frontend!")]
         public static void Seed(TtcDbContext context, bool clearMatches)
         {
+            // TODO: Season 2019: Add GetOpponentMatches to initial seed (remove from MatchService)
+
             if (clearMatches)
             {
                 context.Database.ExecuteSqlCommand("DELETE FROM matchplayer");
@@ -23,15 +25,15 @@ namespace Ttc.DataAccess
             if (!context.Matches.Any(x => x.FrenoySeason == Constants.FrenoySeason))
             {
                 var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
-                vttlPlayers.StopAllPlayers(true).Wait();
-                vttlPlayers.SyncPlayers().Wait();
+                vttlPlayers.StopAllPlayers(true).RunSynchronously();
+                vttlPlayers.SyncPlayers().RunSynchronously();
                 var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
-                sportaPlayers.SyncPlayers().Wait();
+                sportaPlayers.SyncPlayers().RunSynchronously();
 
                 var vttl = new FrenoyMatchesApi(context, Competition.Vttl);
-                vttl.SyncTeamsAndMatches().Wait();
+                vttl.SyncTeamsAndMatches().RunSynchronously();
                 var sporta = new FrenoyMatchesApi(context, Competition.Sporta);
-                sporta.SyncTeamsAndMatches().Wait();
+                sporta.SyncTeamsAndMatches().RunSynchronously();
             }
 
             CreateSystemUser(context);

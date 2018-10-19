@@ -23,6 +23,11 @@ namespace Ttc.DataEntities
         #region Competition
         public const string Sporta = "Sporta";
         public const string Vttl = "Vttl";
+        /// <summary>
+        /// BUG: Do not increase this to 2019, put in db config instead
+        /// (Some button at frontend to start new season?)
+        /// NewSeasonSeed: Seed no longer worked with async (but perhaps RunSynchronously() does work?)
+        /// </summary>
         public const int CurrentSeason = 2018;
         public const int FrenoySeason = CurrentSeason - 2000 + 1;
         public const int DefaultStartHour = 20;

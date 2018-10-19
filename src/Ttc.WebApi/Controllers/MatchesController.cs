@@ -46,10 +46,10 @@ namespace Ttc.WebApi.Controllers
         [HttpGet]
         [Route("GetOpponentMatches")]
         [AllowAnonymous]
-        public async Task<IEnumerable<OtherMatch>> GetOpponentMatches(int teamId/*, int? clubId = null, string teamCode = null*/)
+        public async Task<IEnumerable<OtherMatch>> GetOpponentMatches(int teamId, int? clubId = null, string teamCode = null)
         {
-            //var opponent = OpposingTeam.Create(clubId, teamCode);
-            var result = await _service.GetOpponentMatches(teamId);
+            var opponent = OpposingTeam.Create(clubId, teamCode);
+            var result = await _service.GetOpponentMatches(teamId, opponent);
             CleanSensitiveData(result);
             return result;
         }

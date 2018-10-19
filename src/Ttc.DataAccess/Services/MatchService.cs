@@ -74,37 +74,32 @@ namespace Ttc.DataAccess.Services
             using (var dbContext = new TtcDbContext())
             {
                 var team = await dbContext.Teams.SingleAsync(x => x.Id == teamId);
-                //var frenoy = new FrenoyMatchesApi(dbContext, Constants.NormalizeCompetition(team.Competition));
 
-                //var firstMatch = dbContext.Matches.Where(x => x.FrenoySeason == Constants.FrenoySeason && x.ShouldBePlayed).Min(x => x.Date);
-                //if (DateTime.Now > firstMatch)
-                //{
-                    //frenoy.SyncOpponentMatches(team, opponent);
-
-                var watch = Stopwatch.StartNew();
-                
                 var matchEntities = await dbContext.Matches
                     .WithIncludes()
-                    //.Where(match => (match.AwayClubId == opponent.ClubId && match.AwayTeamCode == opponent.TeamCode) || (match.HomeClubId == opponent.ClubId && match.HomeTeamCode == opponent.TeamCode))
+                    .Where(match => (match.AwayClubId == opponent.ClubId && match.AwayTeamCode == opponent.TeamCode) || (match.HomeClubId == opponent.ClubId && match.HomeTeamCode == opponent.TeamCode))
                     .Where(match => match.FrenoyDivisionId == team.FrenoyDivisionId)
                     .ToArrayAsync();
 
-                Debug.WriteLine("aaaaand: " + watch.Elapsed.ToString("g"));
-                watch.Restart();
+                if (matchEntities.All(x => x.IsHomeMatch.HasValue))
+                {
+                    // BUG: if the frenoy sync goes wayhire in the middle, we'll never get to this part to sync the remaining matches
+                    var frenoy = new FrenoyMatchesApi(dbContext, Constants.NormalizeCompetition(team.Competition));
+                    await frenoy.SyncOpponentMatches(team, opponent);
+
+                    matchEntities = await dbContext.Matches
+                        .WithIncludes()
+                        .Where(match => (match.AwayClubId == opponent.ClubId && match.AwayTeamCode == opponent.TeamCode) || (match.HomeClubId == opponent.ClubId && match.HomeTeamCode == opponent.TeamCode))
+                        .Where(match => match.FrenoyDivisionId == team.FrenoyDivisionId)
+                        .ToArrayAsync();
+                }
 
                 // No comments for OpponentMatches
 
                 var result = Mapper.Map<IList<MatchEntity>, IList<OtherMatch>>(matchEntities);
-
-
-                Debug.WriteLine("za map: " + watch.Elapsed.ToString("g"));
-
                 return result;
-                //}
 
                 // TODO: Bug PreSeason code: This doesn't work! These results are NOT displayed in the MatchCard, the spinner just keeps on spinnin'
-                // 
-
                 // Pre season: Fetch last year matches instead
                 //int? divisionId = frenoy.SyncLastYearOpponentMatches(team, opponent);
                 //if (divisionId.HasValue)
@@ -127,7 +122,6 @@ namespace Ttc.DataAccess.Services
                 //    return result;
                 //}
             }
-            //return null;
         }
         #endregion
 
