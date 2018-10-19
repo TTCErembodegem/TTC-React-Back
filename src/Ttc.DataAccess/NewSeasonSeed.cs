@@ -14,29 +14,33 @@ namespace Ttc.DataAccess
         {
             // TODO: Season 2019: Add GetOpponentMatches to initial seed (remove from MatchService)
 
-            if (clearMatches)
-            {
-                context.Database.ExecuteSqlCommand("DELETE FROM matchplayer");
-                context.Database.ExecuteSqlCommand("DELETE FROM matchgame");
-                context.Database.ExecuteSqlCommand("DELETE FROM matchcomment");
-                context.Database.ExecuteSqlCommand("DELETE FROM matches");
-            }
+            // RunSynchronously(): Can only be used 2 times
+            // Wait(): doesn't work
+            // -> This a reason to upgrade to .NET Core?
 
-            if (!context.Matches.Any(x => x.FrenoySeason == Constants.FrenoySeason))
-            {
-                var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
-                vttlPlayers.StopAllPlayers(true).RunSynchronously();
-                vttlPlayers.SyncPlayers().RunSynchronously();
-                var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
-                sportaPlayers.SyncPlayers().RunSynchronously();
+            //if (clearMatches)
+            //{
+            //    context.Database.ExecuteSqlCommand("DELETE FROM matchplayer");
+            //    context.Database.ExecuteSqlCommand("DELETE FROM matchgame");
+            //    context.Database.ExecuteSqlCommand("DELETE FROM matchcomment");
+            //    context.Database.ExecuteSqlCommand("DELETE FROM matches");
+            //}
 
-                var vttl = new FrenoyMatchesApi(context, Competition.Vttl);
-                vttl.SyncTeamsAndMatches().RunSynchronously();
-                var sporta = new FrenoyMatchesApi(context, Competition.Sporta);
-                sporta.SyncTeamsAndMatches().RunSynchronously();
-            }
+            //if (!context.Matches.Any(x => x.FrenoySeason == Constants.FrenoySeason))
+            //{
+            //    var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
+            //    vttlPlayers.StopAllPlayers(true).RunSynchronously();
+            //    vttlPlayers.SyncPlayers().RunSynchronously();
+            //    var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
+            //    sportaPlayers.SyncPlayers().RunSynchronously();
 
-            CreateSystemUser(context);
+            //    var vttl = new FrenoyMatchesApi(context, Competition.Vttl);
+            //    vttl.SyncTeamsAndMatches().RunSynchronously();
+            //    var sporta = new FrenoyMatchesApi(context, Competition.Sporta);
+            //    sporta.SyncTeamsAndMatches().RunSynchronously();
+            //}
+
+            //CreateSystemUser(context);
         }
 
         private static void CreateSystemUser(TtcDbContext context)
