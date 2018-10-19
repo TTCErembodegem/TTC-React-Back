@@ -75,23 +75,35 @@ namespace Ttc.DataAccess.Services
             {
                 var team = await dbContext.Teams.SingleAsync(x => x.Id == teamId);
 
-                var matchEntities = await dbContext.Matches
-                    .WithIncludes()
-                    .Where(match => (match.AwayClubId == opponent.ClubId && match.AwayTeamCode == opponent.TeamCode) || (match.HomeClubId == opponent.ClubId && match.HomeTeamCode == opponent.TeamCode))
-                    .Where(match => match.FrenoyDivisionId == team.FrenoyDivisionId)
-                    .ToArrayAsync();
-
-                if (matchEntities.All(x => x.IsHomeMatch.HasValue))
+                async Task<MatchEntity[]> GetMatchEntities()
                 {
-                    // BUG: if the frenoy sync goes wayhire in the middle, we'll never get to this part to sync the remaining matches
+                    // ReSharper disable AccessToDisposedClosure
+                    var matches = dbContext.Matches
+                        .WithIncludes()
+                        .Where(match => match.FrenoyDivisionId == team.FrenoyDivisionId);
+                    // ReSharper restore AccessToDisposedClosure
+
+                    if (opponent != null)
+                    {
+                        matches = matches.Where(match =>
+                            (match.AwayClubId == opponent.ClubId && match.AwayTeamCode == opponent.TeamCode) ||
+                            (match.HomeClubId == opponent.ClubId && match.HomeTeamCode == opponent.TeamCode)
+                        );
+                    }
+
+                    return await matches.ToArrayAsync();
+                }
+
+
+                MatchEntity[] matchEntities = await GetMatchEntities();
+
+                if (opponent != null)
+                {
+                    // TODO PERFORMANCE: This executes too many times, make it part of initial competition load
                     var frenoy = new FrenoyMatchesApi(dbContext, Constants.NormalizeCompetition(team.Competition));
                     await frenoy.SyncOpponentMatches(team, opponent);
 
-                    matchEntities = await dbContext.Matches
-                        .WithIncludes()
-                        .Where(match => (match.AwayClubId == opponent.ClubId && match.AwayTeamCode == opponent.TeamCode) || (match.HomeClubId == opponent.ClubId && match.HomeTeamCode == opponent.TeamCode))
-                        .Where(match => match.FrenoyDivisionId == team.FrenoyDivisionId)
-                        .ToArrayAsync();
+                    matchEntities = await GetMatchEntities();
                 }
 
                 // No comments for OpponentMatches

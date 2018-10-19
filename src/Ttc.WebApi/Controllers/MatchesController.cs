@@ -48,7 +48,8 @@ namespace Ttc.WebApi.Controllers
         [AllowAnonymous]
         public async Task<IEnumerable<OtherMatch>> GetOpponentMatches(int teamId, int? clubId = null, string teamCode = null)
         {
-            var opponent = OpposingTeam.Create(clubId, teamCode);
+            // This is also called from Team Week display where there is no opponent
+            var opponent = clubId.HasValue ? OpposingTeam.Create(clubId, teamCode) : null;
             var result = await _service.GetOpponentMatches(teamId, opponent);
             CleanSensitiveData(result);
             return result;
