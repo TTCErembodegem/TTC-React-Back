@@ -92,7 +92,14 @@ namespace Ttc.DataAccess.Utilities
                 if (fillInOurTeam)
                 {
                     int playerIndex = 10;
-                    foreach (var player in _match.Players.Where(x => x.Player != null).OrderBy(x => x.Position))
+
+                    // TODO: hier kunnen alle spelers meerdere keren inzitten....
+                    // --> checken of er wel altijd een Major is?
+                    // --> Check dan direct ook Dries zijn probleem met het instellen van de spelers es...
+
+                    // OrderBy(SportaKlassementn,j ).ThenBy(Postion)
+
+                    foreach (var player in _match.Players.Where(x => x.Player != null).Where(x => x.Status == PlayerMatchStatus.Major).OrderBy(x => x.Player.IndexSporta))
                     {
                         scoresheet.Cells["B" + playerIndex].Value = player.Player.Name;
                         playerIndex++;
@@ -107,8 +114,6 @@ namespace Ttc.DataAccess.Utilities
                 return package.GetAsByteArray();
             }
         }
-
-        
 
         private (string ClubName, string TeamCode) GetTheirTeam()
         {

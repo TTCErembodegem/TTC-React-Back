@@ -106,11 +106,14 @@
     </Compile>
     <Compile Include="BackupLegacyDatabase.cs" />
     <Compile Include="IntegrationTests.cs" />
+    <Compile Include="CreateSportaMatchExcels.cs" />
     <Compile Include="PlaygroundTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
