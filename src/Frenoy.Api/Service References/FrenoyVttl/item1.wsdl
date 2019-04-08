@@ -276,6 +276,7 @@
           <xsd:element name="GamesWon" type="xsd:integer" />
           <xsd:element name="GamesLost" type="xsd:integer" />
           <xsd:element name="GamesDraw" type="xsd:integer" />
+          <xsd:element name="GamesWO" type="xsd:integer" />
           <xsd:element name="IndividualMatchesWon" type="xsd:integer" />
           <xsd:element name="IndividualMatchesLost" type="xsd:integer" />
           <xsd:element name="IndividualSetsWon" type="xsd:integer" />
@@ -356,6 +357,12 @@
           <xsd:element minOccurs="0" maxOccurs="1" name="IsHomeForfeited" type="xsd:boolean" />
           <xsd:element minOccurs="0" maxOccurs="1" name="IsAwayForfeited" type="xsd:boolean" />
           <xsd:element minOccurs="0" maxOccurs="1" name="MatchDetails" type="tns:TeamMatchDetailsEntryType" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="DivisionId" type="xsd:integer" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="DivisionCategory" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="IsHomeWithdrawn" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="IsAwayWithdrawn" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="VenueClub" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="VenueEntry" type="tns:VenueEntryType" />
         </xsd:all>
       </xsd:complexType>
       <xsd:complexType name="TeamMatchPlayerListType">
@@ -371,6 +378,7 @@
           <xsd:element name="Timestamp" type="xsd:dateTime" />
           <xsd:element name="Author" type="tns:MemberEntryType" />
           <xsd:element name="Comment" type="xsd:string" />
+          <xsd:element name="Code" type="xsd:string" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="MemberEntryType">

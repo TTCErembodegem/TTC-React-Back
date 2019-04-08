@@ -2244,6 +2244,8 @@ namespace Frenoy.Api.FrenoyVttl {
         
         private string commentField;
         
+        private string codeField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
         public System.DateTime Timestamp {
@@ -2277,6 +2279,18 @@ namespace Frenoy.Api.FrenoyVttl {
             set {
                 this.commentField = value;
                 this.RaisePropertyChanged("Comment");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string Code {
+            get {
+                return this.codeField;
+            }
+            set {
+                this.codeField = value;
+                this.RaisePropertyChanged("Code");
             }
         }
         
@@ -2744,6 +2758,18 @@ namespace Frenoy.Api.FrenoyVttl {
         
         private TeamMatchDetailsEntryType matchDetailsField;
         
+        private string divisionIdField;
+        
+        private string divisionCategoryField;
+        
+        private string isHomeWithdrawnField;
+        
+        private string isAwayWithdrawnField;
+        
+        private string venueClubField;
+        
+        private VenueEntryType venueEntryField;
+        
         /// <remarks/>
         public string DivisionName {
             get {
@@ -2983,6 +3009,74 @@ namespace Frenoy.Api.FrenoyVttl {
             }
         }
         
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(DataType="integer")]
+        public string DivisionId {
+            get {
+                return this.divisionIdField;
+            }
+            set {
+                this.divisionIdField = value;
+                this.RaisePropertyChanged("DivisionId");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(DataType="integer")]
+        public string DivisionCategory {
+            get {
+                return this.divisionCategoryField;
+            }
+            set {
+                this.divisionCategoryField = value;
+                this.RaisePropertyChanged("DivisionCategory");
+            }
+        }
+        
+        /// <remarks/>
+        public string IsHomeWithdrawn {
+            get {
+                return this.isHomeWithdrawnField;
+            }
+            set {
+                this.isHomeWithdrawnField = value;
+                this.RaisePropertyChanged("IsHomeWithdrawn");
+            }
+        }
+        
+        /// <remarks/>
+        public string IsAwayWithdrawn {
+            get {
+                return this.isAwayWithdrawnField;
+            }
+            set {
+                this.isAwayWithdrawnField = value;
+                this.RaisePropertyChanged("IsAwayWithdrawn");
+            }
+        }
+        
+        /// <remarks/>
+        public string VenueClub {
+            get {
+                return this.venueClubField;
+            }
+            set {
+                this.venueClubField = value;
+                this.RaisePropertyChanged("VenueClub");
+            }
+        }
+        
+        /// <remarks/>
+        public VenueEntryType VenueEntry {
+            get {
+                return this.venueEntryField;
+            }
+            set {
+                this.venueEntryField = value;
+                this.RaisePropertyChanged("VenueEntry");
+            }
+        }
+        
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChanged(string propertyName) {
@@ -3012,6 +3106,8 @@ namespace Frenoy.Api.FrenoyVttl {
         private string gamesLostField;
         
         private string gamesDrawField;
+        
+        private string gamesWOField;
         
         private string individualMatchesWonField;
         
@@ -3093,6 +3189,18 @@ namespace Frenoy.Api.FrenoyVttl {
             set {
                 this.gamesDrawField = value;
                 this.RaisePropertyChanged("GamesDraw");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(DataType="integer")]
+        public string GamesWO {
+            get {
+                return this.gamesWOField;
+            }
+            set {
+                this.gamesWOField = value;
+                this.RaisePropertyChanged("GamesWO");
             }
         }
         

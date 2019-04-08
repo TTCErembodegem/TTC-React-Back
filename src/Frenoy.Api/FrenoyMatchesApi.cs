@@ -95,7 +95,7 @@ namespace Frenoy.Api
         {
             if (_forceSync || ShouldAttemptMatchSync(matchEntity.Id))
             {
-                var matches = await _frenoy.GetMatchesAsync(new GetMatchesRequest
+                GetMatchesResponse1 matches = await _frenoy.GetMatchesAsync(new GetMatchesRequest
                 {
                     DivisionId = matchEntity.FrenoyDivisionId.ToString(),
                     WithDetailsSpecified = true,

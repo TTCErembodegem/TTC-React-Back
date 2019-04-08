@@ -2244,6 +2244,8 @@ namespace Frenoy.Api.FrenoySporta {
         
         private string commentField;
         
+        private string codeField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
         public System.DateTime Timestamp {
@@ -2277,6 +2279,18 @@ namespace Frenoy.Api.FrenoySporta {
             set {
                 this.commentField = value;
                 this.RaisePropertyChanged("Comment");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string Code {
+            get {
+                return this.codeField;
+            }
+            set {
+                this.codeField = value;
+                this.RaisePropertyChanged("Code");
             }
         }
         
@@ -2744,6 +2758,14 @@ namespace Frenoy.Api.FrenoySporta {
         
         private TeamMatchDetailsEntryType matchDetailsField;
         
+        private string divisionIdField;
+        
+        private string divisionCategoryField;
+        
+        private string isHomeWithdrawnField;
+        
+        private string isAwayWithdrawnField;
+        
         /// <remarks/>
         public string DivisionName {
             get {
@@ -2980,6 +3002,52 @@ namespace Frenoy.Api.FrenoySporta {
             set {
                 this.matchDetailsField = value;
                 this.RaisePropertyChanged("MatchDetails");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(DataType="integer")]
+        public string DivisionId {
+            get {
+                return this.divisionIdField;
+            }
+            set {
+                this.divisionIdField = value;
+                this.RaisePropertyChanged("DivisionId");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(DataType="integer")]
+        public string DivisionCategory {
+            get {
+                return this.divisionCategoryField;
+            }
+            set {
+                this.divisionCategoryField = value;
+                this.RaisePropertyChanged("DivisionCategory");
+            }
+        }
+        
+        /// <remarks/>
+        public string IsHomeWithdrawn {
+            get {
+                return this.isHomeWithdrawnField;
+            }
+            set {
+                this.isHomeWithdrawnField = value;
+                this.RaisePropertyChanged("IsHomeWithdrawn");
+            }
+        }
+        
+        /// <remarks/>
+        public string IsAwayWithdrawn {
+            get {
+                return this.isAwayWithdrawnField;
+            }
+            set {
+                this.isAwayWithdrawnField = value;
+                this.RaisePropertyChanged("IsAwayWithdrawn");
             }
         }
         
