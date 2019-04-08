@@ -2248,6 +2248,9 @@ namespace Frenoy.Api.FrenoySporta {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        // HACK / TODO: Manual change: Added XmlIgnore to both Vttl/Sporta WSDL generated classes!
+        // Got FormatException: Check the git commit message
+        [System.Xml.Serialization.XmlIgnore]
         public System.DateTime Timestamp {
             get {
                 return this.timestampField;
