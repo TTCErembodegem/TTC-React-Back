@@ -55,6 +55,7 @@ namespace Ttc.DataEntities
         public int? IndexVttl { get; set; }
         public string LinkKaartVttl { get; set; }
         public string KlassementVttl { get; set; }
+        public string NextKlassementVttl { get; set; }
         public int? ComputerNummerVttl { get; set; }
         public int? VolgnummerVttl { get; set; }
         #endregion
@@ -64,6 +65,7 @@ namespace Ttc.DataEntities
         public int? IndexSporta { get; set; }
         public string LinkKaartSporta { get; set; }
         public string KlassementSporta { get; set; }
+        public string NextKlassementSporta { get; set; }
         public int? LidNummerSporta { get; set; }
         public int? VolgnummerSporta { get; set; }
         #endregion

@@ -301,6 +301,14 @@
     <Compile Include="Migrations\201806192135410_ConfigParameters.Designer.cs">
       <DependentUpon>201806192135410_ConfigParameters.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904101921396_PlayerPrevSeasonKlassement.cs" />
+    <Compile Include="Migrations\201904101921396_PlayerPrevSeasonKlassement.Designer.cs">
+      <DependentUpon>201904101921396_PlayerPrevSeasonKlassement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904101935442_PlayerNextSeasonKlassement.cs" />
+    <Compile Include="Migrations\201904101935442_PlayerNextSeasonKlassement.Designer.cs">
+      <DependentUpon>201904101935442_PlayerNextSeasonKlassement.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="NewSeasonSeed.cs" />
     <Compile Include="Services\BaseService.cs" />
@@ -496,6 +504,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806192135410_ConfigParameters.resx">
       <DependentUpon>201806192135410_ConfigParameters.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904101921396_PlayerPrevSeasonKlassement.resx">
+      <DependentUpon>201904101921396_PlayerPrevSeasonKlassement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904101935442_PlayerNextSeasonKlassement.resx">
+      <DependentUpon>201904101935442_PlayerNextSeasonKlassement.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ExcelExportResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

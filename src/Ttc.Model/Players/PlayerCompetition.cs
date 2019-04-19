@@ -10,6 +10,7 @@
         public int ClubId { get; set; }
         public string FrenoyLink { get; set; }
         public string Ranking { get; set; }
+        public string NextRanking { get; set; }
 
         /// <summary>
         /// Index in de club (volgnummer)
@@ -38,7 +39,7 @@
             
         }
 
-        public PlayerCompetition(Competition competition, int clubId, int uniqueIndex, string frenoyLink, string ranking, int position, int rankingIndex, int rankingValue)
+        public PlayerCompetition(Competition competition, int clubId, int uniqueIndex, string frenoyLink, string ranking, int position, int rankingIndex, int rankingValue, string prevRanking)
         {
             Competition = competition;
             ClubId = clubId;
@@ -48,6 +49,7 @@
             UniqueIndex = uniqueIndex;
             RankingIndex = rankingIndex;
             RankingValue = rankingValue;
+            NextRanking = prevRanking;
         }
         #endregion
 

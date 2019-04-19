@@ -339,28 +339,28 @@ namespace Ttc.DataAccess
                 .ForMember(
                     dest => dest.Vttl,
                     opts => opts.MapFrom(src => src.ClubIdVttl.HasValue ?
-                        CreateVttlPlayer(klassementToValueConverter, src.ClubIdVttl.Value, src.ComputerNummerVttl.Value, src.LinkKaartVttl, src.KlassementVttl, src.VolgnummerVttl.Value, src.IndexVttl.Value)
+                        CreateVttlPlayer(klassementToValueConverter, src.ClubIdVttl.Value, src.ComputerNummerVttl.Value, src.LinkKaartVttl, src.KlassementVttl, src.VolgnummerVttl.Value, src.IndexVttl.Value, src.NextKlassementVttl)
                         : null))
                 .ForMember(
                     dest => dest.Sporta,
                     opts => opts.MapFrom(src => src.ClubIdSporta.HasValue ?
-                        CreateSportaPlayer(klassementToValueConverter, src.ClubIdSporta.Value, src.LidNummerSporta.Value, src.LinkKaartSporta, src.KlassementSporta, src.VolgnummerSporta.Value, src.IndexSporta.Value)
+                        CreateSportaPlayer(klassementToValueConverter, src.ClubIdSporta.Value, src.LidNummerSporta.Value, src.LinkKaartSporta, src.KlassementSporta, src.VolgnummerSporta.Value, src.IndexSporta.Value, src.NextKlassementSporta)
                         : null))
                 ;
         }
 
-        private static PlayerCompetition CreateSportaPlayer(KlassementValueConverter converter, int clubId, int uniqueIndex, string frenoyLink, string ranking, int position, int rankingIndex)
+        private static PlayerCompetition CreateSportaPlayer(KlassementValueConverter converter, int clubId, int uniqueIndex, string frenoyLink, string ranking, int position, int rankingIndex, string prevRanking)
         {
             return new PlayerCompetition(
                 Competition.Sporta,
-                clubId, uniqueIndex, frenoyLink, ranking, position, rankingIndex, converter.Sporta(ranking));
+                clubId, uniqueIndex, frenoyLink, ranking, position, rankingIndex, converter.Sporta(ranking), prevRanking);
         }
 
-        private static PlayerCompetition CreateVttlPlayer(KlassementValueConverter converter, int clubId, int uniqueIndex, string frenoyLink, string ranking, int position, int rankingIndex)
+        private static PlayerCompetition CreateVttlPlayer(KlassementValueConverter converter, int clubId, int uniqueIndex, string frenoyLink, string ranking, int position, int rankingIndex, string prevRanking)
         {
             return new PlayerCompetition(
                 Competition.Vttl,
-                clubId, uniqueIndex, frenoyLink, ranking, position, rankingIndex, converter.Vttl(ranking));
+                clubId, uniqueIndex, frenoyLink, ranking, position, rankingIndex, converter.Vttl(ranking), prevRanking);
         }
 
         #endregion
