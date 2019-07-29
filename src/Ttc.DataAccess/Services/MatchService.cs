@@ -100,6 +100,7 @@ namespace Ttc.DataAccess.Services
 
                 if (opponent != null)
                 {
+                    // TODO BUG: This means that when called from Team Week Overview, no opponent is set and there is no sync...
                     // TODO PERFORMANCE: This executes too many times, make it part of initial competition load
                     var frenoy = new FrenoyMatchesApi(dbContext, Constants.NormalizeCompetition(team.Competition));
                     await frenoy.SyncOpponentMatches(team, opponent);
