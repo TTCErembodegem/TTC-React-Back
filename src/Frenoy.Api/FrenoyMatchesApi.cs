@@ -135,7 +135,7 @@ namespace Frenoy.Api
         //    if (lastYearTeam != null)
         //    {
         //        int lastYearDivisionId = int.Parse(lastYearTeam.DivisionId);
-        //        var ourTeam = _db.Teams.SingleOrDefault(x => x.Year == Constants.CurrentSeason - 1 && x.FrenoyDivisionId == lastYearDivisionId && x.Competition == _settings.Competition.ToString());
+        //        var ourTeam = _db.Teams.SingleOrDefault(x => x.Year == _currentSeason - 1 && x.FrenoyDivisionId == lastYearDivisionId && x.Competition == _settings.Competition.ToString());
         //        if (ShouldAttemptOpponentMatchSync(opponent, team.Id, prevFrenoySeason))
         //        {
         //            var matches = await _frenoy.GetMatchesAsync(new GetMatchesRequest

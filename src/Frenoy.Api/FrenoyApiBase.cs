@@ -34,6 +34,7 @@ namespace Frenoy.Api
         protected readonly ITtcDbContext _db;
         protected readonly int _thuisClubId;
         protected readonly bool _forceSync;
+        protected readonly int _currentSeason;
         #endregion
 
         #region Constructor
@@ -43,8 +44,8 @@ namespace Frenoy.Api
             _db = ttcDbContext;
 
             bool isVttl = comp == Competition.Vttl;
-            int currentSeason = _db.CurrentSeason;
-            _settings = isVttl ? FrenoySettings.VttlSettings(currentSeason) : FrenoySettings.SportaSettings(currentSeason);
+            _currentSeason = _db.CurrentSeason;
+            _settings = isVttl ? FrenoySettings.VttlSettings(_currentSeason) : FrenoySettings.SportaSettings(_currentSeason);
 
             _isVttl = isVttl;
             if (isVttl)

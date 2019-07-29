@@ -30,18 +30,23 @@ namespace Ttc.DataAccess
             int newYear = 2019;
             if (!context.Matches.Any(x => x.FrenoySeason == newYear))
             {
-                var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
-                await vttlPlayers.StopAllPlayers(true);
-                await vttlPlayers.SyncPlayers();
+                // VTTL
+                // ATTN: VTTL worked after Service Update
+                //var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
+                //await vttlPlayers.StopAllPlayers(true);
+                //await vttlPlayers.SyncPlayers();
 
+                //var vttl = new FrenoyMatchesApi(context, Competition.Vttl);
+                //await vttl.SyncTeamsAndMatches();
+
+
+                // Sporta
                 var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
                 await sportaPlayers.StopAllPlayers(true);
                 await sportaPlayers.SyncPlayers();
 
-                //var vttl = new FrenoyMatchesApi(context, Competition.Vttl);
-                //await vttl.SyncTeamsAndMatches();
-                //var sporta = new FrenoyMatchesApi(context, Competition.Sporta);
-                //await sporta.SyncTeamsAndMatches();
+                var sporta = new FrenoyMatchesApi(context, Competition.Sporta);
+                await sporta.SyncTeamsAndMatches();
             }
 
             //CreateSystemUser(context);
