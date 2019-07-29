@@ -43,7 +43,8 @@ namespace Frenoy.Api
             _db = ttcDbContext;
 
             bool isVttl = comp == Competition.Vttl;
-            _settings = isVttl ? FrenoySettings.VttlSettings : FrenoySettings.SportaSettings;
+            int currentSeason = _db.CurrentSeason;
+            _settings = isVttl ? FrenoySettings.VttlSettings(currentSeason) : FrenoySettings.SportaSettings(currentSeason);
 
             _isVttl = isVttl;
             if (isVttl)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Linq;
 using Ttc.DataEntities;
 using Ttc.DataEntities.Core;
 
@@ -25,6 +26,22 @@ namespace Ttc.DataAccess
         public DbSet<MatchCommentEntity> MatchComments { get; set; }
 
         public DbSet<ParameterEntity> Parameters { get; set; }
+
+        /// <summary>
+        /// The year of the current season.
+        /// For season 2019-2020 this is 2019.
+        /// </summary>
+        public int CurrentSeason
+        {
+            get
+            {
+                var year = Parameters.Single(x => x.Sleutel == "year").Value;
+                return int.Parse(year);
+            }
+        }
+
+        public int CurrentFrenoySeason => CurrentSeason - 2000 + 1;
+
         public DbSet<Backup.BackupReport> BackupReports { get; set; }
         public DbSet<Backup.BackupTeamPlayer> BackupTeamPlayers { get; set; }
 

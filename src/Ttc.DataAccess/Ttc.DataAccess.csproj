@@ -309,6 +309,10 @@
     <Compile Include="Migrations\201904101935442_PlayerNextSeasonKlassement.Designer.cs">
       <DependentUpon>201904101935442_PlayerNextSeasonKlassement.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201907292030320_StartCompetition20192020.cs" />
+    <Compile Include="Migrations\201907292030320_StartCompetition20192020.Designer.cs">
+      <DependentUpon>201907292030320_StartCompetition20192020.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="NewSeasonSeed.cs" />
     <Compile Include="Services\BaseService.cs" />
@@ -510,6 +514,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904101935442_PlayerNextSeasonKlassement.resx">
       <DependentUpon>201904101935442_PlayerNextSeasonKlassement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907292030320_StartCompetition20192020.resx">
+      <DependentUpon>201907292030320_StartCompetition20192020.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utilities\ExcelExportResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

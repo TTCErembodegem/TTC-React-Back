@@ -29,11 +29,12 @@ namespace Ttc.DataAccess.Services
 
             using (var dbContext = new TtcDbContext())
             {
+                var currentFrenoySeason = dbContext.CurrentFrenoySeason;
                 var matchEntities = await dbContext.Matches
                     .WithIncludes()
                     //.Where(x => x.Id == 802)
                     .Where(x => x.HomeClubId == Constants.OwnClubId || x.AwayClubId == Constants.OwnClubId)
-                    .Where(x => x.FrenoySeason == Constants.FrenoySeason)
+                    .Where(x => x.FrenoySeason == currentFrenoySeason)
                     .ToListAsync();
 
                 var matchIds = matchEntities.Select(x => x.Id).ToArray();
@@ -394,6 +395,7 @@ namespace Ttc.DataAccess.Services
 
         private static async Task<SportaMatchExcelCreator> CreateExcelCreator(int matchId, TtcDbContext dbContext)
         {
+            int currentSeason = dbContext.CurrentSeason;
             var activePlayers = await dbContext.Players
                 .Where(x => x.Gestopt == null)
                 .Where(x => x.ClubIdSporta.HasValue)
@@ -407,7 +409,7 @@ namespace Ttc.DataAccess.Services
 
             var teams = await dbContext.Teams
                 .Include(x => x.Opponents.Select(o => o.Club))
-                .Where(x => x.Year == Constants.CurrentSeason)
+                .Where(x => x.Year == currentSeason)
                 .Where(x => x.Competition == Competition.Sporta.ToString())
                 .ToArrayAsync();
 

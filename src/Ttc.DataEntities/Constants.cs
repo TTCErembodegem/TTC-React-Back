@@ -5,9 +5,6 @@ namespace Ttc.DataEntities
 {
     public static class Constants
     {
-        // TODO: unused keys from dbContext.Parameters:
-        // jaar, Frenoy_SeasonId, stduur, frenoy_wsdlUrl*, link*
-
         /// <summary>
         /// Duplicated in frontend in ClubModel.js
         /// </summary>
@@ -23,13 +20,6 @@ namespace Ttc.DataEntities
         #region Competition
         public const string Sporta = "Sporta";
         public const string Vttl = "Vttl";
-        /// <summary>
-        /// BUG: Do not increase this to 2019, put in db config instead
-        /// (Some button at frontend to start new season?)
-        /// NewSeasonSeed: Seed no longer worked with async (but perhaps RunSynchronously() does work?)
-        /// </summary>
-        public const int CurrentSeason = 2018;
-        public const int FrenoySeason = CurrentSeason - 2000 + 1;
         public const int DefaultStartHour = 20;
         public const string FrenoyTeamCategory = "1"; // 2=The ladies, 3=Veteranen, 13=Jeugd
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using System.Threading.Tasks;
 using Frenoy.Api;
 using Ttc.DataEntities;
 using Ttc.Model.Players;
@@ -9,14 +10,13 @@ namespace Ttc.DataAccess
 {
     internal static class NewSeasonSeed
     {
-        [Obsolete("Seed no longer works from Migrations. Add currentSeason to db and configure from frontend!")]
-        public static void Seed(TtcDbContext context, bool clearMatches)
+        /// <summary>
+        /// Adds the matches and syncs the players for the new season
+        /// </summary>
+        /// <returns>The new season year</returns>
+        public static async Task<int> Seed(TtcDbContext context, bool clearMatches)
         {
-            // TODO: Season 2019: Add GetOpponentMatches to initial seed (remove from MatchService)
-
-            // RunSynchronously(): Can only be used 2 times
-            // Wait(): doesn't work
-            // -> This a reason to upgrade to .NET Core?
+            // TODO: Season 2020: Add GetOpponentMatches to initial seed (remove from MatchService)
 
             //if (clearMatches)
             //{
@@ -26,21 +26,27 @@ namespace Ttc.DataAccess
             //    context.Database.ExecuteSqlCommand("DELETE FROM matches");
             //}
 
-            //if (!context.Matches.Any(x => x.FrenoySeason == Constants.FrenoySeason))
-            //{
-            //    var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
-            //    vttlPlayers.StopAllPlayers(true).RunSynchronously();
-            //    vttlPlayers.SyncPlayers().RunSynchronously();
-            //    var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
-            //    sportaPlayers.SyncPlayers().RunSynchronously();
+            //int newYear = context.CurrentFrenoySeason + 1;
+            int newYear = 2019;
+            if (!context.Matches.Any(x => x.FrenoySeason == newYear))
+            {
+                var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
+                await vttlPlayers.StopAllPlayers(true);
+                await vttlPlayers.SyncPlayers();
 
-            //    var vttl = new FrenoyMatchesApi(context, Competition.Vttl);
-            //    vttl.SyncTeamsAndMatches().RunSynchronously();
-            //    var sporta = new FrenoyMatchesApi(context, Competition.Sporta);
-            //    sporta.SyncTeamsAndMatches().RunSynchronously();
-            //}
+                var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
+                await sportaPlayers.StopAllPlayers(true);
+                await sportaPlayers.SyncPlayers();
+
+                //var vttl = new FrenoyMatchesApi(context, Competition.Vttl);
+                //await vttl.SyncTeamsAndMatches();
+                //var sporta = new FrenoyMatchesApi(context, Competition.Sporta);
+                //await sporta.SyncTeamsAndMatches();
+            }
 
             //CreateSystemUser(context);
+
+            return newYear;
         }
 
         private static void CreateSystemUser(TtcDbContext context)

@@ -22,6 +22,11 @@ namespace Ttc.DataEntities.Core
         DbSet<MatchPlayerEntity> MatchPlayers { get; set; }
         DbSet<MatchGameEntity> MatchGames { get; set; }
 
+        DbSet<ParameterEntity> Parameters { get; set; }
+
+        int CurrentSeason { get; }
+        int CurrentFrenoySeason { get; }
+
         Task<int> SaveChangesAsync();
     }
 }

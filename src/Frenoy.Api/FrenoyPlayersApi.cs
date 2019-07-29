@@ -26,7 +26,7 @@ namespace Frenoy.Api
             {
                 if (alsoSetGestopt)
                 {
-                    dbPlayer.Gestopt = Constants.CurrentSeason - 1;
+                    dbPlayer.Gestopt = _db.CurrentSeason - 1;
                 }
                 dbPlayer.ClubIdSporta = null;
                 dbPlayer.ClubIdVttl = null;

@@ -160,9 +160,10 @@ namespace Ttc.DataAccess.Services
 
         private static async Task<User> GetUser(TtcDbContext dbContext, int playerId)
         {
+            int currentSeason = dbContext.CurrentSeason;
             var teams = await dbContext.Teams
                 .Include(x => x.Players)
-                .Where(x => x.Year == Constants.CurrentSeason)
+                .Where(x => x.Year == currentSeason)
                 .Where(x => x.Players.Any(ply => ply.PlayerId == playerId))
                 .Select(x => x.Id)
                 .ToListAsync();

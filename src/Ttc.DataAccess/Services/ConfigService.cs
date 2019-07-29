@@ -18,7 +18,7 @@ namespace Ttc.DataAccess.Services
                 {
                     "email", "googleMapsUrl", "location", "trainingDays", "competitionDays",
                     "adultMembership", "youthMembership", "additionalMembership", "recreationalMembers",
-                    "frenoyClubIdVttl", "frenoyClubIdSporta", "compBalls", "clubBankNr", "clubOrgNr"
+                    "frenoyClubIdVttl", "frenoyClubIdSporta", "compBalls", "clubBankNr", "clubOrgNr", "year"
                 };
                 foreach (var parameter in (await context.Parameters.ToArrayAsync()).Where(x => keys.Contains(x.Sleutel)))
                 {
@@ -43,7 +43,15 @@ namespace Ttc.DataAccess.Services
             using (var context = new TtcDbContext())
             {
                 var param = await context.Parameters.SingleAsync(x => x.Sleutel == key);
-                param.Value = value;
+                if (key == "year")
+                {
+                    int newYear = await NewSeasonSeed.Seed(context, false);
+                    param.Value = newYear.ToString();
+                }
+                else
+                {
+                    param.Value = value;
+                }
                 await context.SaveChangesAsync();
             }
         }

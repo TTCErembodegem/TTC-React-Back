@@ -23,10 +23,11 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
+                int currentSeason = dbContext.CurrentSeason;
                 var teams = await dbContext.Teams
                     .Include(x => x.Players)
                     .Include(x => x.Opponents)
-                    .Where(x => x.Year == Constants.CurrentSeason)
+                    .Where(x => x.Year == currentSeason)
                     .ToArrayAsync();
 
                 var result = Mapper.Map<IList<TeamEntity>, IList<Team>>(teams);
@@ -165,10 +166,11 @@ namespace Ttc.DataAccess.Services
         {
             using (var dbContext = new TtcDbContext())
             {
+                int currentSeason = dbContext.CurrentSeason;
                 var teams = await dbContext.Teams
                     .Include(x => x.Players)
                     //.Include(x => x.Opponents)
-                    .Where(x => x.Year == Constants.CurrentSeason)
+                    .Where(x => x.Year == currentSeason)
                     .ToArrayAsync();
 
                 var matches = await dbContext.Matches
@@ -176,7 +178,7 @@ namespace Ttc.DataAccess.Services
                     //.Include(x => x.AwayTeam)
                     .Include(x => x.Players)
                     .Where(x => x.HomeClubId == Constants.OwnClubId || x.AwayClubId == Constants.OwnClubId)
-                    .Where(x => x.FrenoySeason == Constants.FrenoySeason)
+                    .Where(x => x.FrenoySeason == currentSeason)
                     .ToListAsync();
 
                 var players = await dbContext.Players.Where(x => x.Gestopt == null).ToArrayAsync();

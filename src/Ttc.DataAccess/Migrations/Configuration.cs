@@ -21,9 +21,10 @@ namespace Ttc.DataAccess.Migrations
             AutomaticMigrationsEnabled = false;
         }
 
+        /// <see cref="NewSeasonSeed"/>
         protected override void Seed(TtcDbContext context)
         {
-            NewSeasonSeed.Seed(context, false);
+            // New season seed is now done from the frontend
         }
     }
 }

@@ -55,8 +55,9 @@ namespace Frenoy.Syncer
             bool endOfSeason = !context.Matches.Any(match => match.Date > DateTime.Now);
             if (true || endOfSeason)
             {
+                int currentFrenoySeason = context.CurrentFrenoySeason;
                 var passedMatches = context.Matches
-                    .Where(x => x.FrenoySeason == Constants.FrenoySeason)
+                    .Where(x => x.FrenoySeason == currentFrenoySeason)
                     //.Where(x => x.Date < DateTime.Today)
                     .OrderByDescending(x => x.Date)
                     .Take(42);
