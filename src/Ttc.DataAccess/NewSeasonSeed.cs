@@ -27,12 +27,13 @@ namespace Ttc.DataAccess
             //}
 
             //int newYear = context.CurrentFrenoySeason + 1;
-            int newYear = DateTime.Today.Year - 2000 + 1;
+            int newYear = DateTime.Today.Year;
+            int newFrenoyYear = newYear - 2000 + 1;
             if (DateTime.Today.Month < 7)
             {
                 throw new Exception($"Starting new season {newYear}? That doesn't seem right?");
             }
-            if (!context.Matches.Any(x => x.FrenoySeason == newYear))
+            if (!context.Matches.Any(x => x.FrenoySeason == newFrenoyYear))
             {
                 // VTTL
                 var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
