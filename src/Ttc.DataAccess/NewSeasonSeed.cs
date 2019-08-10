@@ -27,17 +27,20 @@ namespace Ttc.DataAccess
             //}
 
             //int newYear = context.CurrentFrenoySeason + 1;
-            int newYear = 2019;
+            int newYear = DateTime.Today.Year - 2000 + 1;
+            if (DateTime.Today.Month < 7)
+            {
+                throw new Exception($"Starting new season {newYear}? That doesn't seem right?");
+            }
             if (!context.Matches.Any(x => x.FrenoySeason == newYear))
             {
                 // VTTL
-                // ATTN: VTTL worked after Service Update
-                //var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
-                //await vttlPlayers.StopAllPlayers(true);
-                //await vttlPlayers.SyncPlayers();
+                var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
+                await vttlPlayers.StopAllPlayers(true);
+                await vttlPlayers.SyncPlayers();
 
-                //var vttl = new FrenoyMatchesApi(context, Competition.Vttl);
-                //await vttl.SyncTeamsAndMatches();
+                var vttl = new FrenoyMatchesApi(context, Competition.Vttl);
+                await vttl.SyncTeamsAndMatches();
 
 
                 // Sporta
