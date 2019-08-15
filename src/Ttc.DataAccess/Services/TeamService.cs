@@ -173,12 +173,13 @@ namespace Ttc.DataAccess.Services
                     .Where(x => x.Year == currentSeason)
                     .ToArrayAsync();
 
+                int currentFrenoySeason = dbContext.CurrentFrenoySeason;
                 var matches = await dbContext.Matches
                     //.Include(x => x.HomeTeam)
                     //.Include(x => x.AwayTeam)
                     .Include(x => x.Players)
                     .Where(x => x.HomeClubId == Constants.OwnClubId || x.AwayClubId == Constants.OwnClubId)
-                    .Where(x => x.FrenoySeason == currentSeason)
+                    .Where(x => x.FrenoySeason == currentFrenoySeason)
                     .ToListAsync();
 
                 var players = await dbContext.Players.Where(x => x.Gestopt == null).ToArrayAsync();
