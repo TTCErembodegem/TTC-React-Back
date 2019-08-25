@@ -93,5 +93,29 @@ namespace Ttc.DataAccess.Services
             }
         }
         #endregion
+
+        public async Task<Club> UpdateClub(Club club)
+        {
+            using (var dbContext = new TtcDbContext())
+            {
+                var existingClub = await dbContext.Clubs.FirstOrDefaultAsync(x => x.Id == club.Id);
+                if (existingClub == null)
+                {
+                    throw new Exception("Club not found");
+                }
+                
+                MapClub(club, existingClub);
+                await dbContext.SaveChangesAsync();
+            }
+            return club;
+        }
+
+        private static void MapClub(Club club, ClubEntity existingClub)
+        {
+            existingClub.Naam = club.Name;
+            existingClub.Douche = club.Shower ? 1 : 0;
+            existingClub.Website = club.Website;
+            // existingClub.Lokalen = club.MainLocation
+        }
     }
 }

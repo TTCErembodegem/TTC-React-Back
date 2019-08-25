@@ -22,6 +22,14 @@ namespace Ttc.WebApi.Controllers
         [AllowAnonymous]
         public async Task <IEnumerable<Club>> Get() => await _service.GetActiveClubs();
 
+        [HttpPost]
+        [Route("UpdateClub")]
+        public async Task<Club> UpdateClub([FromBody]Club club)
+        {
+            var result = await _service.UpdateClub(club);
+            return result;
+        }
+
         #region Club Board
         [HttpPost]
         [Route("Board")]
