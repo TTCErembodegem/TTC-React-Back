@@ -165,9 +165,8 @@ namespace Ttc.WebApi.Controllers
         {
             var emailConfig = await _configService.GetEmailConfig();
             var players = await _playerService.GetOwnClub();
-            var playerEmails = players.Select(player => player.Contact.Email);
-            EmailService.SendEmail(playerEmails, email.Title, email.Email, emailConfig).Wait();
-            //EmailService.SendEmail("wouter@pongit.be", email.Title, email.Email, emailConfig).Wait();
+            var activePlayers = players.Where(player => player.Active);
+            EmailService.SendEmail(activePlayers, email.Title, email.Email, emailConfig).Wait();
         }
     }
 

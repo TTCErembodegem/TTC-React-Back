@@ -20,3 +20,9 @@ FROM speler
 WHERE gestopt IS NULL AND klassementsporta IS NOT NULL AND KlassementSporta<>'0'
 ORDER BY klassementsporta 
 ```
+
+## Emailing
+
+Uses a SendGrid API key:  
+Username: `pongit`.  
+Email: `wouter@pongit.be`  
