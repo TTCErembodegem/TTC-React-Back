@@ -8,6 +8,7 @@ using Ttc.DataAccess.Services;
 using Ttc.Model;
 using Ttc.Model.Matches;
 using Ttc.Model.Teams;
+using Ttc.WebApi.Emailing;
 using Ttc.WebApi.Utilities;
 
 namespace Ttc.WebApi.Controllers
@@ -17,12 +18,14 @@ namespace Ttc.WebApi.Controllers
     {
         #region Constructor
         private readonly MatchService _service;
-        private readonly TeamService _teamService;
+        private readonly PlayerService _playerService;
+        private readonly ConfigService _configService;
 
-        public MatchesController(MatchService service, TeamService teamService)
+        public MatchesController(MatchService service, PlayerService playerService, ConfigService configService)
         {
             _service = service;
-            _teamService = teamService;
+            _playerService = playerService;
+            _configService = configService;
         }
         #endregion
 
@@ -154,6 +157,17 @@ namespace Ttc.WebApi.Controllers
         {
             var result = await _service.GetExcelExport(matchId);
             return Convert.ToBase64String(result.Item1);
+        }
+
+        [HttpPost]
+        [Route("WeekCompetitionEmail")]
+        public async Task WeekCompetitionEmail([FromBody] WeekCompetitionEmailModel email)
+        {
+            var emailConfig = await _configService.GetEmailConfig();
+            var players = await _playerService.GetOwnClub();
+            var playerEmails = players.Select(player => player.Contact.Email);
+            EmailService.SendEmail(playerEmails, email.Title, email.Email, emailConfig).Wait();
+            //EmailService.SendEmail("wouter@pongit.be", email.Title, email.Email, emailConfig).Wait();
         }
     }
 

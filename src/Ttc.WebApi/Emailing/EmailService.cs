@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -9,6 +10,14 @@ namespace Ttc.WebApi.Emailing
 {
     public static class EmailService
     {
+        public static async Task SendEmail(IEnumerable<string> emails, string subject, string content, EmailConfig config)
+        {
+            foreach (var email in emails)
+            {
+                await SendEmail(email, subject, content, config);
+            }
+        }
+
         public static async Task SendEmail(string email, string subject, string content, EmailConfig config)
         {
             dynamic sg = new SendGridAPIClient(config.SendGridApiKey);

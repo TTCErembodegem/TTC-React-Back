@@ -210,6 +210,7 @@
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Emailing\EmailService.cs" />
     <Compile Include="Emailing\PasswordChangedEmailer.cs" />
+    <Compile Include="Emailing\WeekCompetitionEmailModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
