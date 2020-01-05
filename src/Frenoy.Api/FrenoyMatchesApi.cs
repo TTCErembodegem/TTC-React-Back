@@ -250,17 +250,18 @@ namespace Frenoy.Api
                 {
                     string score = frenoyMatch.Score.ToLowerInvariant();
                     bool isForfeit = score.Contains("ff") || score.Contains("af") || score.Contains("gu");
-                    if (!isForfeit)
+                    matchEntity.WalkOver = isForfeit;
+
+                    // Uitslag
+                    var scoreRex = new Regex(@"^(\d+)-(\d+)");
+                    var match = scoreRex.Match(frenoyMatch.Score);
+                    if (match.Success)
                     {
-                        // Uitslag
-                        matchEntity.HomeScore = int.Parse(frenoyMatch.Score.Substring(0, frenoyMatch.Score.IndexOf("-")));
-                        matchEntity.AwayScore = int.Parse(frenoyMatch.Score.Substring(frenoyMatch.Score.IndexOf("-") + 1));
-                        matchEntity.WalkOver = false;
+                        matchEntity.HomeScore = int.Parse(match.Groups[1].Value);
+                        matchEntity.AwayScore = int.Parse(match.Groups[2].Value);
                     }
-                    else
-                    {
-                        matchEntity.WalkOver = true;
-                    }
+                    //matchEntity.HomeScore = int.Parse(frenoyMatch.Score.Substring(0, frenoyMatch.Score.IndexOf("-")));
+                    //matchEntity.AwayScore = int.Parse(frenoyMatch.Score.Substring(frenoyMatch.Score.IndexOf("-") + 1));
                 }
 
                 if (frenoyMatch.MatchDetails != null && frenoyMatch.MatchDetails.DetailsCreated)
@@ -272,9 +273,9 @@ namespace Frenoy.Api
                     if (!frenoyMatch.IsAwayForfeited && !frenoyMatch.IsHomeForfeited)
                     {
                         AddMatchGames(frenoyMatch, matchEntity);
-
-                        await RemoveExistingMatchPlayersAndGames(matchEntity);
                     }
+
+                    await RemoveExistingMatchPlayersAndGames(matchEntity);
                 }
 
                 if (frenoyMatch.Score != null && frenoyMatch.MatchDetails != null && frenoyMatch.MatchDetails.DetailsCreated)
