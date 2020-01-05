@@ -260,8 +260,6 @@ namespace Frenoy.Api
                         matchEntity.HomeScore = int.Parse(match.Groups[1].Value);
                         matchEntity.AwayScore = int.Parse(match.Groups[2].Value);
                     }
-                    //matchEntity.HomeScore = int.Parse(frenoyMatch.Score.Substring(0, frenoyMatch.Score.IndexOf("-")));
-                    //matchEntity.AwayScore = int.Parse(frenoyMatch.Score.Substring(frenoyMatch.Score.IndexOf("-") + 1));
                 }
 
                 if (frenoyMatch.MatchDetails != null && frenoyMatch.MatchDetails.DetailsCreated)

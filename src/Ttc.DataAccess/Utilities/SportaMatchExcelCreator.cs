@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -68,8 +69,11 @@ namespace Ttc.DataAccess.Utilities
                 CreateTemplateVisitors(package);
                 CreateTemplateVisitorPlayers(package);
 
-                // Fill in match details
                 var scoresheet = package.Workbook.Worksheets["Wedstrijdblad"];
+                var location = _context.Parameters.First(p => p.Sleutel == "location");
+                scoresheet.Cells["B5"].Value = location.Value;
+
+                // Fill in match details
                 scoresheet.Cells["B6"].Value = _match.Date;
                 scoresheet.Cells["G6"].Value = _match.Date.ToString(@"HH\umm");
                 scoresheet.Cells["U4"].Value = _match.FrenoyMatchId;

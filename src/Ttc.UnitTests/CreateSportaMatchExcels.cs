@@ -45,7 +45,7 @@ namespace Ttc.UnitTests
 
             Directory.CreateDirectory(SavePath);
 
-            foreach (var match in matches)
+            foreach (var match in matches.Where(x => !x.IsSyncedWithFrenoy))
             {
                 var (package, info) = await service.GetExcelExport(match.Id, false);
 
@@ -57,8 +57,11 @@ namespace Ttc.UnitTests
 
                 //var dest = SavePath.Replace("{season}", Constants.CurrentSeason.ToString());
                 var dir = Path.Combine(SavePath, $"Sporta {info.OurTeamCode}");
+                var file = Path.Combine(dir, fileName);
                 Directory.CreateDirectory(dir);
                 File.WriteAllBytes(Path.Combine(dir, fileName), package);
+                File.SetLastWriteTime(file, match.Date);
+                File.SetLastAccessTime(file, match.Date);
             }
         }
     }
