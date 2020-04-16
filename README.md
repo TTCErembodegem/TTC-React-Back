@@ -2,6 +2,10 @@
 
 WebApi 2 Backend.  
 
+## Deploy
+
+[Jenkins](http://pongit:9001/job/ttc-front/)
+
 
 ## New Season
 
@@ -22,6 +26,8 @@ ORDER BY klassementsporta
 ```
 
 ## Emailing
+
+Go to Admin > Params to update the "SendGridApiKey" param.
 
 Uses a SendGrid API key:  
 Username: `pongit`.  
