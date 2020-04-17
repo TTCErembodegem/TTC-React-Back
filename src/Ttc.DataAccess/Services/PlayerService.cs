@@ -136,6 +136,9 @@ namespace Ttc.DataAccess.Services
             existingSpeler.FirstName = player.FirstName;
             existingSpeler.LastName = player.LastName;
             existingSpeler.NaamKort = player.Alias;
+
+            existingSpeler.NextKlassementVttl = player.Vttl?.NextRanking;
+            existingSpeler.NextKlassementSporta = player.Sporta?.NextRanking;
         }
 
         public async Task<byte[]> GetExcelExport()

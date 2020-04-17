@@ -44,7 +44,7 @@ namespace Ttc.DataAccess.Services
                     var managerInfo = managers.Single(x => x.SpelerId == managerPlayer.Id);
                     ourClub.Managers.Add(new ClubManager
                     {
-                        Description = string.IsNullOrWhiteSpace(managerInfo.Omschrijving) ? ClubManagerType.Default : (ClubManagerType)Enum.Parse(typeof(ClubManagerType), managerInfo.Omschrijving, true),
+                        Description = managerInfo.Omschrijving,
                         PlayerId = managerInfo.SpelerId,
                         Name = managerPlayer.Name,
                         Contact = new PlayerContact(managerPlayer.Id, managerPlayer.Email, managerPlayer.Gsm, managerPlayer.Adres, managerPlayer.Gemeente),
@@ -77,7 +77,7 @@ namespace Ttc.DataAccess.Services
                     context.ClubContacten.Add(board);
                 }
 
-                board.Omschrijving = Enum.Parse(typeof(ClubManagerType), boardFunction, true).ToString();
+                board.Omschrijving = boardFunction;
                 board.Sortering = sort;
                 await context.SaveChangesAsync();
             }

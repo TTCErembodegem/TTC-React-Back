@@ -2,16 +2,6 @@
 
 namespace Ttc.Model.Clubs
 {
-    public enum ClubManagerType
-    {
-        Default,
-        Chairman,
-        Secretary,
-        Treasurer,
-        Vttl,
-        Sporta,
-    }
-
     /// <summary>
     /// Voorzitter, secretaris, ...
     /// </summary>
@@ -19,7 +9,7 @@ namespace Ttc.Model.Clubs
     {
         #region Properties
         public int PlayerId { get; set; }
-        public ClubManagerType Description { get; set; }
+        public string Description { get; set; }
         public string Name { get; set; }
         public PlayerContact Contact { get; set; }
         public int SortOrder { get; set; }
