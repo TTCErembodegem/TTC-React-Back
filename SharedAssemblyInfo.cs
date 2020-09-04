@@ -1,7 +1,7 @@
 using System.Reflection;
 
 [assembly: AssemblyCompany("itenium.be")]
-[assembly: AssemblyCopyright("Copyright © itenium.be 2015-2018")]
+[assembly: AssemblyCopyright("Copyright © itenium 2015-2020")]
 
 // Version information for an assembly consists of the following four values:
 //

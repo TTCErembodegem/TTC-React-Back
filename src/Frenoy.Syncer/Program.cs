@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Frenoy.Api;
 using Ttc.DataAccess;
 using Ttc.DataAccess.Migrations;
@@ -11,7 +12,7 @@ namespace Frenoy.Syncer
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             using (var context = new TtcDbContext())
             {
@@ -26,12 +27,12 @@ namespace Frenoy.Syncer
                     //var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
                     //sportaPlayers.SyncPlayers();
 
-                    // This code can be triggered by deploying a new migration
-                    // --> No more at the moment with asyncy stuff see README.
+                    // And this code can be triggered from the UI?
+                    // Admin > Params > Update "year"
                     var vttl = new FrenoyMatchesApi(context, Competition.Vttl);
-                    vttl.SyncTeamsAndMatches();
-                    var sporta = new FrenoyMatchesApi(context, Competition.Sporta);
-                    sporta.SyncTeamsAndMatches();
+                    await vttl.SyncTeamsAndMatches();
+                    //var sporta = new FrenoyMatchesApi(context, Competition.Sporta);
+                    //sporta.SyncTeamsAndMatches();
 
                     //RandomizeMatchDatesForTestingPurposes(context);
 

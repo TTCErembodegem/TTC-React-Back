@@ -1,23 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
 using System.ServiceModel;
-using System.ServiceModel.Configuration;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Frenoy.Api;
 using Frenoy.Api.FrenoyVttl;
 using Ttc.DataEntities;
 using Ttc.DataEntities.Core;
-using Ttc.Model.Matches;
 using Ttc.Model.Players;
-using Ttc.Model.Teams;
-using Match = Ttc.Model.Matches.Match;
 
 namespace Frenoy.Api
 {
