@@ -261,7 +261,7 @@
     <None Include="Service References\FrenoyVttl\configuration.svcinfo" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\FrenoyVttl\item1.wsdl" />
+    <None Include="Service References\FrenoyVttl\item.wsdl" />
     <None Include="Service References\FrenoyVttl\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

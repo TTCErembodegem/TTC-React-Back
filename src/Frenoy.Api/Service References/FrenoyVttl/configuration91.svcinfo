@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="zUiGiPDRaITehdQfaZfP/+l7dio=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="0Ov7+Kw+Qmezdcwv5OLpWvtOkbgmKFUWX1HQr1kPDoc=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="TabTAPI_Binding">
       <properties>
@@ -221,10 +221,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="TabTAPI_Port" contract="FrenoyVttl.TabTAPI_PortType" bindingType="basicHttpBinding" address="https://api.vttl.be/0.7/index.php?s=vttl" bindingConfiguration="TabTAPI_Binding">
+    <endpoint name="TabTAPI_Port" contract="FrenoyVttl.TabTAPI_PortType" bindingType="basicHttpBinding" address="https://api.vttl.be/index.php?s=vttl" bindingConfiguration="TabTAPI_Binding">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>https://api.vttl.be/0.7/index.php?s=vttl</serializedValue>
+          <serializedValue>https://api.vttl.be/index.php?s=vttl</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Configuration;
 using System.Text.RegularExpressions;
@@ -63,6 +64,12 @@ namespace Frenoy.Api
                 var endpoint = new EndpointAddress(FrenoySportaEndpoint);
                 _frenoy = new TabTAPI_PortTypeClient(binding, endpoint);
             }
+
+            // Turn off certificate check -- probably a problem with a self signed certificate on the Frenoy server?
+            // SecurityNegotiationException: 'Could not establish secure channel for SSL/TLS with authority 'api.vttl.be'.
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+            ServicePointManager.ServerCertificateValidationCallback = (sender, cert, chain, error) => true;
 
             //_frenoy.Endpoint.Binding.ReceiveTimeout = TimeSpan.FromMinutes(5);
             //_frenoy.Endpoint.Binding.CloseTimeout = TimeSpan.FromMinutes(5);
