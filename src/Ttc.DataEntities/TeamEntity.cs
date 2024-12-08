@@ -39,7 +39,7 @@ namespace Ttc.DataEntities
         public ICollection<TeamOpponentEntity> Opponents { get; set; }
 
         /// <summary>
-        /// TTC Erembodegem TeamCode (A, B, C, ...)
+        /// TTC Aalst TeamCode (A, B, C, ...)
         /// </summary>
         [MaxLength(2)]
         public string TeamCode { get; set; }

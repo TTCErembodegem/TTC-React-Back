@@ -4,7 +4,7 @@ using Ttc.Model.Players;
 namespace Ttc.Model.Teams
 {
     /// <summary>
-    /// One TTC Erembodegem Team in a Division/Reeks
+    /// One TTC Aalst Team in a Division/Reeks
     /// </summary>
     public class Team
     {
@@ -12,7 +12,7 @@ namespace Ttc.Model.Teams
         public int Id { get; set; }
 
         /// <summary>
-        /// TTC Erembodegem Team code (A, B, C, ...)
+        /// TTC Aalst Team code (A, B, C, ...)
         /// </summary>
         public string TeamCode { get; set; }
         public int ClubId { get; set; }
@@ -34,7 +34,7 @@ namespace Ttc.Model.Teams
         public string DivisionName { get; set; }
 
         /// <summary>
-        /// Links to Frenoy website and API details of TTC Erembodegem Team
+        /// Links to Frenoy website and API details of TTC Aalst Team
         /// </summary>
         public FrenoyTeamLinks Frenoy { get; set; }
 

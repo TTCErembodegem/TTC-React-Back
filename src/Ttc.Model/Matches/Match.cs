@@ -13,7 +13,7 @@ namespace Ttc.Model.Matches
     }
 
     /// <summary>
-    /// Non-TTC Erembodegem match
+    /// Non-TTC Aalst match
     /// </summary>
     public class OtherMatch : IMatch
     {
@@ -63,8 +63,8 @@ namespace Ttc.Model.Matches
 
         public int TeamId { get; set; }
         /// <summary>
-        /// Null when TTC Erembodegem did not play (~ ReadonlyMatch)
-        /// True/False: Was TTC Erembodegem, True=Was in Erembodegem
+        /// Null when TTC Aalst did not play (~ ReadonlyMatch)
+        /// True/False: Was TTC Aalst, True=Was in Aalst
         /// </summary>
         public bool? IsHomeMatch { get; set; }
         public OpposingTeam Opponent { get; set; }

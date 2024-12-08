@@ -80,7 +80,7 @@ namespace Ttc.DataAccess.Utilities
 
                 var ourTeam = _match.HomeTeam ?? _match.AwayTeam;
                 scoresheet.Cells["W5"].Value = string.IsNullOrWhiteSpace(ourTeam.ReeksNummer) ? "Ere" : ourTeam.ReeksNummer + ourTeam.ReeksCode;
-                scoresheet.Cells["A9"].Value = $"Erembodegem {ourTeam.TeamCode}";
+                scoresheet.Cells["A9"].Value = $"Aalst {ourTeam.TeamCode}";
 
                 var theirTeam = GetTheirTeam();
                 scoresheet.Cells["A16"].Value = theirTeam.ClubName + " " + theirTeam.TeamCode;
@@ -169,7 +169,7 @@ namespace Ttc.DataAccess.Utilities
             var ploegen = teams
                 .Select(x => new
                 {
-                    Ploegen = $"Erembodegem {x.TeamCode}",
+                    Ploegen = $"Aalst {x.TeamCode}",
                     Afdeling = string.IsNullOrWhiteSpace(x.ReeksNummer) ? "Ere" : x.ReeksNummer,
                     Reeks = x.ReeksCode,
                 })

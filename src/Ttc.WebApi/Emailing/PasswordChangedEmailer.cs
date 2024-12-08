@@ -19,7 +19,7 @@ Als je dit niet zelf gedaan hebt, dan is er iets mis!<br>
 
         public void Email(string email)
         {
-            string subject = "Nieuw paswoord TTC Erembodegem";
+            string subject = "Nieuw paswoord TTC Aalst";
             string content = string.Format(NewPasswordRequestTemplate);
             EmailService.SendEmail(email, subject, content, _config).Wait();
         }

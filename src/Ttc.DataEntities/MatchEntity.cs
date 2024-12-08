@@ -64,8 +64,8 @@ namespace Ttc.DataEntities
         public bool IsSyncedWithFrenoy { get; set; }
 
         /// <summary>
-        /// Null when TTC Erembodegem did not play (~ ReadonlyMatch)
-        /// True/False: Was TTC Erembodegem, True=Was in Erembodegem
+        /// Null when TTC Aalst did not play (~ ReadonlyMatch)
+        /// True/False: Was TTC Aalst, True=Was in Aalst
         /// </summary>
         public bool? IsHomeMatch => !HomeTeamId.HasValue && !AwayTeamId.HasValue ? (bool?)null : HomeTeamId.HasValue;
 

@@ -15,7 +15,7 @@
         public int Won { get; set; }
 
         /// <summary>
-        /// True == TTC Erembodegem player
+        /// True == TTC Aalst player
         /// </summary>
         public bool Home { get; set; }
         public int PlayerId { get; set; }

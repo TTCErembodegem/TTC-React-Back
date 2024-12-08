@@ -20,6 +20,7 @@ namespace Frenoy.Syncer
                 {
                     // This code can be triggered from the UI!
                     // Admin > Spelers > Frenoy Sync button (float: right)
+                    // Or just: await NewSeasonSeed.Seed(context, false);
 
                     //var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
                     //vttlPlayers.StopAllPlayers(true);

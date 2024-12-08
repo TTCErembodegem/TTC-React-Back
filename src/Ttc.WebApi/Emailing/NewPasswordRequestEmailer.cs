@@ -22,8 +22,8 @@ Reset je paswoord hier:<br>
 
         public void Email(string email, Guid guid)
         {
-            string subject = "Paswoord reset TTC Erembodegem";
-            string fullUrlLink = $"http://www.ttc-erembodegem.be/login/nieuw-paswoord/" + guid;
+            string subject = "Paswoord reset TTC Aalst";
+            string fullUrlLink = $"http://www.ttc-aalst.be/login/nieuw-paswoord/" + guid;
             string content = string.Format(NewPasswordRequestTemplate, fullUrlLink);
             EmailService.SendEmail(email, subject, content, _config).Wait();
         }

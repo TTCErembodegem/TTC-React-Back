@@ -5,7 +5,7 @@ using Ttc.DataAccess.Utilities;
 namespace Ttc.DataAccess
 {
     /// <summary>
-    /// TTC Erembodegem DataAccess configuration
+    /// TTC Aalst DataAccess configuration
     /// </summary>
     public static class GlobalBackendConfiguration
     {

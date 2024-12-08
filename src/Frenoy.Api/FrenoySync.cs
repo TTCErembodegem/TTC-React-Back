@@ -107,7 +107,7 @@ namespace Frenoy.Api
                     CommitChanges();
                 }
 
-                // Add Erembodegem players to the home team
+                // Add Aalst players to the home team
                 var ploeg = _db.ClubPloegen.Single(x => x.ClubId == _thuisClubId && x.ReeksId == reeks.Id && x.Code == frenoyTeam.Team);
                 if (MapTeamPlayers)
                 {
@@ -323,7 +323,7 @@ namespace Frenoy.Api
             kalender.ThuisClubPloegId = GetClubPloegId(reeks.Id, kalender.ThuisClubId.Value, kalender.ThuisPloeg);
             kalender.UitClubPloegId = GetClubPloegId(reeks.Id, kalender.UitClubId.Value, kalender.UitPloeg);
 
-            // In the db the ThuisClubId is always Erembodegem
+            // In the db the ThuisClubId is always Aalst
             kalender.Thuis = kalender.ThuisClubId == _thuisClubId && kalender.ThuisPloeg == thuisPloegCode ? 1 : 0;
             if (kalender.Thuis == 0)
             {

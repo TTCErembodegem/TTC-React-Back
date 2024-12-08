@@ -35,10 +35,10 @@ namespace Ttc.UnitTests
 
             var here = @"Beste,
 <br><br>
-De nieuwe website van TCC Erembodegem is een feit!
+De nieuwe website van TCC Aalst is een feit!
 <br><br>
 Er is voor jou speciaal een nieuw paswoord gegenereerd:<br>
-<a href=""http://www.ttc-erembodegem.be"">http://www.ttc-erembodegem.be</a><br>
+<a href=""http://www.ttc-aalst.be"">http://www.ttc-aalst.be</a><br>
 Nieuw paswoord: {0}<br>
 <br>
 Er is een handleiding hoe alles precies in zijn werk gaat:<br>
@@ -55,7 +55,7 @@ Wouter & Jorn";
                 var mail = new MailMessage();
                 mail.From = new MailAddress("woutervs@hotmail.com");
                 mail.To.Add(toEmail.Key);
-                mail.Subject = "TTC Erembodegem: Paswoord nieuwe website";
+                mail.Subject = "TTC Aalst: Paswoord nieuwe website";
                 mail.IsBodyHtml = true;
                 string htmlBody;
                 htmlBody = string.Format(here, toEmail.Value);

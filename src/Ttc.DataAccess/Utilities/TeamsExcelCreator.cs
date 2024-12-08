@@ -249,7 +249,7 @@ namespace Ttc.DataAccess.Utilities
         {
             if (clubId == Constants.OwnClubId)
             {
-                return "Erembodegem " + teamCode;
+                return "Aalst " + teamCode;
             }
             var club = clubs.Single(x => x.Id == clubId);
             return club.Naam + " " + teamCode;

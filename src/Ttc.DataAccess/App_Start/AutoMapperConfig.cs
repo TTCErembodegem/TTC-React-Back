@@ -208,7 +208,7 @@ namespace Ttc.DataAccess
 
         /// <summary>
         /// Change the meaning of 'home' from 'was the player playing in his own club'
-        /// to 'is the player a member of TTC Erembodegem'
+        /// to 'is the player a member of TTC Aalst'
         /// </summary>
         private static void ChangeMeaningOfHomePlayer(Match match)
         {
