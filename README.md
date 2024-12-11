@@ -2,11 +2,6 @@
 
 WebApi 2 Backend.  
 
-## Deploy
-
-[Jenkins](http://pongit:9001/job/ttc-front/)
-
-
 ## New Season
 
 Go to Admin > Params and update the "year" param.
