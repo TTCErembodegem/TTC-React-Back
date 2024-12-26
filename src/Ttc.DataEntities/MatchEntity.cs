@@ -36,7 +36,7 @@ public class MatchEntity
 
     public int? HomeTeamId { get; set; }
     [ForeignKey("HomeTeamId")]
-    public TeamEntity HomeTeam { get; set; }
+    public TeamEntity? HomeTeam { get; set; }
     //[Index]
     public int HomeClubId { get; set; }
     [MaxLength(2)]
@@ -44,7 +44,7 @@ public class MatchEntity
 
     public int? AwayTeamId { get; set; }
     [ForeignKey("AwayTeamId")]
-    public TeamEntity AwayTeam { get; set; }
+    public TeamEntity? AwayTeam { get; set; }
     //[Index]
     public int AwayClubId { get; set; }
 

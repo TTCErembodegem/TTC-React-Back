@@ -182,7 +182,7 @@ public class TeamToggleRequest
 {
     public int TeamId { get; set; }
     public int PlayerId { get; set; }
-    public string Role { get; set; }
+    public string Role { get; set; } = "";
 
     public override string ToString() => $"TeamId={TeamId}, PlayerId={PlayerId}, Role={Role}";
 }
