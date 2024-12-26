@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using Frenoy.Api.FrenoyVttl;
-using Ttc.DataEntities;
 using Ttc.Model.Players;
 
 namespace Frenoy.Api

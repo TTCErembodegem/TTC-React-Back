@@ -1,32 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace Ttc.DataEntities.Core
+namespace Ttc.DataEntities.Core;
+
+public interface ITtcDbContext
 {
-    public interface ITtcDbContext
-    {
-        DbSet<PlayerEntity> Players { get; set; }
-        DbSet<ClubEntity> Clubs { get; set; }
-        DbSet<ClubLokaal> ClubLokalen { get; set; }
-        DbSet<ClubContact> ClubContacten { get; set; }
+    DbSet<PlayerEntity> Players { get; set; }
+    DbSet<PlayerPasswordResetEntity> PlayerPasswordResets { get; set; }
 
-        DbSet<TeamEntity> Teams { get; set; }
-        DbSet<TeamOpponentEntity> TeamOpponents { get; set; }
-        DbSet<TeamPlayerEntity> TeamPlayers { get; set; }
+    DbSet<ClubEntity> Clubs { get; set; }
+    DbSet<ClubLokaal> ClubLokalen { get; set; }
+    DbSet<ClubContact> ClubContacten { get; set; }
 
-        DbSet<MatchEntity> Matches { get; set; }
-        DbSet<MatchPlayerEntity> MatchPlayers { get; set; }
-        DbSet<MatchGameEntity> MatchGames { get; set; }
+    DbSet<TeamEntity> Teams { get; set; }
+    DbSet<TeamOpponentEntity> TeamOpponents { get; set; }
+    DbSet<TeamPlayerEntity> TeamPlayers { get; set; }
 
-        DbSet<ParameterEntity> Parameters { get; set; }
+    DbSet<MatchEntity> Matches { get; set; }
+    DbSet<MatchPlayerEntity> MatchPlayers { get; set; }
+    DbSet<MatchGameEntity> MatchGames { get; set; }
+    DbSet<MatchCommentEntity> MatchComments { get; set; }
 
-        int CurrentSeason { get; }
-        int CurrentFrenoySeason { get; }
+    DbSet<ParameterEntity> Parameters { get; set; }
 
-        Task<int> SaveChangesAsync();
-    }
+    int CurrentSeason { get; }
+    int CurrentFrenoySeason { get; }
+
+    Task<int> SaveChangesAsync(CancellationToken token = default);
+
+    EntityEntry<TEntity> Entry<TEntity>(TEntity entity)
+        where TEntity : class;
+
+    DatabaseFacade Database { get; }
 }

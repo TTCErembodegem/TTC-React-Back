@@ -2,10 +2,8 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Frenoy.Api.FrenoyVttl;
-using Ttc.DataAccess;
-using Ttc.DataAccess.Entities;
-using Ttc.DataAccess.Migrations;
+using FrenoyVttl;
+using Ttc.DataEntities;
 using Ttc.Model.Matches;
 using Ttc.Model.Teams;
 

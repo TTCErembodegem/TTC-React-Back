@@ -1,9 +1,5 @@
-﻿using System;
-using System.Data.Entity.Migrations;
-using System.Linq;
-using System.Threading.Tasks;
-using Frenoy.Api;
-using Ttc.DataEntities;
+﻿using Frenoy.Api;
+using Ttc.DataEntities.Core;
 using Ttc.Model.Players;
 
 namespace Ttc.DataAccess
@@ -14,10 +10,8 @@ namespace Ttc.DataAccess
         /// Adds the matches and syncs the players for the new season
         /// </summary>
         /// <returns>The new season year</returns>
-        public static async Task<int> Seed(TtcDbContext context, bool clearMatches)
+        public static async Task<int> Seed(ITtcDbContext context, bool clearMatches)
         {
-            // TODO: Season 2020: Add GetOpponentMatches to initial seed (remove from MatchService)
-
             //if (clearMatches)
             //{
             //    context.Database.ExecuteSqlCommand("DELETE FROM matchplayer");
@@ -26,7 +20,6 @@ namespace Ttc.DataAccess
             //    context.Database.ExecuteSqlCommand("DELETE FROM matches");
             //}
 
-            //int newYear = context.CurrentFrenoySeason + 1;
             int newYear = DateTime.Today.Year;
             int newFrenoyYear = newYear - 2000 + 1;
             if (DateTime.Today.Month < 7)
@@ -36,39 +29,24 @@ namespace Ttc.DataAccess
             if (!context.Matches.Any(x => x.FrenoySeason == newFrenoyYear))
             {
                 // VTTL
-                var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
-                await vttlPlayers.StopAllPlayers(true);
-                await vttlPlayers.SyncPlayers();
+                //var vttlPlayers = new FrenoyPlayersApi(context, Competition.Vttl);
+                //await vttlPlayers.StopAllPlayers(false);
+                //await vttlPlayers.SyncPlayers();
 
                 var vttl = new FrenoyMatchesApi(context, Competition.Vttl);
                 await vttl.SyncTeamsAndMatches();
 
 
                 // Sporta
-                var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
-                await sportaPlayers.StopAllPlayers(true);
-                await sportaPlayers.SyncPlayers();
+                //var sportaPlayers = new FrenoyPlayersApi(context, Competition.Sporta);
+                //await sportaPlayers.StopAllPlayers(false);
+                //await sportaPlayers.SyncPlayers();
 
                 var sporta = new FrenoyMatchesApi(context, Competition.Sporta);
                 await sporta.SyncTeamsAndMatches();
             }
 
-            //CreateSystemUser(context);
-
             return newYear;
-        }
-
-        private static void CreateSystemUser(TtcDbContext context)
-        {
-            // Clublokaal user account
-            context.Players.AddOrUpdate(p => p.NaamKort, new PlayerEntity
-            {
-                Gestopt = 1,
-                FirstName = "SYSTEM",
-                NaamKort = "SYSTEM",
-                Toegang = PlayerToegang.System
-            });
-            //context.Database.ExecuteSqlCommand("UPDATE speler SET paswoord=MD5('system') WHERE FirstName='SYSTEM' AND paswoord IS NULL");
         }
     }
 }

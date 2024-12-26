@@ -1,9 +1,8 @@
-﻿namespace Ttc.WebApi.Utilities.Auth
-{
-    public class ValidateTokenRequest
-    {
-        public string Token { get; set; }
+﻿namespace Ttc.WebApi.Utilities.Auth;
 
-        public override string ToString() => $"Token: {Token}";
-    }
+public class ValidateTokenRequest
+{
+    public string Token { get; set; } = "";
+
+    public override string ToString() => $"Token: {Token}";
 }

@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using Frenoy.Api;
 using OfficeOpenXml;
-using OfficeOpenXml.Style;
 using Ttc.DataEntities;
+using Ttc.DataEntities.Core;
 using Ttc.Model.Matches;
-using Ttc.Model.Players;
 
 namespace Ttc.DataAccess.Utilities
 {
@@ -32,10 +28,9 @@ namespace Ttc.DataAccess.Utilities
         private readonly ICollection<PlayerEntity> _players;
         private readonly ICollection<TeamEntity> _teams;
         private readonly ICollection<PlayerEntity> _opponentPlayers;
-        private readonly TtcDbContext _context;
+        private readonly ITtcDbContext _context;
         private readonly MatchEntity _match;
         private SportaMatchFileInfo _fileInfo;
-        private readonly KlassementValueConverter _klassementCalc = new KlassementValueConverter();
 
         private static string TemplatePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Resources\SportaScoresheetTemplate.xlsx");
 
@@ -45,7 +40,7 @@ namespace Ttc.DataAccess.Utilities
         public SportaMatchFileInfo FileInfo => _fileInfo;
 
         public SportaMatchExcelCreator(
-            TtcDbContext context,
+            ITtcDbContext context,
             MatchEntity match,
             ICollection<PlayerEntity> players,
             ICollection<TeamEntity> teams,
@@ -99,7 +94,6 @@ namespace Ttc.DataAccess.Utilities
 
                     // TODO: hier kunnen alle spelers meerdere keren inzitten....
                     // --> checken of er wel altijd een Major is?
-                    // --> Check dan direct ook Dries zijn probleem met het instellen van de spelers es...
 
                     // OrderBy(SportaKlassementn,j ).ThenBy(Postion)
 
@@ -153,7 +147,7 @@ namespace Ttc.DataAccess.Utilities
                 sheet.Cells["A" + rowIndex].Value = opponent.Name;
                 sheet.Cells["B" + rowIndex].Value = opponent.LidNummerSporta;
                 sheet.Cells["C" + rowIndex].Value = opponent.KlassementSporta;
-                sheet.Cells["D" + rowIndex].Value = _klassementCalc.Sporta(opponent.KlassementSporta);
+                sheet.Cells["D" + rowIndex].Value = KlassementValueConverter.Sporta(opponent.KlassementSporta);
                 rowIndex++;
             }
 
@@ -210,7 +204,7 @@ namespace Ttc.DataAccess.Utilities
                 .Select(x => new
                 {
                     Naam = x.Name,
-                    Klassement = _klassementCalc.Sporta(x.KlassementSporta),
+                    Klassement = KlassementValueConverter.Sporta(x.KlassementSporta),
                     Waarde = x.KlassementSporta,
                     Lidkaart = x.LidNummerSporta
                 })

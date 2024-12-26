@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data.Entity;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Frenoy.Api.FrenoyVttl;
+using FrenoyVttl;
+using Microsoft.EntityFrameworkCore;
 using Ttc.DataEntities;
 using Ttc.DataEntities.Core;
 using Ttc.Model.Matches;
@@ -31,10 +26,13 @@ namespace Frenoy.Api
         /// </summary>
         public async Task SyncTeamsAndMatches()
         {
-            var frenoyTeams = await _frenoy.GetClubTeamsAsync(new GetClubTeamsRequest
+            var frenoyTeams = await _frenoy.GetClubTeamsAsync(new GetClubTeamsRequest1
             {
-                Club = _settings.FrenoyClub,
-                Season = _settings.FrenoySeason.ToString()
+                GetClubTeamsRequest = new GetClubTeamsRequest()
+                {
+                    Club = _settings.FrenoyClub,
+                    Season = _settings.FrenoySeason.ToString()
+                }
             });
             await SyncTeamsAndMatches(frenoyTeams.GetClubTeamsResponse);
         }
@@ -45,7 +43,10 @@ namespace Frenoy.Api
             {
                 // Create new division for each team in the club
                 // Check if it already exists: Two teams could play in the same division
-                TeamEntity teamEntity = _db.Teams.SingleOrDefault(x => x.FrenoyDivisionId.ToString() == frenoyTeam.DivisionId && x.TeamCode == frenoyTeam.Team);
+                TeamEntity? teamEntity = _db.Teams
+                    .Where(x => x.FrenoyDivisionId.ToString() == frenoyTeam.DivisionId)
+                    .SingleOrDefault(x => x.TeamCode == frenoyTeam.Team);
+
                 if (teamEntity == null)
                 {
                     teamEntity = CreateTeam(frenoyTeam);
@@ -53,11 +54,19 @@ namespace Frenoy.Api
                     await CommitChanges();
 
                     // Create the teams in the new division=reeks
-                    var frenoyDivision = await _frenoy.GetDivisionRankingAsync(new GetDivisionRankingRequest
+                    var frenoyDivision = await _frenoy.GetDivisionRankingAsync(new GetDivisionRankingRequest1
                     {
-                        DivisionId = frenoyTeam.DivisionId
+                        GetDivisionRankingRequest = new GetDivisionRankingRequest()
+                        {
+                            DivisionId = frenoyTeam.DivisionId
+                        }
                     });
-                    foreach (var frenoyTeamsInDivision in frenoyDivision.GetDivisionRankingResponse.RankingEntries.Where(x => ExtractTeamCodeFromFrenoyName(x.Team) != frenoyTeam.Team || !IsOwnClub(x.TeamClub)))
+
+                    var teamsInDivision = frenoyDivision.GetDivisionRankingResponse.RankingEntries
+                        .Where(x => ExtractTeamCodeFromFrenoyName(x.Team) != frenoyTeam.Team || !IsOwnClub(x.TeamClub))
+                        .ToArray();
+
+                    foreach (var frenoyTeamsInDivision in teamsInDivision)
                     {
                         var teamOpponent = await CreateTeamOpponent(teamEntity, frenoyTeamsInDivision);
                         _db.TeamOpponents.Add(teamOpponent);
@@ -74,14 +83,17 @@ namespace Frenoy.Api
         public async Task SyncTeamMatches(TeamEntity team)
         {
             // Create the matches=kalender table in the new  division=reeks
-            var matches = await _frenoy.GetMatchesAsync(new GetMatchesRequest
+            var matches = await _frenoy.GetMatchesAsync(new GetMatchesRequest1
             {
-                Club = _settings.FrenoyClub,
-                Season = _settings.FrenoySeason.ToString(),
-                DivisionId = team.FrenoyDivisionId.ToString(),
-                Team = team.TeamCode,
-                WithDetailsSpecified = false,
-                WithDetails = false,
+                GetMatchesRequest = new GetMatchesRequest()
+                {
+                    Club = _settings.FrenoyClub,
+                    Season = _settings.FrenoySeason.ToString(),
+                    DivisionId = team.FrenoyDivisionId.ToString(),
+                    Team = team.TeamCode,
+                    WithDetailsSpecified = false,
+                    WithDetails = false,
+                }
             });
 
             await SyncTeamMatches(team.Id, team.FrenoyDivisionId, matches.GetMatchesResponse);
@@ -91,12 +103,15 @@ namespace Frenoy.Api
         {
             if (_forceSync || ShouldAttemptMatchSync(matchEntity.Id))
             {
-                GetMatchesResponse1 matches = await _frenoy.GetMatchesAsync(new GetMatchesRequest
+                GetMatchesResponse1 matches = await _frenoy.GetMatchesAsync(new GetMatchesRequest1
                 {
-                    DivisionId = matchEntity.FrenoyDivisionId.ToString(),
-                    WithDetailsSpecified = true,
-                    WithDetails = true,
-                    MatchId = matchEntity.FrenoyMatchId
+                    GetMatchesRequest = new GetMatchesRequest()
+                    {
+                        DivisionId = matchEntity.FrenoyDivisionId.ToString(),
+                        WithDetailsSpecified = true,
+                        WithDetails = true,
+                        MatchId = matchEntity.FrenoyMatchId
+                    }
                 });
 
                 Debug.Assert(matches.GetMatchesResponse.MatchCount == "1");
@@ -105,9 +120,7 @@ namespace Frenoy.Api
                 int? ourTeamId = (matchEntity.HomeTeam ?? matchEntity.AwayTeam)?.Id;
 
                 await MapMatch(matchEntity, ourTeamId, matchEntity.FrenoyDivisionId, frenoyMatch, matchEntity.FrenoySeason);
-
                 await SyncMatchResults(matchEntity, frenoyMatch);
-
                 await CommitChanges();
             }
         }
@@ -154,14 +167,17 @@ namespace Frenoy.Api
         {
             if (ShouldAttemptOpponentMatchSync(opponent, team.Id))
             {
-                var matches = await _frenoy.GetMatchesAsync(new GetMatchesRequest
+                var matches = await _frenoy.GetMatchesAsync(new GetMatchesRequest1
                 {
-                    Club = GetFrenoyClubdId(opponent.ClubId),
-                    Season = _settings.FrenoySeason.ToString(),
-                    Team = opponent.TeamCode,
-                    WithDetailsSpecified = false,
-                    WithDetails = false,
-                    DivisionId = team.FrenoyDivisionId.ToString()
+                    GetMatchesRequest = new GetMatchesRequest()
+                    {
+                        Club = GetFrenoyClubId(opponent.ClubId),
+                        Season = _settings.FrenoySeason.ToString(),
+                        Team = opponent.TeamCode,
+                        WithDetailsSpecified = false,
+                        WithDetails = false,
+                        DivisionId = team.FrenoyDivisionId.ToString()
+                    }
                 });
                 await SyncTeamMatches(team.Id, team.FrenoyDivisionId, matches.GetMatchesResponse);
             }
@@ -171,24 +187,23 @@ namespace Frenoy.Api
         #region Match Creation
         private async Task SyncTeamMatches(int? teamId, int frenoyDivisionId, GetMatchesResponse matches, int? frenoySeason = null)
         {
-            frenoySeason = frenoySeason ?? _db.CurrentFrenoySeason;
+            frenoySeason ??= _db.CurrentFrenoySeason;
 
             foreach (TeamMatchEntryType frenoyMatch in matches.TeamMatchesEntries)
             {
                 // Kalender entries
-                MatchEntity matchEntity = await _db.Matches.SingleOrDefaultAsync(x => x.FrenoyMatchId == frenoyMatch.MatchId && x.FrenoySeason == frenoySeason.Value);
+                MatchEntity? matchEntity = await _db.Matches.SingleOrDefaultAsync(x => x.FrenoyMatchId == frenoyMatch.MatchId && x.FrenoySeason == frenoySeason.Value);
                 if (matchEntity == null)
                 {
                     matchEntity = new MatchEntity();
                     await MapMatch(matchEntity, teamId, frenoyDivisionId, frenoyMatch, frenoySeason.Value);
                     _db.Matches.Add(matchEntity);
-                    await CommitChanges();
                 }
                 else
                 {
                     await MapMatch(matchEntity, teamId, frenoyDivisionId, frenoyMatch, frenoySeason);
-                    await CommitChanges();
                 }
+                await CommitChanges();
             }
         }
 
@@ -300,15 +315,6 @@ namespace Frenoy.Api
             _db.MatchGames.RemoveRange(oldMatchGames);
         }
 
-        //private static void AssertMatchPlayers(MatchEntity matchEntity)
-        //{
-        //    var testPlayer = matchEntity.Players.Count(x => x.PlayerId != 0) == 0 || matchEntity.Players.Count > 8;
-        //    if (testPlayer && (matchEntity.AwayTeamId.HasValue || matchEntity.HomeTeamId.HasValue))
-        //    {
-        //        Debug.Assert(false, "player problem");
-        //    }
-        //}
-
         private static void AddMatchGames(IndividualMatchResultEntryType frenoyIndividual, int id, MatchEntity matchEntity)
         {
             if (frenoyIndividual.IsHomeForfeited || frenoyIndividual.IsAwayForfeited)
@@ -316,14 +322,12 @@ namespace Frenoy.Api
                 return;
             }
 
-            MatchGameEntity matchResult = null;
+            MatchGameEntity matchResult;
             if (frenoyIndividual.AwayPlayerMatchIndex?.Length == 2 || frenoyIndividual.AwayPlayerMatchIndex?.Length == 2 ||
                 frenoyIndividual.HomePlayerMatchIndex?.Length == 2 || frenoyIndividual.HomePlayerUniqueIndex?.Length == 2)
             {
                 // TODO: We also got here when matchEntity.WalkOver = true
                 //       HomePlayerUniqueIndex or AwayPlayerUniqueIndex = "" when the Team forfeited the entire season
-                // 
-
                 // TODO: We now have the Ids from doubles with Home/AwayPlayerUniqueIndex becoming an array
 
                 // Sporta doubles match:
@@ -444,7 +448,7 @@ namespace Frenoy.Api
                     Debug.Assert(frenoyVerslagSpeler.IsForfeited, "Either a VictoryCount or IsForfeited");
                 }
 
-                PlayerEntity dbPlayer = null;
+                PlayerEntity? dbPlayer = null;
                 if (match.IsHomeMatch.HasValue && ((match.IsHomeMatch.Value && thuisSpeler) || (!match.IsHomeMatch.Value && !thuisSpeler)))
                 {
                     if (_isVttl)
@@ -472,19 +476,19 @@ namespace Frenoy.Api
 
         #region Cache
         private static readonly TimeSpan FrenoyPesterExpiration = TimeSpan.FromHours(1);
-        private static readonly Dictionary<int, DateTime> FrenoyNoPesterCache = new Dictionary<int, DateTime>();
+        private static readonly Dictionary<int, DateTime> FrenoyNoPesterCache = new();
         private static readonly object FrenoyNoPesterLock = new object();
         private static bool ShouldAttemptMatchSync(int matchId)
         {
             lock (FrenoyNoPesterLock)
             {
-                if (!FrenoyNoPesterCache.ContainsKey(matchId))
+                if (!FrenoyNoPesterCache.TryGetValue(matchId, out var value))
                 {
                     FrenoyNoPesterCache.Add(matchId, DateTime.Now);
                     return true;
                 }
 
-                bool shouldSync = FrenoyNoPesterCache[matchId] > DateTime.Now + FrenoyPesterExpiration;
+                bool shouldSync = value > DateTime.Now + FrenoyPesterExpiration;
                 if (shouldSync)
                 {
                     FrenoyNoPesterCache.Remove(matchId);
@@ -493,22 +497,22 @@ namespace Frenoy.Api
             }
         }
 
-        private static readonly Dictionary<string, DateTime> FrenoyOpponentCache = new Dictionary<string, DateTime>();
+        private static readonly Dictionary<string, DateTime> FrenoyOpponentCache = new();
         private static readonly object FrenoyOpponentLock = new object();
         private bool ShouldAttemptOpponentMatchSync(OpposingTeam team, int teamId, int? season = null)
         {
-            season = season ?? _db.CurrentFrenoySeason;
+            season ??= _db.CurrentFrenoySeason;
 
             string hash = season + team.TeamCode + team.ClubId + '-' + teamId;
             lock (FrenoyOpponentLock)
             {
-                if (!FrenoyOpponentCache.ContainsKey(hash))
+                if (!FrenoyOpponentCache.TryGetValue(hash, out var value))
                 {
                     FrenoyOpponentCache.Add(hash, DateTime.Now);
                     return true;
                 }
 
-                bool shouldSync = FrenoyOpponentCache[hash] > DateTime.Now + FrenoyPesterExpiration;
+                bool shouldSync = value > DateTime.Now + FrenoyPesterExpiration;
                 if (shouldSync)
                 {
                     FrenoyOpponentCache.Remove(hash);
@@ -530,21 +534,15 @@ namespace Frenoy.Api
             return ti.ToTitleCase((frenoyVerslagSpeler.FirstName + " " + frenoyVerslagSpeler.LastName).ToLowerInvariant());
         }
 
-        private int GetSpelerId(string playerName)
-        {
-            var speler = _db.Players.Single(x => x.NaamKort == playerName);
-            return speler.Id;
-        }
-
-        private string GetFrenoyClubdId(int clubId)
+        private string GetFrenoyClubId(int clubId)
         {
             if (_isVttl)
             {
-                return _db.Clubs.Single(x => x.Id == clubId).CodeVttl;
+                return _db.Clubs.Single(x => x.Id == clubId).CodeVttl!;
             }
             else
             {
-                return _db.Clubs.Single(x => x.Id == clubId).CodeSporta;
+                return _db.Clubs.Single(x => x.Id == clubId).CodeSporta!;
             }
         }
         #endregion

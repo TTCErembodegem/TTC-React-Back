@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Frenoy.Api.FrenoyVttl;
+﻿using System.Diagnostics;
+using FrenoyVttl;
+using Microsoft.EntityFrameworkCore;
 using Ttc.DataEntities;
 using Ttc.DataEntities.Core;
 using Ttc.Model.Players;
@@ -22,7 +17,7 @@ namespace Frenoy.Api
         public async Task SyncClubLokalen()
         {
             // TODO: these methods need to be applied to vttl and sporta together
-            // TODO: need to check with Dirk/Jelle if frenoy club locations are actually better than current data...
+            // TODO: need to check if frenoy club locations are actually better than current data...
 
             Debug.Assert(false, "legacy db data might be better?");
 
@@ -47,9 +42,12 @@ namespace Frenoy.Api
             {
                 var oldLokalen = await _db.ClubLokalen.Where(x => x.ClubId == dbClub.Id).ToArrayAsync();
 
-                var frenoyClubs = await _frenoy.GetClubsAsync(new GetClubs
+                var frenoyClubs = await _frenoy.GetClubsAsync(new GetClubsRequest
                 {
-                    Club = getClubCode(dbClub)
+                    GetClubs = new GetClubs()
+                    {
+                        Club = getClubCode(dbClub)
+                    }
                 });
 
                 var frenoyClub = frenoyClubs.GetClubsResponse.ClubEntries.FirstOrDefault();

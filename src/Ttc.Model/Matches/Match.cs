@@ -1,113 +1,114 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using Ttc.Model.Core;
+﻿using Ttc.Model.Core;
 using Ttc.Model.Teams;
 
-namespace Ttc.Model.Matches
+namespace Ttc.Model.Matches;
+
+/// <summary>
+/// Non-TTC Aalst match
+/// </summary>
+public class OtherMatch : ITtcConfidential
 {
-    public interface IMatch
+    #region Properties
+    public int Id { get; set; }
+    public DateTime Date { get; set; }
+    public bool ShouldBePlayed { get; set; }
+    public string FrenoyMatchId { get; set; }
+    public bool IsSyncedWithFrenoy { get; set; }
+    public int Week { get; set; }
+    public string Competition { get; set; }
+    public int FrenoyDivisionId { get; set; }
+
+    public OpposingTeam Home { get; set; }
+    public OpposingTeam Away { get; set; }
+
+    public MatchScore Score { get; set; }
+    public MatchOutcome ScoreType { get; set; }
+    public bool IsPlayed { get; set; }
+    public ICollection<MatchPlayer> Players { get; set; }
+    public ICollection<MatchGame> Games { get; set; }
+    #endregion
+
+    public void Hide()
     {
-        bool ShouldHide();
-        ICollection<MatchPlayer> Players { get; set; }
+        // Duplicated below
+        // ATTN: I'd expect this to be filled in only after the Frenoy sync?
+        if (!(IsPlayed || IsSyncedWithFrenoy || Helpers.HasMatchStarted(Date)))
+        {
+            Players = [];
+        }
     }
 
+    public override string ToString() => $"Id: {Id}, Date: {Date}, FrenoyMatchId: {FrenoyMatchId}, IsSyncedWithFrenoy: {IsSyncedWithFrenoy}, Home: {Home}, Away: {Away}, Score: {Score}";
+}
+
+public class Match : ITtcConfidential
+{
+    #region Kalender Properties
+    public int Id { get; set; }
+    public DateTime Date { get; set; }
+    public bool ShouldBePlayed { get; set; }
+    public string FrenoyMatchId { get; set; }
+    public bool IsSyncedWithFrenoy { get; set; }
+    public int Week { get; set; }
+    public string Competition { get; set; }
+    public int FrenoyDivisionId { get; set; }
+    public string Block { get; set; }
+
+    public int TeamId { get; set; }
     /// <summary>
-    /// Non-TTC Aalst match
+    /// Null when TTC Aalst did not play (~ ReadonlyMatch)
+    /// True/False: Was TTC Aalst, True=Was in Aalst
     /// </summary>
-    public class OtherMatch : IMatch
+    public bool? IsHomeMatch { get; set; }
+    public OpposingTeam Opponent { get; set; }
+    #endregion
+
+    #region Verslag Properties
+    public int ReportPlayerId { get; set; }
+    public MatchScore Score { get; set; }
+    public MatchOutcome ScoreType { get; set; }
+    public string Description { get; set; }
+    public bool IsPlayed { get; set; }
+
+    public ICollection<MatchPlayer> Players { get; set; }
+    public string FormationComment { get; set; }
+    public ICollection<MatchGame> Games { get; set; }
+    public ICollection<MatchComment> Comments { get; set; }
+    #endregion
+
+    #region Constructors
+    public Match()
     {
-        #region Properties
-        public int Id { get; set; }
-        public DateTime Date { get; set; }
-        public bool ShouldBePlayed { get; set; }
-        public string FrenoyMatchId { get; set; }
-        public bool IsSyncedWithFrenoy { get; set; }
-        public int Week { get; set; }
-        public string Competition { get; set; }
-        public int FrenoyDivisionId { get; set; }
-
-        public OpposingTeam Home { get; set; }
-        public OpposingTeam Away { get; set; }
-
-        public MatchScore Score { get; set; }
-        public MatchOutcome ScoreType { get; set; }
-        public bool IsPlayed { get; set; }
-        [TtcConfidential("MATCH")]
-        public ICollection<MatchPlayer> Players { get; set; }
-        public ICollection<MatchGame> Games { get; set; }
-        #endregion
-
-        public bool ShouldHide()
-        {
-            // Duplicated below
-            return !(IsPlayed || IsSyncedWithFrenoy || Helpers.HasMatchStarted(Date));
-        }
-
-        public override string ToString() => $"Id: {Id}, Date: {Date}, FrenoyMatchId: {FrenoyMatchId}, IsSyncedWithFrenoy: {IsSyncedWithFrenoy}, Home: {Home}, Away: {Away}, Score: {Score}";
+        Players = new List<MatchPlayer>();
+        Games = new List<MatchGame>();
+        Comments = new List<MatchComment>();
+        ScoreType = MatchOutcome.NotYetPlayed;
+        Score = new MatchScore();
     }
 
-    public class Match : IMatch
+    public Match(int playerId) : this()
     {
-        #region Kalender Properties
-        public int Id { get; set; }
-        public DateTime Date { get; set; }
-        public bool ShouldBePlayed { get; set; }
-        public string FrenoyMatchId { get; set; }
-        public bool IsSyncedWithFrenoy { get; set; }
-        public int Week { get; set; }
-        public string Competition { get; set; }
-        public int FrenoyDivisionId { get; set; }
-        [TtcConfidential]
-        public string Block { get; set; }
-
-        public int TeamId { get; set; }
-        /// <summary>
-        /// Null when TTC Aalst did not play (~ ReadonlyMatch)
-        /// True/False: Was TTC Aalst, True=Was in Aalst
-        /// </summary>
-        public bool? IsHomeMatch { get; set; }
-        public OpposingTeam Opponent { get; set; }
-        #endregion
-
-        #region Verslag Properties
-        public int ReportPlayerId { get; set; }
-        public MatchScore Score { get; set; }
-        public MatchOutcome ScoreType { get; set; }
-        public string Description { get; set; }
-        public bool IsPlayed { get; set; }
-
-        [TtcConfidential("MATCH")]
-        public ICollection<MatchPlayer> Players { get; set; }
-        [TtcConfidential]
-        public string FormationComment { get; set; }
-        public ICollection<MatchGame> Games { get; set; }
-        [TtcConfidential("MATCH-COMMENTS")]
-        public ICollection<MatchComment> Comments { get; set; }
-        #endregion
-
-        #region Constructors
-        public Match()
-        {
-            Players = new List<MatchPlayer>();
-            Games = new List<MatchGame>();
-            Comments = new List<MatchComment>();
-            ScoreType = MatchOutcome.NotYetPlayed;
-            Score = new MatchScore();
-        }
-
-        public Match(int playerId) : this()
-        {
-            ReportPlayerId = playerId;
-        }
-        #endregion
-
-        public bool ShouldHide()
-        {
-            // Duplicated above
-            return !(IsPlayed || IsSyncedWithFrenoy || Helpers.HasMatchStarted(Date));
-        }
-
-        public override string ToString() => $"Id={Id} on {Date:g}, Home={IsHomeMatch}, TeamId={TeamId}, Opponent=({Opponent})";
+        ReportPlayerId = playerId;
     }
+    #endregion
+
+    public void Hide()
+    {
+        FormationComment = "";
+        Block = "";
+
+        // Duplicated above
+        if (!(IsPlayed || IsSyncedWithFrenoy || Helpers.HasMatchStarted(Date)))
+        {
+            Players = [];
+        }
+
+        var toRemove = Comments.Where(c => c.Hidden).ToArray();
+        foreach (var rm in toRemove)
+        {
+            Comments.Remove(rm);
+        }
+    }
+
+    public override string ToString() => $"Id={Id} on {Date:g}, Home={IsHomeMatch}, TeamId={TeamId}, Opponent=({Opponent})";
 }

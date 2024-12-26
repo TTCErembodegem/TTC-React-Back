@@ -1,22 +1,21 @@
-﻿namespace Ttc.Model.Matches
+﻿namespace Ttc.Model.Matches;
+
+public static class PlayerMatchStatus
 {
-    public static class PlayerMatchStatus
-    {
-        /// <summary>
-        /// Opstelling door ploeg kapitein
-        /// </summary>
-        public const string Captain = "Captain";
+    /// <summary>
+    /// Opstelling door ploeg kapitein
+    /// </summary>
+    public const string Captain = "Captain";
 
-        /// <summary>
-        /// Opstelling door Jelle (De kapiteins der kapiteins:)
-        /// Frenoy sync zet ook deze status
-        /// </summary>
-        public const string Major = "Major";
+    /// <summary>
+    /// Opstelling door de kapiteins der kapiteins:)
+    /// Frenoy sync zet ook deze status
+    /// </summary>
+    public const string Major = "Major";
 
-        // Opstelling door de spelers zelf:
-        public const string Play = "Play";
-        public const string NotPlay = "NotPlay";
-        public const string Maybe = "Maybe";
-        public const string DontKnow = "DontKnow";
-    }
+    // Opstelling door de spelers zelf:
+    public const string Play = "Play";
+    public const string NotPlay = "NotPlay";
+    public const string Maybe = "Maybe";
+    public const string DontKnow = "DontKnow";
 }

@@ -1,60 +1,51 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 using Ttc.DataAccess.Utilities;
+using Ttc.DataEntities.Core;
 
-namespace Ttc.DataAccess.Services
+namespace Ttc.DataAccess.Services;
+
+public class ConfigService
 {
-    public class ConfigService : BaseService
+    private readonly ITtcDbContext _context;
+
+    public ConfigService(ITtcDbContext context)
     {
-        public async Task<Dictionary<string, string>> Get()
-        {
-            var dict = new Dictionary<string, string>();
-            using (var context = new TtcDbContext())
-            {
-                var keys = new[]
-                {
-                    "email", "googleMapsUrl", "location", "trainingDays", "competitionDays",
-                    "adultMembership", "youthMembership", "additionalMembership", "recreationalMembers",
-                    "frenoyClubIdVttl", "frenoyClubIdSporta", "compBalls", "clubBankNr", "clubOrgNr", "year",
-                    "endOfSeason"
-                };
-                foreach (var parameter in (await context.Parameters.ToArrayAsync()).Where(x => keys.Contains(x.Sleutel)))
-                {
-                    dict.Add(parameter.Sleutel, parameter.Value);
-                }
-            }
-            return dict;
-        }
+        _context = context;
+    }
 
-        public async Task<EmailConfig> GetEmailConfig()
+    public async Task<Dictionary<string, string>> Get()
+    {
+        var keys = new[]
         {
-            using (var context = new TtcDbContext())
-            {
-                var sendGridApiKey = (await context.Parameters.SingleAsync(x => x.Sleutel == "SendGridApiKey")).Value;
-                var fromEmail = (await context.Parameters.SingleAsync(x => x.Sleutel == "FromEmail")).Value;
-                return new EmailConfig(fromEmail, sendGridApiKey);
-            }
-        }
+            "email", "googleMapsUrl", "location", "trainingDays", "competitionDays",
+            "adultMembership", "youthMembership", "additionalMembership", "recreationalMembers",
+            "frenoyClubIdVttl", "frenoyClubIdSporta", "compBalls", "clubBankNr", "clubOrgNr", "year",
+            "endOfSeason"
+        };
 
-        public async Task Save(string key, string value)
+        var parameters = await _context.Parameters.Where(x => keys.Contains(x.Sleutel)).ToArrayAsync();
+        return parameters.ToDictionary(x => x.Sleutel, x => x.Value);
+    }
+
+    public async Task<EmailConfig> GetEmailConfig()
+    {
+        var sendGridApiKey = (await _context.Parameters.SingleAsync(x => x.Sleutel == "SendGridApiKey")).Value;
+        var fromEmail = (await _context.Parameters.SingleAsync(x => x.Sleutel == "FromEmail")).Value;
+        return new EmailConfig(fromEmail, sendGridApiKey);
+    }
+
+    public async Task Save(string key, string value)
+    {
+        var param = await _context.Parameters.SingleAsync(x => x.Sleutel == key);
+        if (key == "year")
         {
-            using (var context = new TtcDbContext())
-            {
-                var param = await context.Parameters.SingleAsync(x => x.Sleutel == key);
-                if (key == "year")
-                {
-                    int newYear = await NewSeasonSeed.Seed(context, false);
-                    param.Value = newYear.ToString();
-                }
-                else
-                {
-                    param.Value = value;
-                }
-                await context.SaveChangesAsync();
-            }
+            int newYear = await NewSeasonSeed.Seed(_context, false);
+            param.Value = newYear.ToString();
         }
+        else
+        {
+            param.Value = value;
+        }
+        await _context.SaveChangesAsync();
     }
 }

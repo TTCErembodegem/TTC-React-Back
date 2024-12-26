@@ -1,76 +1,77 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Http;
-using log4net;
-using log4net.Appender;
-using log4net.Repository.Hierarchy;
+﻿using System.Net;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Ttc.DataAccess.Services;
-using Ttc.WebApi.Utilities;
+using Ttc.Model.Core;
 
-namespace Ttc.WebApi.Controllers
+namespace Ttc.WebApi.Controllers;
+
+[Authorize]
+[Route("api/config")]
+public class ConfigController
 {
-    [RoutePrefix("api/config")]
-    public class ConfigController : BaseController
+    #region Constructor
+    private readonly ConfigService _service;
+    private readonly TtcLogger _logger;
+
+    public ConfigController(ConfigService service, TtcLogger logger)
     {
-        #region Constructor
-        private readonly ConfigService _service;
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(ConfigController));
+        _service = service;
+        _logger = logger;
+    }
+    #endregion
 
-        public ConfigController(ConfigService service)
-        {
-            _service = service;
-        }
-        #endregion
-
-        [AllowAnonymous]
-        public async Task<Dictionary<string, string>> Get() => await _service.Get();
-
-        [HttpPost]
-        public async Task Post([FromBody]ConfigParam param)
-        {
-            await _service.Save(param.Key, param.Value);
-        }
-
-        [HttpPost]
-        [Route("Log")]
-        [AllowAnonymous]
-        public void Log([FromBody]dynamic context)
-        {
-            var str = context.args.ToString();
-            Logger.Error(str);
-        }
-
-        [HttpGet]
-        [Route("Log/Get")]
-        [AllowAnonymous]
-        public HttpResponseMessage GetLogging()
-        {
-            FileAppender rootAppender = ((Hierarchy)LogManager.GetRepository())
-                .Root.Appenders.OfType<FileAppender>()
-                .FirstOrDefault();
-
-            var resp = new HttpResponseMessage(HttpStatusCode.OK);
-            
-            if (rootAppender == null)
-            {
-                resp.Content = new StringContent("No log4net FileAppender configured!", System.Text.Encoding.UTF8, "text/plain");
-            }
-            else
-            {
-                resp.Content = new StringContent(System.IO.File.ReadAllText(rootAppender.File), System.Text.Encoding.UTF8, "text/plain");
-            }
-            return resp;
-        }
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<Dictionary<string, string>> Get()
+    {
+        _logger.Information("Getting config");
+        return await _service.Get();
     }
 
-    public class ConfigParam
+    [HttpPost]
+    public async Task Post([FromBody] ConfigParam param)
     {
-        public string Key { get; set; }
-        public string Value { get; set; }
+        await _service.Save(param.Key, param.Value);
+    }
 
-        public override string ToString() => $"{Key} => {Value}";
+    [HttpPost]
+    [Route("Log")]
+    [AllowAnonymous]
+    public void Log([FromBody] dynamic context)
+    {
+        var str = context.args.ToString();
+        _logger.Error(str);
+    }
+
+    [HttpGet]
+    [Route("Log/Get")]
+    [AllowAnonymous]
+    public HttpResponseMessage GetLogging()
+    {
+        //FileAppender rootAppender = ((Hierarchy)LogManager.GetRepository())
+        //    .Root.Appenders.OfType<FileAppender>()
+        //    .FirstOrDefault();
+
+        var resp = new HttpResponseMessage(HttpStatusCode.OK);
+
+        //if (rootAppender == null)
+        //{
+        //    resp.Content = new StringContent("No log4net FileAppender configured!", System.Text.Encoding.UTF8, "text/plain");
+        //}
+        //else
+        //{
+        //    resp.Content = new StringContent(System.IO.File.ReadAllText(rootAppender.File), System.Text.Encoding.UTF8, "text/plain");
+        //}
+        return resp;
     }
 }
+
+public class ConfigParam
+{
+    public string Key { get; set; } = "";
+    public string Value { get; set; } = "";
+
+    public override string ToString() => $"{Key} => {Value}";
+}
+

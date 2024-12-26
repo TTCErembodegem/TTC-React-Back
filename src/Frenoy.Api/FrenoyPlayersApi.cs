@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using Frenoy.Api.FrenoyVttl;
+﻿using System.Globalization;
+using FrenoyVttl;
+using Microsoft.EntityFrameworkCore;
 using Ttc.DataEntities;
 using Ttc.DataEntities.Core;
 using Ttc.Model.Players;
-using Ttc.Model.Teams;
 
 namespace Frenoy.Api
 {
@@ -36,10 +30,13 @@ namespace Frenoy.Api
 
         public async Task SyncPlayers()
         {
-            var frenoyPlayers = await _frenoy.GetMembersAsync(new GetMembersRequest
+            var frenoyPlayers = await _frenoy.GetMembersAsync(new GetMembersRequest1
             {
-                Season = (_currentSeason - 2000 + 1).ToString(),
-                Club = _settings.FrenoyClub,
+                GetMembersRequest = new GetMembersRequest()
+                {
+                    Season = (_currentSeason - 2000 + 1).ToString(),
+                    Club = _settings.FrenoyClub,
+                }
             });
 
             foreach (MemberEntryType frenoyPlayer in frenoyPlayers.GetMembersResponse.MemberEntries)
@@ -89,7 +86,6 @@ namespace Frenoy.Api
             player.ClubIdVttl = Constants.OwnClubId;
             player.KlassementVttl = frenoyPlayer.Ranking;
             player.ComputerNummerVttl = int.Parse(frenoyPlayer.UniqueIndex);
-            //player.LinkKaartVttl
         }
 
         private async Task<PlayerEntity> CreatePlayerEntity(MemberEntryType frenoyPlayer)
@@ -152,9 +148,12 @@ namespace Frenoy.Api
         public async Task<ICollection<PlayerEntity>> GetPlayers(int clubId)
         {
             var club = await _db.Clubs.FindAsync(clubId);
-            var frenoyPlayers = await _frenoy.GetMembersAsync(new GetMembersRequest
+            var frenoyPlayers = await _frenoy.GetMembersAsync(new GetMembersRequest1
             {
-                Club = club.CodeSporta,
+                GetMembersRequest = new GetMembersRequest()
+                {
+                    Club = club.CodeSporta,
+                }
             });
 
             var players = frenoyPlayers.GetMembersResponse.MemberEntries

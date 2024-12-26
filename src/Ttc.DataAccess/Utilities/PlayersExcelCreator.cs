@@ -62,7 +62,6 @@ namespace Ttc.DataAccess.Utilities
             );
 
             int i = 2;
-            var rankingValueConverter = new KlassementValueConverter();
             foreach (var player in _players.Where(x => x.ClubIdSporta == Constants.OwnClubId).OrderBy(x => x.VolgnummerSporta))
             {
                 worksheet.Cells[i, 1].Value = player.VolgnummerSporta;
@@ -70,7 +69,7 @@ namespace Ttc.DataAccess.Utilities
                 worksheet.Cells[i, 3].Value = player.LidNummerSporta;
                 worksheet.Cells[i, 4].Value = player.Name;
                 worksheet.Cells[i, 5].Value = player.KlassementSporta;
-                worksheet.Cells[i, 6].Value = rankingValueConverter.Sporta(player.KlassementSporta);
+                worksheet.Cells[i, 6].Value = KlassementValueConverter.Sporta(player.KlassementSporta);
 
                 i++;
             }

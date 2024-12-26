@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Net;
-using System.ServiceModel;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Frenoy.Api.FrenoyVttl;
+using FrenoyVttl;
+using Microsoft.EntityFrameworkCore;
 using Ttc.DataEntities;
 using Ttc.DataEntities.Core;
 using Ttc.Model.Players;
@@ -52,17 +47,22 @@ namespace Frenoy.Api
                 // Sporta
                 _thuisClubId = _db.Clubs.Single(x => x.CodeSporta == _settings.FrenoyClub).Id;
 
-                var binding = new BasicHttpBinding("TabTAPI_Binding");
-                binding.Security.Mode = BasicHttpSecurityMode.Transport;
-                var endpoint = new EndpointAddress(FrenoySportaEndpoint);
-                _frenoy = new TabTAPI_PortTypeClient(binding, endpoint);
+                //var binding = new BasicHttpBinding(BasicHttpSecurityMode.Transport);
+                // binding.Security.Mode = BasicHttpSecurityMode.Transport;
+                //var endpoint = new EndpointAddress(FrenoySportaEndpoint);
+                _frenoy = new TabTAPI_PortTypeClient(
+                    new System.ServiceModel.BasicHttpBinding(System.ServiceModel.BasicHttpSecurityMode.Transport),
+                    new System.ServiceModel.EndpointAddress(new Uri(FrenoySportaEndpoint))
+                );
             }
+
+            //_frenoy.Endpoint.EndpointBehaviors.Add(new CustomDateTimeBehavior());
 
             // Turn off certificate check -- probably a problem with a self signed certificate on the Frenoy server?
             // SecurityNegotiationException: 'Could not establish secure channel for SSL/TLS with authority 'api.vttl.be'.
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
-            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-            ServicePointManager.ServerCertificateValidationCallback = (sender, cert, chain, error) => true;
+            //ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
+            //System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+            //ServicePointManager.ServerCertificateValidationCallback = (sender, cert, chain, error) => true;
 
             //_frenoy.Endpoint.Binding.ReceiveTimeout = TimeSpan.FromMinutes(5);
             //_frenoy.Endpoint.Binding.CloseTimeout = TimeSpan.FromMinutes(5);
@@ -80,7 +80,6 @@ namespace Frenoy.Api
             {
                 return regMatch.Groups[1].Value;
             }
-            Debug.Assert(false, "This code path is never been tested");
             return null;
         }
 
@@ -110,10 +109,13 @@ namespace Frenoy.Api
 
         private async Task<ClubEntity> CreateClub(string frenoyClubCode)
         {
-            var frenoyClub = await _frenoy.GetClubsAsync(new GetClubs
+            var frenoyClub = await _frenoy.GetClubsAsync(new GetClubsRequest
             {
-                Club = frenoyClubCode,
-                Season = _settings.FrenoySeason.ToString()
+                GetClubs = new GetClubs()
+                {
+                    Club = frenoyClubCode,
+                    Season = _settings.FrenoySeason.ToString()
+                }
             });
             Debug.Assert(frenoyClub.GetClubsResponse.ClubEntries.Count() == 1);
 

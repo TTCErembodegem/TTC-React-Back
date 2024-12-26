@@ -1,9 +1,8 @@
-﻿namespace Ttc.Model.Matches
+﻿namespace Ttc.Model.Matches;
+
+public enum WalkOver
 {
-    public enum WalkOver
-    {
-        None,
-        Home,
-        Out
-    }
+    None,
+    Home,
+    Out
 }
