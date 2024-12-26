@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Frenoy.Api;
 using Microsoft.EntityFrameworkCore;
 using Ttc.DataAccess.Utilities;
 using Ttc.Model.Teams;
@@ -59,34 +60,29 @@ public class TeamService
         return team;
     }
 
-    private static async Task<ICollection<DivisionRanking>> GetFrenoyRanking(Competition competition, int divisionId)
+    private async Task<ICollection<DivisionRanking>> GetFrenoyRanking(Competition competition, int divisionId)
     {
         var key = new TeamRankingKey(competition, divisionId);
-        if (RankingCache.ContainsKey(key))
+        if (RankingCache.TryGetValue(key, out ICollection<DivisionRanking>? frenoyRanking))
         {
-            return RankingCache[key];
+            return frenoyRanking;
         }
 
-        return null;
-
-        //var frenoy = new FrenoyTeamsApi(dbContext, competition);
-        //var ranking = await frenoy.GetTeamRankings(divisionId);
-        //if (!RankingCache.ContainsKey(key))
-        //{
-        //    lock (CacheLock)
-        //    {
-        //        if (!RankingCache.ContainsKey(key))
-        //        {
-        //            RankingCache.Add(key, ranking);
-        //        }
-        //    }
-        //}
-        //return ranking;
+        var frenoy = new FrenoyTeamsApi(_context, competition);
+        var ranking = await frenoy.GetTeamRankings(divisionId);
+        if (!RankingCache.ContainsKey(key))
+        {
+            lock (CacheLock)
+            {
+                RankingCache.TryAdd(key, ranking);
+            }
+        }
+        return ranking;
     }
 
     #region DivisionCache
     private static readonly Dictionary<TeamRankingKey, ICollection<DivisionRanking>> RankingCache = new();
-    private static readonly object CacheLock = new object();
+    private static readonly object CacheLock = new();
 
     private struct TeamRankingKey
     {

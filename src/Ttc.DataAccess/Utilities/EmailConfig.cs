@@ -1,16 +1,15 @@
-﻿namespace Ttc.DataAccess.Utilities
+﻿namespace Ttc.DataAccess.Utilities;
+
+public class EmailConfig
 {
-    public class EmailConfig
+    public string EmailFrom { get; set; }
+    public string SendGridApiKey { get; set; }
+
+    public EmailConfig(string emailFrom, string sendGridApiKey)
     {
-        public string EmailFrom { get; set; }
-        public string SendGridApiKey { get; set; }
-
-        public EmailConfig(string emailFrom, string sendGridApiKey)
-        {
-            EmailFrom = emailFrom;
-            SendGridApiKey = sendGridApiKey;
-        }
-
-        public override string ToString() => $"{EmailFrom}, ${SendGridApiKey}";
+        EmailFrom = emailFrom;
+        SendGridApiKey = sendGridApiKey;
     }
+
+    public override string ToString() => $"{EmailFrom}, ${SendGridApiKey}";
 }
