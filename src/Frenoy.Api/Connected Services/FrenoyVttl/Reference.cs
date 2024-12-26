@@ -2682,7 +2682,7 @@ namespace FrenoyVttl
     public partial class CommentEntryType
     {
         
-        private System.DateTime timestampField;
+        private string timestampField;
         
         private MemberEntryType authorField;
         
@@ -2692,7 +2692,7 @@ namespace FrenoyVttl
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public System.DateTime Timestamp
+        public string Timestamp
         {
             get
             {
