@@ -18,11 +18,13 @@ public class UserProvider
 
     public bool IsAuthenticated => Principal?.Identity?.IsAuthenticated ?? false;
 
+    public string? Alias => Principal?.Identity?.Name ?? "Anonymous";
+
     public int? PlayerId
     {
         get
         {
-            string? playerId = Principal?.Claims.FirstOrDefault(x => x.Type == "")?.Value;
+            string? playerId = Principal?.Claims.FirstOrDefault(x => x.Type == "playerId")?.Value;
             if (string.IsNullOrWhiteSpace(playerId))
                 return null;
 
@@ -40,13 +42,14 @@ public class UserProvider
     {
         var claims = new[]
         {
-                new Claim(JwtRegisteredClaimNames.Sub, user.PlayerId.ToString()),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim("alias", user.Alias),
-                new Claim("playerId", user.PlayerId.ToString()),
-                new Claim("security", JsonConvert.SerializeObject(user.Security)),
-                new Claim("teams", string.Join(",", user.Teams)),
-            };
+            new Claim(JwtRegisteredClaimNames.Sub, user.PlayerId.ToString()),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(ClaimTypes.Name, user.Alias),
+            new Claim("alias", user.Alias),
+            new Claim("playerId", user.PlayerId.ToString()),
+            new Claim("security", JsonConvert.SerializeObject(user.Security)),
+            new Claim("teams", string.Join(",", user.Teams)),
+        };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.JwtSecret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

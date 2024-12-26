@@ -20,4 +20,9 @@ public class TtcLogger
     {
         _logger.Error(log);
     }
+
+    public void Error(Exception exception, string messageTemplate, object propertyValue)
+    {
+        _logger.Error(exception, messageTemplate, propertyValue);
+    }
 }

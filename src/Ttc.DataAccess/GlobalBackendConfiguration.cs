@@ -47,8 +47,8 @@ public static class GlobalBackendConfiguration
                 // The following three options help with debugging, but should
                 // be changed or removed for production.
                 .LogTo(Console.WriteLine, LogLevel.Warning)
-                .EnableSensitiveDataLogging()
-                .EnableDetailedErrors()
+                //.EnableSensitiveDataLogging()
+                //.EnableDetailedErrors()
         );
     }
 }

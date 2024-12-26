@@ -1,6 +1,7 @@
 using CoreWCF.Configuration;
 using CoreWCF.Description;
 using Serilog;
+using Serilog.Context;
 using System.Text.Json.Serialization;
 using Ttc.DataAccess;
 using Ttc.Model.Core;
@@ -9,9 +10,10 @@ using Ttc.WebApi.Utilities;
 using Ttc.WebApi.Utilities.Auth;
 
 Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Debug()
-    .WriteTo.Console()
-    .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+    .MinimumLevel.Information()
+    .Enrich.FromLogContext()
+    .WriteTo.Console(outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Message} {Properties}{NewLine}{Exception}")
+    .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day, outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Message} {Properties}{NewLine}{Exception}")
     .CreateLogger();
 
 Log.Information("Starting up...");
@@ -28,7 +30,7 @@ try
         });
     });
     builder.Services.AddSerilog(Log.Logger);
-    builder.Services.AddScoped<TtcLogger>();
+    builder.Services.AddSingleton<TtcLogger>();
     builder.Services.AddScoped<EmailService>();
     builder.Services.AddScoped<UserProvider>();
     builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -41,6 +43,8 @@ try
     var ttcSettings = LoadSettings.Configure(builder.Services);
     GlobalBackendConfiguration.Configure(builder.Services, ttcSettings);
     AddAuthentication.Configure(builder.Services, ttcSettings);
+    builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+    builder.Services.AddProblemDetails();
 
     builder.Services.AddServiceModelServices().AddServiceModelMetadata();
     builder.Services.AddSingleton<IServiceBehavior, UseRequestHeadersForMetadataAddressBehavior>();
@@ -52,27 +56,22 @@ try
         app.UseSwaggerUI();
     }
 
-    //var myWSHttpBinding = new WSHttpBinding(SecurityMode.Transport);
-    //myWSHttpBinding.Security.Transport.ClientCredentialType = HttpClientCredentialType.None;
-
-    //app.UseServiceModel(builder =>
-    //{
-    //    builder.AddService<EchoService>((serviceOptions) => { })
-    //        // Add a BasicHttpBinding at a specific endpoint
-    //        .AddServiceEndpoint<EchoService, IEchoService>(new BasicHttpBinding(), "/EchoService/basichttp")
-    //        // Add a WSHttpBinding with Transport Security for TLS
-    //        .AddServiceEndpoint<EchoService, IEchoService>(myWSHttpBinding, "/EchoService/WSHttps");
-    //});
-
     var serviceMetadataBehavior = app.Services.GetRequiredService<CoreWCF.Description.ServiceMetadataBehavior>();
     serviceMetadataBehavior.HttpGetEnabled = true;
 
     app.UseCors();
-    app.UseSerilogRequestLogging();
     app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
+    app.Use(async (context, next) =>
+    {
+        LogContext.PushProperty("UserName", context.User.Identity?.Name ?? "Anonymous");
+        await next();
+    });
+    app.UseSerilogRequestLogging();
     app.MapControllers();
+    app.UseExceptionHandler();
+    app.Lifetime.ApplicationStopped.Register(Log.CloseAndFlush);
     app.Run();
 }
 catch (Exception ex)
