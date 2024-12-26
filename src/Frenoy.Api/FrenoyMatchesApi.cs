@@ -296,11 +296,9 @@ public class FrenoyMatchesApi : FrenoyApiBase
     {
         if (frenoyMatch.MatchDetails.IndividualMatchResults != null)
         {
-            int id = 0;
             foreach (var frenoyIndividual in frenoyMatch.MatchDetails.IndividualMatchResults)
             {
-                id--;
-                AddMatchGames(frenoyIndividual, id, matchEntity);
+                AddMatchGames(frenoyIndividual, matchEntity);
             }
         }
     }
@@ -314,7 +312,7 @@ public class FrenoyMatchesApi : FrenoyApiBase
         _db.MatchGames.RemoveRange(oldMatchGames);
     }
 
-    private static void AddMatchGames(IndividualMatchResultEntryType frenoyIndividual, int id, MatchEntity matchEntity)
+    private static void AddMatchGames(IndividualMatchResultEntryType frenoyIndividual, MatchEntity matchEntity)
     {
         if (frenoyIndividual.IsHomeForfeited || frenoyIndividual.IsAwayForfeited)
         {
@@ -325,14 +323,9 @@ public class FrenoyMatchesApi : FrenoyApiBase
         if (frenoyIndividual.AwayPlayerMatchIndex?.Length == 2 || frenoyIndividual.AwayPlayerMatchIndex?.Length == 2 ||
             frenoyIndividual.HomePlayerMatchIndex?.Length == 2 || frenoyIndividual.HomePlayerUniqueIndex?.Length == 2)
         {
-            // TODO: We also got here when matchEntity.WalkOver = true
-            //       HomePlayerUniqueIndex or AwayPlayerUniqueIndex = "" when the Team forfeited the entire season
-            // TODO: We now have the Ids from doubles with Home/AwayPlayerUniqueIndex becoming an array
-
             // Sporta doubles match:
             matchResult = new MatchGameEntity
             {
-                Id = id,
                 MatchId = matchEntity.Id,
                 MatchNumber = int.Parse(frenoyIndividual.Position),
                 WalkOver = WalkOver.None
@@ -344,7 +337,6 @@ public class FrenoyMatchesApi : FrenoyApiBase
             // Sporta/Vttl singles match
             matchResult = new MatchGameEntity
             {
-                Id = id,
                 MatchId = matchEntity.Id,
                 MatchNumber = int.Parse(frenoyIndividual.Position),
                 HomePlayerUniqueIndex = homeUniqueIndex,
@@ -366,46 +358,7 @@ public class FrenoyMatchesApi : FrenoyApiBase
         {
             if (frenoyIndividual.HomeSetCount == null || frenoyIndividual.AwaySetCount == null)
             {
-                // Some sort of WO?
-                // Position + Home or AwayPlayerMatchIndex is filled in but all the rest is null?
-
-                // TODO: Sporta doubles matches: the HomeSetCount/AwaySetCount is no longer filled in
-                // and the match result is not saved...
-
-                // The doubles result is still in the array of IndividualResults but has a different signature
-                // C# just silently skips it...
-                // uh...! https://github.com/gfrenoy/TabT-API
-
-                //[6] => stdClass Object
-                //  (
-                //      [Position] => 7
-                //      [HomePlayerMatchIndex] => Array
-                //          (
-                //              [0] => 1
-                //              [1] => 2
-                //          )
-                //
-                //      [HomePlayerUniqueIndex] => Array
-                //          (
-                //              [0] => 46671
-                //              [1] => 47012
-                //          )
-                //
-                //      [AwayPlayerMatchIndex] => Array
-                //          (
-                //              [0] => 2
-                //              [1] => 3
-                //          )
-                //
-                //      [AwayPlayerUniqueIndex] => Array
-                //          (
-                //              [0] => 8259
-                //              [1] => 9177
-                //          )
-                //
-                //      [HomeSetCount] => 0
-                //      [AwaySetCount] => 3
-                //  )
+                // If a player forfeited
                 return;
             }
 
@@ -415,7 +368,7 @@ public class FrenoyMatchesApi : FrenoyApiBase
         matchEntity.Games.Add(matchResult);
     }
 
-    private async Task AddMatchPlayers(TeamMatchPlayerEntryType[] players, MatchEntity match, bool thuisSpeler)
+    private async Task AddMatchPlayers(TeamMatchPlayerEntryType[]? players, MatchEntity match, bool thuisSpeler)
     {
         if (players == null)
             return;
@@ -582,7 +535,7 @@ public class FrenoyMatchesApi : FrenoyApiBase
         {
             TeamId = teamEntity.Id,
             ClubId = await GetClubId(frenoyTeam.TeamClub),
-            TeamCode = ExtractTeamCodeFromFrenoyName(frenoyTeam.Team)
+            TeamCode = ExtractTeamCodeFromFrenoyName(frenoyTeam.Team) ?? ""
         };
         return opponent;
     }
