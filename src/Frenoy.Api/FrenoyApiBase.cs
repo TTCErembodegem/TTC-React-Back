@@ -55,8 +55,6 @@ public class FrenoyApiBase
             );
         }
 
-        //_frenoy.Endpoint.EndpointBehaviors.Add(new CustomDateTimeBehavior());
-
         // Turn off certificate check -- probably a problem with a self signed certificate on the Frenoy server?
         // SecurityNegotiationException: 'Could not establish secure channel for SSL/TLS with authority 'api.vttl.be'.
         //ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
