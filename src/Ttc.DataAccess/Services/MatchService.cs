@@ -333,7 +333,7 @@ public class MatchService
             .SingleAsync(x => x.Id == matchId);
 
         var teams = await _context.Teams
-            .Include(x => x.Opponents.Select(o => o.Club))
+            .Include(x => x.Opponents).ThenInclude(x => x.Club)
             .Where(x => x.Year == currentSeason)
             .Where(x => x.Competition == Competition.Sporta.ToString())
             .ToArrayAsync();
