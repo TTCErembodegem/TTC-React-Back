@@ -18,7 +18,7 @@ public class MatchComment
     public int MatchId { get; set; }
     public string Text { get; set; }
     public int PlayerId { get; set; }
-    public DateTime PostedOn { get; set; }
+    public DateTime? PostedOn { get; set; }
     public bool Hidden { get; set; }
     public string ImageUrl { get; set; }
     #endregion
