@@ -21,8 +21,7 @@ public class OpposingTeam
     {
 
     }
-
-    public static OpposingTeam Create(int? clubId, string teamCode)
+    public static OpposingTeam? Create(int? clubId, string teamCode)
     {
         if (!clubId.HasValue) return null;
         return new OpposingTeam(clubId.Value, teamCode);

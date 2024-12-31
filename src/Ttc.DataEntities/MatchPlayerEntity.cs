@@ -20,7 +20,7 @@ public class MatchPlayerEntity
     [MaxLength(10)]
     public string Status { get; set; }
     [MaxLength(300)]
-    public string StatusNote { get; set; }
+    public string? StatusNote { get; set; }
 
     /// <summary>
     /// Aantal gewonnen matchen.
