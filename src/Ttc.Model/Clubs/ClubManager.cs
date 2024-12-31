@@ -1,6 +1,4 @@
-﻿using Ttc.Model.Players;
-
-namespace Ttc.Model.Clubs;
+﻿namespace Ttc.Model.Clubs;
 
 /// <summary>
 /// Voorzitter, secretaris, ...
@@ -11,7 +9,6 @@ public class ClubManager
     public int PlayerId { get; set; }
     public string Description { get; set; }
     public string Name { get; set; }
-    public PlayerContact Contact { get; set; }
     public int SortOrder { get; set; }
     #endregion
 

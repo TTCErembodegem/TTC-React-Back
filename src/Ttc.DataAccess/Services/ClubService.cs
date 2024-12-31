@@ -44,7 +44,6 @@ public class ClubService
                 Description = managerInfo.Omschrijving,
                 PlayerId = managerInfo.SpelerId,
                 Name = managerPlayer.Name,
-                Contact = new PlayerContact(managerPlayer.Id, managerPlayer.Email, managerPlayer.Gsm, managerPlayer.Adres, managerPlayer.Gemeente),
                 SortOrder = managerInfo.Sortering
             });
         }
