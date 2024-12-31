@@ -20,12 +20,13 @@ services:
 
   webapi:
     build:
+      context: ./
       dockerfile: ./src/Ttc.WebApi/Dockerfile
     container_name: ttc-backend
     restart: always
     ports:
-      - "5000:8080"
-      - "5001:5001"
+      - "7750:8080"
+      - "7751:8081"
     networks:
       - ttcnet
     environment:
