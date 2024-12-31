@@ -1,0 +1,44 @@
+version: '3.8'
+name: ttc
+
+services:
+  db:
+    image: mysql:5.5.60
+    container_name: ttc-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: ttc_aalst
+      MYSQL_USER:
+      MYSQL_PASSWORD:
+    ports:
+      - "33060:3306"
+    networks:
+      - ttcnet
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+      - mysql-data:/var/lib/mysql
+
+  webapi:
+    build:
+      dockerfile: ./src/Ttc.WebApi/Dockerfile
+    container_name: ttc-backend
+    restart: always
+    ports:
+      - "5000:8080"
+      - "5001:5001"
+    networks:
+      - ttcnet
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    volumes:
+      - ./upload:/upload
+    depends_on:
+      - db
+
+volumes:
+  mysql-data:
+
+networks:
+  ttcnet:
+    driver: bridge

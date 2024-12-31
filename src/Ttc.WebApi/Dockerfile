@@ -1,32 +1,30 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
-# Depending on the operating system of the host machines(s) that will build or run the containers, the image specified in the FROM statement may need to be changed.
-# For more information, please see https://aka.ms/containercompat
+WORKDIR /source
 
-# This stage is used when running from VS in fast mode (Default for Debug configuration)
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-nanoserver-1809 AS base
+COPY *.sln .
+COPY src/Ttc.WebApi/*.csproj ./src/Ttc.WebApi/
+COPY src/Frenoy.Api/*.csproj ./src/Frenoy.Api/
+COPY src/Ttc.DataAccess/*.csproj ./src/Ttc.DataAccess/
+COPY src/Ttc.DataEntities/*.csproj ./src/Ttc.DataEntities/
+COPY src/Ttc.Model/*.csproj ./src/Ttc.Model/
+COPY src/Ttc.UnitTests/*.csproj ./src/Ttc.UnitTests/
+
+RUN dotnet restore
+
+COPY src/Ttc.WebApi/. ./src/Ttc.WebApi/
+COPY src/Frenoy.Api/. ./src/Frenoy.Api/
+COPY src/Ttc.DataAccess/. ./src/Ttc.DataAccess/
+COPY src/Ttc.DataEntities/. ./src/Ttc.DataEntities/
+COPY src/Ttc.Model/. ./src/Ttc.Model/
+COPY src/Ttc.UnitTests/. ./src/Ttc.UnitTests/
+
+WORKDIR /source/src/Ttc.WebApi
+RUN dotnet publish -c Release -o /app
+
+
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 as runtime
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
-
-
-# This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:8.0-nanoserver-1809 AS build
-ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["Ttc.WebApi/Ttc.WebApi.csproj", "Ttc.WebApi/"]
-RUN dotnet restore "./Ttc.WebApi/Ttc.WebApi.csproj"
-COPY . .
-WORKDIR "/src/Ttc.WebApi"
-RUN dotnet build "./Ttc.WebApi.csproj" -c %BUILD_CONFIGURATION% -o /app/build
-
-# This stage is used to publish the service project to be copied to the final stage
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Ttc.WebApi.csproj" -c %BUILD_CONFIGURATION% -o /app/publish /p:UseAppHost=false
-
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Ttc.WebApi.dll"]
+COPY --from=build /app .
+ENTRYPOINT [ "dotnet", "/app/Ttc.WebApi.dll" ]

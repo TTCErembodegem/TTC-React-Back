@@ -26,6 +26,16 @@ Performance:
 	- Invalidate cache with all changes!
 - Review existing table indexes! (gets seem to be like really slow)
 
+## Database
+
+```sh
+docker run --name ttc-mysql -p 33060:3306 -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:5.5.60
+
+create database ttc_aalst
+-- and load sql script from ./db
+```
+
+
 
 ## EF Migrations
 

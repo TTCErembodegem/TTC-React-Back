@@ -97,11 +97,11 @@ public class UploadController
         var path = GetServerImagePath(ImageFolder.Players);
         if (type == "player-photo")
         {
-            path += "\\" + playerId + ".png";
+            path = Path.Combine(path, playerId + ".png");
         }
         else
         {
-            path += "\\" + playerId + "_avatar.png";
+            path = Path.Combine(path, playerId + "_avatar.png");
         }
 
         return new FileInfo(path);
@@ -119,20 +119,20 @@ public class UploadController
         switch (folder)
         {
             case ImageFolder.Temp:
-                fullPath = root + "\\temp";
+                fullPath = Path.Combine(root, "temp");
                 break;
 
             case ImageFolder.Backup:
-                fullPath = root + "\\backup";
+                fullPath = Path.Combine(root, "backup");
                 break;
 
             case ImageFolder.Match:
-                fullPath = root + "\\matches";
+                fullPath = Path.Combine(root, "matches");
                 break;
 
             case ImageFolder.Players:
             default:
-                fullPath = root + "\\players";
+                fullPath = Path.Combine(root, "players");
                 break;
         }
 
