@@ -93,6 +93,10 @@ public class UserProvider
         {
             return null;
         }
+        catch (SecurityTokenMalformedException)
+        {
+            return null;
+        }
     }
 
     public static TokenValidationParameters CreateTokenParameters(TtcSettings settings)
