@@ -91,10 +91,8 @@ public class UserProvider
         }
         catch (SecurityTokenValidationException)
         {
-            return null;
-        }
-        catch (SecurityTokenMalformedException)
-        {
+            // SecurityTokenValidationException, SecurityTokenMalformedException
+            // SecurityTokenSignatureKeyNotFoundException
             return null;
         }
     }
