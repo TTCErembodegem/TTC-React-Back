@@ -17,6 +17,7 @@ services:
     networks:
       - ttcnet
     volumes:
+      # TODO: this didn't seem to be working on Synology...
       - ./db:/docker-entrypoint-initdb.d
       - mysql-data:/var/lib/mysql
 
