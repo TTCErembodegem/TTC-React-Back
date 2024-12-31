@@ -55,6 +55,11 @@ try
         app.UseSwagger();
         app.UseSwaggerUI();
     }
+    else
+    {
+        app.UseHsts();
+        app.UseHttpsRedirection();
+    }
 
     var serviceMetadataBehavior = app.Services.GetRequiredService<CoreWCF.Description.ServiceMetadataBehavior>();
     serviceMetadataBehavior.HttpGetEnabled = true;

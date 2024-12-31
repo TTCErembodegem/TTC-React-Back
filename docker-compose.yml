@@ -33,9 +33,12 @@ services:
     networks:
       - ttcnet
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=Release
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=stockoma
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/dev_cert.pfx
     volumes:
       - ./upload:/upload
+      - ./https:/https
     depends_on:
       - db
 
