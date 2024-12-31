@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   db:
-    image: mysql:5.5.60
+    build:
+      context: ./db
+      dockerfile: Dockerfile
     container_name: ttc-mysql
     restart: always
     environment:
